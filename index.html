@@ -23,7 +23,7 @@
         <h3>Sistem Komputer Lengkap</h3>
         <p>Anatomi komputer: Hardware, Software, Brainware, dan Penggolongan Komputer.</p>
       </div>
-      <button class="btn-access" onclick="openModal('materi1')">Baca Materi <span class="btn-arrow">➔</span></button>
+      <button class="btn-access" onclick="openModal1()">Baca Materi <span class="btn-arrow">➔</span></button>
     </div>
     <div class="mat-card">
       <div class="card-icon">🖱️</div>
@@ -51,6 +51,16 @@
       <button onclick="closeModal()" style="background:rgba(241, 245, 249, 1); width:32px; height:32px; border-radius:50%; border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; color:#64748b; font-weight:bold; transition:0.2s;">✕</button>
     </div>
     <div class="modal-body-wrapper" id="modalBody"></div>
+  </div>
+</div>
+
+<div id="materiModal1" class="modal-overlay">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 id="modalTitle1" style="margin:0; font-weight:800; font-size:1.2rem; color:#1e3a8a;">Judul Materi</h3>
+      <button onclick="closeModal1()" style="background:rgba(241, 245, 249, 1); width:32px; height:32px; border-radius:50%; border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; color:#64748b; font-weight:bold; transition:0.2s;">✕</button>
+    </div>
+    <div class="modal-body-wrapper" id="modalBody1"></div>
   </div>
 </div>
 <script src="script.js"></script>

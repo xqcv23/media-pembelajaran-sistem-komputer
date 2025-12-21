@@ -417,6 +417,7 @@
     }
   }
 
+
   function closeModal() {
     modal.classList.remove('active');
     document.body.style.overflow = 'auto';
