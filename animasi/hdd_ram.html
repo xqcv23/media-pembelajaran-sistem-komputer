@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulasi Final: Audio & Visual Update</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;800&family=Fira+Code:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  /* === 1. SETUP DASAR === */
+  :root { 
+      --bg-dark: #020617;
+      --container-bg: #0f172a;
+      --line-color: #1e293b;
+      --border-color: #334155;
+      --blue-glow: #3b82f6;
+      --cyan-glow: #0ea5e9;
+      --red-alert: #ef4444;
+      --green-safe: #10b981;
+      --purple-rom: #d946ef;
+  }
+  
+  * { box-sizing: border-box; }
+
+  body {
+    font-family: 'Outfit', sans-serif;
+    background-color: var(--bg-dark);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    overflow: hidden;
+  }
+
+  .rs-container { 
+      background: var(--container-bg); 
+      border-radius: 16px; 
+      padding: 20px; 
+      border: 1px solid #1e293b; 
+      position: relative; 
+      overflow: hidden; 
+      box-shadow: inset 0 0 60px rgba(0,0,0,0.8), 0 20px 50px -10px rgba(0,0,0,0.5); 
+      display: flex; flex-direction: column; align-items: center; 
+      width: 100%; max-width: 900px;
+      user-select: none;
+  }
+
+  /* BLACKOUT SCREEN */
+  .sim-blackout { 
+      position: absolute; inset: 0; 
+      background: #000; 
+      z-index: 999; 
+      display: flex; flex-direction: column; align-items: center; justify-content: center; 
+      opacity: 0; pointer-events: none; transition: opacity 0.5s; 
+  }
+  .sim-blackout.active { opacity: 1; pointer-events: auto; }
+  .sim-blackout.flash { background: #fff; transition: none; }
+  
+  .blackout-icon { font-size: 3rem; margin-bottom: 10px; animation: pulseIcon 0.5s infinite alternate; }
+  .blackout-text { color: var(--red-alert); font-family: 'Fira Code', monospace; font-size: 1.2rem; font-weight: 900; text-align: center; text-shadow: 0 0 10px var(--red-alert); animation: glitchText 0.3s infinite; }
+
+  /* HEADER */
+  .rs-stats-panel { 
+      display: flex; justify-content: space-between; margin-bottom: 15px; 
+      background: rgba(30, 41, 59, 0.6); padding: 8px 20px; border-radius: 8px; 
+      border: 1px solid var(--border-color); font-size: 0.8rem; color: #94a3b8; 
+      width: 100%; max-width: 500px; z-index: 10; 
+  }
+  .stat-val { color: #fff; font-weight: bold; margin-left: 5px; }
+
+  /* === 3. BOARD AREA === */
+  #boardScaler { 
+      transform-origin: top center; transition: transform 0.3s ease; 
+      width: 850px; height: 260px; position: relative; margin-bottom: 0;
+  }
+  .rs-board { display: block; position: absolute; inset: 0; z-index: 1; }
+
+  /* === 4. KOMPONEN UTAMA === */
+  .rs-comp { 
+      background: #151b2b; border: 1px solid var(--border-color); border-radius: 12px; 
+      padding: 10px; display: flex; flex-direction: column; align-items: center; 
+      position: absolute; 
+      z-index: 2; 
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
+      transition: 0.3s; top: 30px; 
+      overflow: visible; 
+  }
+  .rs-lbl { font-size: 0.7rem; color: #e2e8f0; font-weight: 700; margin-top: auto; } 
+  .rs-sub { font-size: 0.55rem; color: #64748b; margin-top: 2px; text-align: center;}
+
+  #compHDD { width: 120px; height: 135px; left: 40px; } 
+  #compROM { width: 90px; height: 105px; left: 505px; }
+  #compCPU { width: 100px; height: 125px; left: 670px; }
+  #compHDD.active { border-color: var(--blue-glow); box-shadow: 0 0 20px rgba(59, 130, 246, 0.4); }
+
+  /* === 5. RAM CONTAINER === */
+  #compRAM { 
+      width: 180px; height: 135px; left: 260px;
+      display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+  }
+  .ram-sticks-wrapper {
+      display: flex; justify-content: center; align-items: flex-end;
+      gap: 8px; height: 90px; width: 100%; margin-top: 15px;
+  }
+  .ram-label-top { 
+      position: absolute; top: -20px; left: 50%; transform: translateX(-50%); 
+      color: #10b981; font-size: 0.65rem; font-weight: 800; letter-spacing: 1px; 
+      white-space: nowrap; text-shadow: 0 2px 5px rgba(0,0,0,0.8); 
+  }
+  .ram-slot { 
+      width: 25px; height: 100%; background: #0b0c15; border: 1px solid var(--border-color); 
+      border-radius: 4px; position: relative; overflow: hidden; flex-shrink: 0;
+  }
+  .ram-stick { 
+      position: absolute; bottom: -100%; left: 1px; right: 1px; height: 95%; 
+      background: linear-gradient(180deg, #10b981, #047857); border-top: 2px solid #6ee7b7; 
+      transition: bottom 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+      box-shadow: 0 0 10px rgba(16, 185, 129, 0.5); 
+  }
+  .ram-slot.filled .ram-stick { bottom: 2px; }
+
+  /* === 6. STATUS BADGES === */
+  .status-badge { 
+      position: absolute; top: 50%; left: 50%; 
+      transform: translate(-50%, -50%) scale(0); 
+      min-width: 80px; padding: 6px 8px;
+      display: flex; flex-direction: column; justify-content: center; align-items: center; 
+      z-index: 100; opacity: 0; 
+      transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      border-radius: 6px; backdrop-filter: blur(10px); pointer-events: none; 
+      box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+  }
+  .status-badge.show { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+
+  .badge-safe { 
+      background: rgba(6, 78, 59, 0.95); border: 2px solid var(--green-safe); 
+      box-shadow: 0 0 20px rgba(16, 185, 129, 0.5); 
+  }
+  .badge-safe h3 { margin: 0; font-size: 0.7rem; color: #fff; font-weight: 800; }
+  .badge-safe span { font-size: 0.5rem; color: #a7f3d0; font-weight: bold; margin-top: 2px; padding: 1px 4px; border-radius: 3px; background: rgba(0,0,0,0.3); }
+  .badge-safe::before { content: '✔'; font-size: 1.2rem; line-height: 1; color: var(--green-safe); margin-bottom: 2px; }
+
+  .badge-danger { 
+      background: rgba(127, 29, 29, 0.95); border: 2px solid var(--red-alert); 
+      box-shadow: 0 0 20px rgba(239, 68, 68, 0.5); animation: badgeShake 0.4s infinite;
+  }
+  .badge-danger h3 { margin: 0; font-size: 0.7rem; color: #fff; font-weight: 800; }
+  .badge-danger span { font-size: 0.5rem; color: #fca5a5; font-weight: bold; margin-top: 2px; text-decoration: line-through; padding: 1px 4px; border-radius: 3px; background: rgba(0,0,0,0.3); }
+  .badge-danger::before { content: '✖'; font-size: 1.2rem; line-height: 1; color: #fca5a5; margin-bottom: 2px; }
+
+  /* === 7. TRACES & BUS === */
+  .rs-trace-v { 
+      position: absolute; width: 14px; background: var(--line-color); z-index: -1; 
+      border-left: 1px solid var(--border-color); border-right: 1px solid var(--border-color); 
+      top: 100%; left: 50%; transform: translateX(-50%); overflow: hidden; 
+  }
+  .rs-trace-v::after { 
+      content: ''; position: absolute; inset: 0; 
+      background: linear-gradient(180deg, transparent, var(--cyan-glow), transparent); 
+      opacity: 0.8; background-size: 100% 30px; animation: traceFlow 0.8s linear infinite; 
+  }
+  #traceHDD { height: 62px; } #traceRAM { height: 62px; } #traceROM { height: 92px; } #traceCPU { height: 72px; }
+
+  .rs-bus-line { 
+      position: absolute; bottom: 20px; left: 40px; right: 40px; height: 14px; 
+      background: var(--line-color); border-radius: 4px; z-index: 0; 
+      border: 1px solid var(--border-color); box-shadow: inset 0 0 5px #000; overflow: hidden;
+  }
+  .rs-bus-line::after { 
+      content: ''; position: absolute; inset: 0; 
+      background: linear-gradient(90deg, transparent, var(--cyan-glow), transparent); 
+      opacity: 0.6; background-size: 50px 100%; animation: busFlow 1.5s linear infinite; 
+  }
+
+  /* === VISUAL UPDATE === */
+  .hdd-bars-container { display: flex; gap: 4px; justify-content: center; width: 100%; margin-bottom: 10px; height: 60px; align-items: flex-end; position: relative; z-index: 5; }
+  .hdd-bar { width: 14px; height: 100%; background: var(--blue-glow); border-radius: 2px; box-shadow: 0 0 8px var(--blue-glow); transition: 0.2s; }
+  
+  .hdd-bar.reading { background: #fff; box-shadow: 0 0 15px #fff; opacity: 0.8; }
+  .hdd-bar.empty { background: #1e293b; box-shadow: none; opacity: 0.3; }
+
+  .rom-chip { width: 45px; height: 45px; background: #4a044e; border: 2px solid #c026d3; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #f0abfc; font-size: 0.75rem; margin-bottom: 5px; position: relative; }
+  
+  /* CPU CORE */
+  .cpu-core { width: 50px; height: 50px; border-radius: 6px; border: 2px solid var(--border-color); background: radial-gradient(circle, #1e293b, #000); position: relative; margin-bottom: 5px; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
+  .cpu-logo-svg { width: 30px; height: 30px; fill: #64748b; transition: 0.2s; }
+  
+  /* CPU STATES */
+  /* 1. Working (Cyan) */
+  .cpu-active .cpu-core { border-color: #fff; background: #0f172a; animation: cpuPulse 0.5s infinite; }
+  .cpu-active .cpu-logo-svg { fill: var(--cyan-glow); filter: drop-shadow(0 0 5px var(--cyan-glow)); }
+
+  /* 2. Booting (Purple/ROM) - New Visual */
+  .cpu-booting .cpu-core { border-color: #d946ef; background: #2e022d; box-shadow: 0 0 20px #d946ef; }
+  .cpu-booting .cpu-logo-svg { fill: #d946ef; filter: drop-shadow(0 0 8px #d946ef); }
+
+  .traveling-packet { position: absolute; width: 14px; height: 14px; background: #00f3ff; border-radius: 2px; box-shadow: 0 0 15px #00f3ff; z-index: 100; pointer-events: none; }
+
+  .rs-controls { display: flex; justify-content: center; gap: 10px; margin-top: 10px; flex-wrap: wrap; width: 100%; z-index: 10; }
+  .rs-btn { background: transparent; border: 1px solid var(--border-color); color: #cbd5e1; padding: 8px 14px; border-radius: 6px; cursor: pointer; text-align: left; transition: 0.2s; position: relative; overflow: hidden; min-width: 140px; }
+  .rs-btn:hover { background: rgba(255,255,255,0.05); border-color: #fff; transform: translateY(-2px); }
+  .rs-btn:disabled { opacity: 0.5; cursor: not-allowed; filter: grayscale(1); }
+  .rs-btn small { display: block; font-size: 0.6rem; color: #64748b; margin-top: 3px; }
+  .rs-btn-pwr { border-color: #991b1b; color: #fca5a5; } .rs-btn-pwr:hover { background: #7f1d1d; color: #fff; box-shadow: 0 0 15px var(--red-alert); }
+  
+  .status-log { text-align: center; margin-top: 8px; font-size: 0.85rem; color: var(--cyan-glow); min-height: 20px; font-weight: bold; }
+  
+  .ram-alert-text { position: absolute; bottom: -22px; left: 50%; transform: translateX(-50%); color: var(--red-alert); font-size: 0.65rem; font-weight: 800; background: #000; padding: 2px 8px; border-radius: 4px; border: 1px solid var(--red-alert); opacity: 0; transition: opacity 0.2s; white-space: nowrap; z-index: 10; }
+  .ram-alert-text.show { opacity: 1; animation: blinkRed 0.5s infinite; }
+
+  @keyframes traceFlow { from { background-position: 0 -30px; } to { background-position: 0 100%; } }
+  @keyframes busFlow { 0% { background-position: 0 0; } 100% { background-position: 500px 0; } }
+  @keyframes pulseIcon { from { transform: scale(1); opacity: 0.5; } to { transform: scale(1.2); opacity: 1; } }
+  @keyframes glitchText { 0% { transform: translate(0); } 25% { transform: translate(-2px, 2px); } 50% { transform: translate(2px, -2px); } 75% { transform: translate(-2px, -2px); } 100% { transform: translate(0); } }
+  @keyframes badgeShake { 0% { transform: translate(-50%, -50%) rotate(0deg); } 25% { transform: translate(-52%, -52%) rotate(-3deg); } 75% { transform: translate(-48%, -48%) rotate(3deg); } 100% { transform: translate(-50%, -50%) rotate(0deg); } }
+  @keyframes blinkRed { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+  @keyframes cpuPulse { 0% { box-shadow: 0 0 0 transparent; } 50% { box-shadow: 0 0 25px var(--cyan-glow); } 100% { box-shadow: 0 0 0 transparent; } }
+</style>
+</head>
+<body>
+
+<div class="rs-container" id="simArea">
+  <div class="sim-blackout" id="simBlackout"><div class="blackout-icon">⚠️</div><div class="blackout-text">POWER FAILURE!<br>SYSTEM HALTED</div></div>
+  
+  <div class="rs-stats-panel"><div>HDD DATA: <span id="hddStat" class="stat-val">5/5 (Aman)</span></div><div>RAM SLOTS: <span id="ramStat" class="stat-val">4 KOSONG</span></div></div>
+  
+  <div id="boardScaler">
+    <div class="rs-board">
+      <div class="rs-bus-line"></div> 
+
+      <!-- 1. HDD -->
+      <div class="rs-comp" id="compHDD">
+        <!-- BADGE HDD -->
+        <div class="status-badge badge-safe" id="hddSafeBadge">
+            <h3>DATA AMAN</h3><span>PERMANEN</span>
+        </div>
+        <div class="hdd-bars-container" id="hddVisual">
+          <div class="hdd-bar" id="bar1"></div><div class="hdd-bar" id="bar2"></div><div class="hdd-bar" id="bar3"></div><div class="hdd-bar" id="bar4"></div><div class="hdd-bar" id="bar5"></div>
+        </div>
+        <div class="rs-lbl">HARD DISK</div><div class="rs-sub">Penyimpanan</div>
+        <div class="rs-trace-v" id="traceHDD"></div>
+      </div>
+
+      <!-- 2. RAM -->
+      <div id="compRAM" class="rs-comp">
+        <div class="ram-label-top">RAM (VOLATILE)</div>
+        <!-- BADGE RAM -->
+        <div class="status-badge badge-danger" id="ramDangerBadge">
+            <h3>DATA HILANG</h3><span>TERHAPUS</span>
+        </div>
+        <div class="ram-sticks-wrapper">
+            <div class="ram-slot" id="sl0"><div class="ram-stick"></div></div>
+            <div class="ram-slot" id="sl1"><div class="ram-stick"></div></div>
+            <div class="ram-slot" id="sl2"><div class="ram-stick"></div></div>
+            <div class="ram-slot" id="sl3"><div class="ram-stick"></div></div>
+        </div>
+        <div class="ram-alert-text" id="ramAlertText">⚠️ MEMORI PENUH!</div>
+        <div class="rs-trace-v" id="traceRAM"></div>
+      </div>
+
+      <!-- 3. ROM -->
+      <div class="rs-comp" id="compROM">
+        <div class="rom-chip">BIOS</div><div class="rs-lbl" style="color:#f0abfc;">ROM</div><div class="rs-sub">Boot Loader</div>
+        <div class="rs-trace-v" id="traceROM"></div>
+      </div>
+
+      <!-- 4. CPU -->
+      <div class="rs-comp" id="compCPU">
+        <div class="cpu-core"><svg class="cpu-logo-svg" viewBox="0 0 24 24"><path d="M4,7V17H20V7H4M2,7C2,5.89 2.9,5 4,5H20C21.1,5 22,5.89 22,7V17C22,18.11 21.1,19 20,19H4C2.9,19 2,18.11 2,17V7M5,15H7V17H5V15M9,15H11V17H9V15M13,15H15V17H13V15M17,15H19V17H17V15Z"/></svg></div>
+        <div class="rs-lbl">CPU</div><div class="rs-sub">Otak</div>
+        <div class="rs-trace-v" id="traceCPU"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="status-log" id="mainStatus">Sistem Siap.</div>
+  
+  <div class="rs-controls">
+    <button class="rs-btn" id="btnBrowser" onclick="mem_runApp('Browser', 1)">🌐 Buka Browser<small>Butuh 1 Slot</small></button>
+    <button class="rs-btn" id="btnGame" onclick="mem_runApp('Game Berat', 2)">🎮 Buka Game<small>Butuh 2 Slot</small></button>
+    <button class="rs-btn rs-btn-pwr" id="btnPwr" onclick="mem_cutPower()">⚡ CABUT LISTRIK<small>Matikan Paksa</small></button>
+  </div>
+</div>
+
+<script>
+  let usedRamSlots = 0;
+  let hddDataIndex = 1;
+  const maxRamSlots = 4;
+  let isSystemOn = true;
+  const BUS_Y = 226; 
+  const COMP_BOTTOM_Y = 165;
+
+  // === AUDIO ENGINE (GENERATOR SUARA TANPA FILE MP3) ===
+  const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  
+  function playSound(type) {
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      const osc = audioCtx.createOscillator();
+      const gainNode = audioCtx.createGain();
+      osc.connect(gainNode);
+      gainNode.connect(audioCtx.destination);
+
+      const now = audioCtx.currentTime;
+
+      if (type === 'data') {
+          // Bunyi "Blip" High Tech
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(800, now);
+          osc.frequency.exponentialRampToValueAtTime(1200, now + 0.1);
+          gainNode.gain.setValueAtTime(0.1, now);
+          gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+          osc.start(now);
+          osc.stop(now + 0.1);
+      } else if (type === 'error') {
+          // Bunyi Glitch/Error
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(100, now);
+          osc.frequency.linearRampToValueAtTime(50, now + 0.3);
+          gainNode.gain.setValueAtTime(0.2, now);
+          gainNode.gain.linearRampToValueAtTime(0, now + 0.3);
+          osc.start(now);
+          osc.stop(now + 0.3);
+      } else if (type === 'startup') {
+          // Bunyi Startup (Chime)
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(220, now);
+          osc.frequency.exponentialRampToValueAtTime(880, now + 0.5);
+          gainNode.gain.setValueAtTime(0, now);
+          gainNode.gain.linearRampToValueAtTime(0.15, now + 0.1);
+          gainNode.gain.linearRampToValueAtTime(0, now + 1.5);
+          osc.start(now);
+          osc.stop(now + 1.5);
+      } else if (type === 'boot') {
+          // Bunyi Boot BIOS (Rendah ke tinggi)
+          osc.type = 'square';
+          osc.frequency.setValueAtTime(110, now);
+          osc.frequency.linearRampToValueAtTime(220, now + 0.2);
+          gainNode.gain.setValueAtTime(0.05, now);
+          gainNode.gain.linearRampToValueAtTime(0, now + 0.2);
+          osc.start(now);
+          osc.stop(now + 0.2);
+      }
+  }
+
+  function mem_runApp(appName, slotsNeeded) {
+      if (!isSystemOn) return;
+      
+      // Init audio context on first user interaction
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+
+      if (usedRamSlots + slotsNeeded > maxRamSlots) {
+          document.getElementById('mainStatus').innerText = "❌ ERROR: RAM Penuh!";
+          playSound('error'); // Play Sound Error
+          document.getElementById('ramAlertText').classList.add('show');
+          setTimeout(() => document.getElementById('ramAlertText').classList.remove('show'), 2000);
+          return;
+      }
+      
+      document.getElementById('mainStatus').innerText = `✅ Menyalin data ${appName} ke RAM...`;
+
+      let delay = 0;
+      for (let i = 0; i < slotsNeeded; i++) {
+          setTimeout(() => { animateDataTransfer(); }, delay);
+          delay += 1200; 
+      }
+
+      setTimeout(() => {
+          if(isSystemOn) {
+              document.getElementById('compCPU').classList.add('cpu-active');
+              document.getElementById('mainStatus').innerText = `⚙️ CPU memproses data ${appName}...`;
+          }
+      }, delay);
+  }
+
+  function animateDataTransfer() {
+      const hddBarId = `bar${hddDataIndex}`;
+      const hddBar = document.getElementById(hddBarId);
+      const compHDD = document.getElementById('compHDD');
+      const compRAM = document.getElementById('compRAM');
+      
+      hddDataIndex++; if(hddDataIndex > 5) hddDataIndex = 1;
+
+      let targetSlotId = null;
+      for(let i=0; i<4; i++){
+          if(!document.getElementById(`sl${i}`).classList.contains('filled') && !document.getElementById(`sl${i}`).classList.contains('reserved')){
+              targetSlotId = `sl${i}`;
+              document.getElementById(`sl${i}`).classList.add('reserved'); break;
+          }
+      }
+      if(!targetSlotId) return;
+
+      playSound('data'); // Play Sound Transfer
+
+      const packet = document.createElement('div');
+      packet.className = 'traveling-packet';
+      document.querySelector('.rs-board').appendChild(packet);
+
+      const startX = compHDD.offsetLeft + hddBar.offsetLeft;
+      const startY = compHDD.offsetTop + hddBar.offsetTop + 40;
+      const hddPoleX = compHDD.offsetLeft + (compHDD.offsetWidth / 2) - 7;
+      const ramPoleX = compRAM.offsetLeft + (compRAM.offsetWidth / 2) - 7;
+      
+      packet.style.left = startX + 'px';
+      packet.style.top = startY + 'px';
+      
+      hddBar.classList.add('reading');
+      setTimeout(() => hddBar.classList.remove('reading'), 500);
+
+      const animation = packet.animate([
+          { left: startX + 'px', top: startY + 'px', offset: 0 },
+          { left: hddPoleX + 'px', top: startY + 'px', offset: 0.1 },
+          { left: hddPoleX + 'px', top: BUS_Y + 'px', offset: 0.4 },
+          { left: ramPoleX + 'px', top: BUS_Y + 'px', offset: 0.7 },
+          { left: ramPoleX + 'px', top: (COMP_BOTTOM_Y - 20) + 'px', opacity: 1, offset: 0.95 },
+          { left: ramPoleX + 'px', top: (COMP_BOTTOM_Y - 40) + 'px', opacity: 0, offset: 1 }
+      ], { duration: 1500, easing: 'linear', fill: 'forwards' });
+
+      animation.onfinish = () => {
+          packet.remove(); 
+          const ramSlot = document.getElementById(targetSlotId);
+          ramSlot.classList.remove('reserved');
+          ramSlot.classList.add('filled');
+          usedRamSlots++;
+          updateStats();
+      };
+  }
+
+  function mem_cutPower() {
+      if (!isSystemOn) return;
+      isSystemOn = false;
+
+      // Init audio context
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      
+      playSound('error'); // Play Sound Mati Listrik
+
+      // Matikan CPU Effect
+      document.getElementById('compCPU').classList.remove('cpu-active');
+      document.getElementById('compCPU').classList.remove('cpu-booting');
+
+      const blackout = document.getElementById('simBlackout');
+      blackout.classList.add('flash'); 
+      setTimeout(() => blackout.classList.remove('flash'), 100);
+      blackout.classList.add('active');
+
+      document.getElementById('btnBrowser').disabled = true;
+      document.getElementById('btnGame').disabled = true;
+      document.getElementById('btnPwr').disabled = true;
+      document.getElementById('mainStatus').innerText = "⚠️ LISTRIK MATI! Sistem Halt.";
+
+      setTimeout(() => {
+          for (let i = 0; i < maxRamSlots; i++) {
+              document.getElementById(`sl${i}`).classList.remove('filled');
+              document.getElementById(`sl${i}`).classList.remove('reserved');
+          }
+          usedRamSlots = 0;
+          updateStats();
+          for(let i=1; i<=5; i++){
+              document.getElementById(`bar${i}`).classList.remove('reading');
+          }
+          hddDataIndex = 1;
+      }, 1000);
+
+      setTimeout(() => { resetSystem(); }, 4000);
+  }
+
+  function resetSystem() {
+      document.getElementById('simBlackout').classList.remove('active');
+      document.getElementById('mainStatus').innerText = "🔌 Power On. Mengecek status...";
+
+      // 1. POP UP BADGES
+      document.getElementById('ramDangerBadge').classList.add('show');
+      document.getElementById('hddSafeBadge').classList.add('show');
+      
+      // 2. WAIT 3 SECONDS
+      setTimeout(() => {
+          document.getElementById('ramDangerBadge').classList.remove('show');
+          document.getElementById('hddSafeBadge').classList.remove('show');
+
+          document.getElementById('mainStatus').innerText = "⚙️ Memuat BIOS dari ROM...";
+          
+          // Play Sound Boot Awal
+          playSound('boot');
+          
+          // 3. RUN SEQUENCE
+          runBootSequence();
+
+      }, 3000);
+  }
+
+  function runBootSequence() {
+      const compROM = document.getElementById('compROM');
+      const compCPU = document.getElementById('compCPU');
+      
+      const packet = document.createElement('div');
+      packet.className = 'traveling-packet';
+      packet.style.background = '#d946ef'; 
+      packet.style.boxShadow = '0 0 10px #d946ef';
+      document.querySelector('.rs-board').appendChild(packet);
+
+      const romX = compROM.offsetLeft + (compROM.offsetWidth/2) - 7;
+      const romY = compROM.offsetTop + compROM.offsetHeight;
+      const cpuX = compCPU.offsetLeft + (compCPU.offsetWidth/2) - 7;
+
+      const animation = packet.animate([
+          { left: romX + 'px', top: romY + 'px', offset: 0 },
+          { left: romX + 'px', top: BUS_Y + 'px', offset: 0.3 },
+          { left: cpuX + 'px', top: BUS_Y + 'px', offset: 0.7 },
+          { left: cpuX + 'px', top: (COMP_BOTTOM_Y - 20) + 'px', opacity: 1, offset: 0.9 },
+          { left: cpuX + 'px', top: (COMP_BOTTOM_Y - 40) + 'px', opacity: 0, offset: 1 }
+      ], { duration: 1500, easing: 'ease-in-out', fill: 'forwards' });
+
+      animation.onfinish = () => {
+          packet.remove();
+
+          // === CPU VISUAL EFFECT: BOOTING (PURPLE FLASH) ===
+          compCPU.classList.add('cpu-booting');
+          
+          // === AUDIO EFFECT: STARTUP CHIME ===
+          playSound('startup');
+
+          // Setelah 1.5 detik, CPU masuk mode 'Ready' (Hilangkan purple, enable tombol)
+          setTimeout(() => {
+              compCPU.classList.remove('cpu-booting');
+              
+              document.getElementById('btnBrowser').disabled = false;
+              document.getElementById('btnGame').disabled = false;
+              document.getElementById('btnPwr').disabled = false;
+              isSystemOn = true;
+              document.getElementById('mainStatus').innerText = "🔄 Sistem Siap. Menunggu Input.";
+          }, 1500);
+      };
+  }
+
+  function updateStats() {
+      const ramText = document.getElementById('ramStat');
+      if(usedRamSlots === 0) ramText.innerText = "4 KOSONG";
+      else if(usedRamSlots === 4) ramText.innerText = "PENUH";
+      else ramText.innerText = `${usedRamSlots} TERPAKAI`;
+  }
+
+  function scaleMemBoard() {
+      const scaler = document.getElementById('boardScaler');
+      const container = document.getElementById('simArea');
+      if(scaler && container) {
+          const ratio = container.clientWidth / 900; 
+          scaler.style.transform = `scale(${Math.min(ratio, 1)})`;
+          scaler.style.marginBottom = `-${(260 * (1 - Math.min(ratio, 1)))}px`;
+      }
+  }
+
+  window.addEventListener('load', scaleMemBoard);
+  window.addEventListener('resize', scaleMemBoard);
+</script>
+
+</body>
+</html>

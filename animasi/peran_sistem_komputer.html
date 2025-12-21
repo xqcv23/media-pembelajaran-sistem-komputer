@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interaksi Antarperangkat (Size Fixed)</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;900&family=Roboto:wght@300;400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Black+Ops+One&display=swap');
+        
+        :root {
+            --c-user: #00f3ff;
+            --c-app: #0066ff;
+            --c-os: #ff0040;
+            --c-driver: #bd00ff;
+            --c-bios: #00ff00;
+            --c-hw: #00ff66;
+            --bg: #08080a;
+            --curr: #00f3ff;
+            
+            /* --- PENGATURAN UKURAN (SCALE) --- */
+            /* Desktop: 0.6 (60% ukuran asli) */
+            --s: 0.6; 
+        }
+
+        /* --- MODE HP (MOBILE) --- */
+        @media (max-width: 900px) {
+            :root {
+                /* HP: 0.3 (30% ukuran asli - KECIL BANGET) */
+                --s: 0.3; 
+            }
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0; background: var(--bg); color: white;
+            font-family: 'Orbitron', sans-serif;
+            overflow-x: hidden; overflow-y: auto;
+            display: flex; justify-content: center; align-items: flex-start;
+            padding-top: 20px; padding-bottom: 20px;
+            min-height: 100vh;
+        }
+
+        .cyber-grid {
+            position: absolute; width: 200%; height: 200%;
+            background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            transform: perspective(600px) rotateX(60deg) translateY(-100px) translateZ(-200px);
+            animation: moveGrid 20s linear infinite;
+            z-index: 0; top: 0; left: 0;
+        }
+        @keyframes moveGrid { 0% { background-position: 0 0; } 100% { background-position: 0 50px; } }
+
+        .interface {
+            position: relative; z-index: 10;
+            width: 95%; max-width: 1200px;
+            display: grid; grid-template-columns: 1.5fr 1fr; gap: 20px;
+            align-items: stretch;
+        }
+
+        .stage, .panel {
+            height: 500px; border-radius: 15px;
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+            background: rgba(10, 15, 20, 0.95);
+        }
+
+        .stage {
+            position: relative; display: flex; justify-content: center; align-items: center;
+            perspective: 1000px; border: 1px solid rgba(255,255,255,0.1);
+            background: radial-gradient(circle, rgba(0,0,0,0.4), rgba(0,0,0,0.9));
+            overflow: hidden;
+        }
+
+        /* Ring Hologram (Ukuran ikut variabel --s tapi dikali dikit biar pas) */
+        .holo-ring {
+            position: absolute; border-radius: 50%; border: 2px solid var(--c-user);
+            box-shadow: 0 0 25px var(--c-user); transition: 0.5s; pointer-events: none;
+            /* Ring lebih besar dikit dari objek */
+            transform: scale(calc(var(--s) * 1.5)); 
+        }
+        .hr1 { width: 350px; height: 350px; border-width: 1px; border-left-color: transparent; animation: spinRing 4s linear infinite; }
+        .hr2 { width: 280px; height: 280px; border-width: 3px; border-top-color: transparent; border-bottom-color: transparent; animation: spinRing 6s reverse linear infinite; }
+        @keyframes spinRing { 
+            0% { transform: scale(calc(var(--s) * 1.5)) rotate(0deg); } 
+            100% { transform: scale(calc(var(--s) * 1.5)) rotate(360deg); } 
+        }
+
+        /* --- LOGIC CUBE --- */
+        .cube-wrapper {
+            width: 150px; height: 150px; transform-style: preserve-3d;
+            /* Default transform pake var(--s) */
+            transform: scale(var(--s)); 
+            animation: idleSpin 10s infinite linear;
+            transition: 0.5s; position: absolute;
+        }
+        .cube { width: 100%; height: 100%; position: absolute; transform-style: preserve-3d; top: 0; left: 0; transition: 0.5s; }
+        .face {
+            position: absolute; width: 150px; height: 150px;
+            border: 2px solid var(--c-user);
+            background: rgba(0, 243, 255, 0.05);
+            display: flex; justify-content: center; align-items: center;
+            font-size: 24px; color: var(--c-user);
+            box-shadow: 0 0 30px rgba(0, 243, 255, 0.2) inset;
+            backface-visibility: visible;
+            transition: 0.5s;
+        }
+        .f-front  { transform: translateZ(75px); } .f-back { transform: rotateY(180deg) translateZ(75px); }
+        .f-right  { transform: rotateY(90deg) translateZ(75px); } .f-left { transform: rotateY(-90deg) translateZ(75px); }
+        .f-top    { transform: rotateX(90deg) translateZ(75px); } .f-bottom { transform: rotateX(-90deg) translateZ(75px); }
+
+        /* --- PRINTER MODERN --- */
+        .printer-modern {
+            position: absolute; width: 280px; height: 120px;
+            /* Default transform pake var(--s) */
+            transform: scale(var(--s)) rotateX(15deg); 
+            transform-style: preserve-3d;
+            display: none; opacity: 0; transition: opacity 0.5s;
+        }
+        .pm-tray-back { position: absolute; top: -60px; left: 50%; margin-left: -90px; width: 180px; height: 100px; background: #222; border: 1px solid #111; transform: translateZ(-50px) rotateX(-15deg); border-radius: 8px 8px 0 0; z-index: 0; }
+        .paper-stack { position: absolute; top: -55px; left: 50%; margin-left: -70px; width: 140px; height: 110px; background: #ddd; transform: translateZ(-45px) rotateX(-15deg); z-index: 1; border: 1px solid #ccc; box-shadow: 0 0 0 2px #fff inset; }
+        .paper-in { position: absolute; top: -55px; left: 50%; margin-left: -70px; width: 140px; height: 120px; background: white; transform: translateZ(-44px) rotateX(-15deg); z-index: 2; box-shadow: 0 2px 5px rgba(0,0,0,0.5); }
+        .pm-body { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(180deg, #222 0%, #111 100%); border-radius: 15px; z-index: 10; box-shadow: 0 30px 40px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.2), 0 5px 0 #080808; display: flex; flex-direction: column; align-items: center; transform-style: preserve-3d; }
+        .pm-lid { width: 95%; height: 60px; margin-top: -5px; background: linear-gradient(180deg, #444 0%, #2a2a2a 100%); border-radius: 12px 12px 4px 4px; border-top: 1px solid #555; position: relative; box-shadow: 0 4px 8px rgba(0,0,0,0.5); display: flex; justify-content: space-between; padding: 15px; z-index: 20; }
+        .pm-controls { display: flex; gap: 8px; }
+        .pm-btn { width: 10px; height: 10px; background: #111; border-radius: 50%; position: relative; }
+        .led-g { position: absolute; width: 100%; height: 100%; background: var(--c-hw); border-radius: 50%; box-shadow: 0 0 5px var(--c-hw); }
+        .led-o { position: absolute; width: 100%; height: 100%; background: orange; border-radius: 50%; opacity: 0; }
+        .upper-face { position: absolute; top: 5px; left: 0; width: 100%; height: 60px; background: linear-gradient(180deg, #333 0%, #222 100%); border-radius: 15px 15px 0 0; z-index: 30; transform: translateZ(20px); display: flex; align-items: flex-end; justify-content: center; padding-bottom: 10px; box-shadow: 0 5px 10px rgba(0,0,0,0.5); }
+        .pm-brand { font-size: 10px; font-weight: bold; color: #777; letter-spacing: 1px; margin-bottom: 5px;}
+        .pm-brand span { color: var(--c-hw); font-style: italic; }
+        .mouth-hole { position: absolute; top: 60px; left: 50%; margin-left: -120px; width: 240px; height: 25px; background: #000; z-index: 5; transform: translateZ(5px); box-shadow: inset 0 5px 10px black; border-radius: 0 0 5px 5px; }
+        .pm-tray-front { position: absolute; bottom: -50px; left: 50%; margin-left: -100px; width: 200px; height: 80px; background: linear-gradient(#1a1a1a, #050505); border-radius: 0 0 10px 10px; transform-origin: top; transform: rotateX(60deg); border: 1px solid #222; z-index: 5; box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
+        .paper-out { position: absolute; top: 66px; left: 50%; margin-left: -65px; width: 130px; height: 140px; background: white; z-index: 15; transform: translateZ(10px) rotateX(60deg); transform-origin: top; overflow: hidden; display: flex; flex-direction: column; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.2); padding: 10px; }
+        .paper-content { width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: flex-start; align-items: center; }
+        .doc-header { font-family: 'Arial', sans-serif; font-weight: 900; font-size: 8px; color: #333; border-bottom: 2px solid #000; width: 100%; text-align: center; padding-bottom: 2px; margin-bottom: 5px; }
+        .doc-lines { width: 100%; display: flex; flex-direction: column; gap: 3px; margin-bottom: 10px; }
+        .d-line { width: 100%; height: 2px; background: #ccc; }
+        .d-line.short { width: 60%; }
+        .doc-result { font-family: 'Black Ops One', cursive; font-size: 18px; color: #008f39; text-shadow: 0 1px 0 rgba(0,0,0,0.2); border: 2px solid #008f39; padding: 2px 5px; border-radius: 4px; transform: rotate(-5deg); margin-top: 5px; }
+        
+        .scan-laser { position: absolute; top: 40px; left: 20px; width: 20px; height: 2px; background: var(--c-hw); box-shadow: 0 0 10px var(--c-hw); z-index: 15; opacity: 0; }
+        .laser-plane { position: absolute; top: 50%; left: 50%; width: 220px; height: 220px; background: linear-gradient(rgba(255, 0, 64, 0.6), transparent); border-bottom: 5px solid var(--c-os); transform: translate(-50%, -50%) rotateX(90deg) translateZ(0); box-shadow: 0 0 60px var(--c-os); opacity: 0; display: none; z-index: 5;}
+        .bios-scan { position: absolute; width: 100%; height: 20%; background: rgba(0, 255, 0, 0.5); box-shadow: 0 0 15px rgba(0, 255, 0, 0.8); top: 0; left: 0; display: none; animation: biosScanning 1s infinite alternate; }
+        @keyframes biosScanning { 0% { top: 0; } 100% { top: 80%; } }
+        .binary-floater { position: absolute; font-family: 'Share Tech Mono', monospace; color: var(--c-bios); font-size: 20px; font-weight: bold; opacity: 0; display: none; }
+        .bin-1 { top: -30px; left: -30px; animation: floatBin 1s infinite; }
+        .bin-2 { top: -30px; right: -30px; animation: floatBin 1.2s infinite 0.2s; }
+        .bin-3 { bottom: -30px; left: -30px; animation: floatBin 1.5s infinite 0.4s; }
+        .bin-4 { bottom: -30px; right: -30px; animation: floatBin 1.1s infinite 0.1s; }
+        @keyframes floatBin { 0% { transform: translate(0,0) scale(0.5); opacity: 0; } 50% { opacity: 1; } 100% { transform: translate(var(--tx), var(--ty)) scale(1.2); opacity: 0; } }
+
+        /* --- PANEL --- */
+        .panel { border-left: 5px solid var(--c-user); padding: 30px; display: flex; flex-direction: column; justify-content: space-between; transition: 0.3s; }
+        .title-display { font-size: 32px; margin: 5px 0 10px; color: var(--c-user); text-shadow: 0 0 20px currentColor; text-transform: uppercase; }
+        .monitor-box { background: #000; border: 1px solid #333; padding: 10px; font-family: 'Share Tech Mono', monospace; color: var(--c-user); margin-bottom: 15px; font-size: 12px; }
+        .control-group { margin-top: auto; }
+        input[type=range] { -webkit-appearance: none; width: 100%; height: 6px; background: #222; border-radius: 5px; outline: none; border: 1px solid #444; }
+        input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 25px; height: 25px; background: var(--c-user); border: 2px solid #fff; border-radius: 50%; cursor: pointer; box-shadow: 0 0 20px var(--c-user); }
+        .btn-play { margin-top: 15px; width: 100%; padding: 10px; background: transparent; border: 1px solid var(--curr); color: var(--curr); font-family: 'Orbitron', sans-serif; font-weight: bold; cursor: pointer; transition: 0.3s; text-shadow: 0 0 5px var(--curr); }
+        .btn-play:hover { background: var(--curr); color: black; }
+        .step-display { font-size: 14px; color: #888; font-weight: bold; letter-spacing: 2px; }
+        .desc-display { font-family: 'Roboto', sans-serif; font-weight: 300; font-size: 15px; line-height: 1.5; color: #ddd; height: 120px; overflow-y: auto; margin-bottom: 10px; padding-right: 5px; }
+        .labels { display: flex; justify-content: space-between; font-size: 8px; color: #666; margin-bottom: 5px; font-weight: bold; }
+
+        /* ============================
+           STATE ANIMATIONS (DENGAN VARIABLE SCALE)
+           ============================ */
+        
+        /* 1. USER */
+        .s-user .cube-wrapper { animation: idleSpin 10s infinite linear, breathe 2s infinite ease-in-out; }
+        @keyframes idleSpin { 
+            0% { transform: scale(var(--s)) rotateX(-20deg) rotateY(0deg); } 
+            100% { transform: scale(var(--s)) rotateX(-20deg) rotateY(360deg); } 
+        }
+        @keyframes breathe { 
+            0%, 100% { transform: scale(var(--s)); } 
+            50% { transform: scale(calc(var(--s) * 1.1)); } 
+        }
+
+        /* 2. APP */
+        .s-app .cube-wrapper { animation: appSpin 4s infinite linear; }
+        @keyframes appSpin { 
+            0% { transform: scale(var(--s)) rotateX(-20deg) rotateY(0deg); } 
+            100% { transform: scale(var(--s)) rotateX(-20deg) rotateY(360deg); } 
+        }
+        .s-app .face { background: rgba(0, 102, 255, 0.1); border-color: var(--c-app); box-shadow: 0 0 15px var(--c-app) inset; }
+        .s-app .f-front { animation: explodeFront 2s infinite alternate; }
+        .s-app .f-back { animation: explodeBack 2s infinite alternate; }
+        .s-app .f-right { animation: explodeRight 2s infinite alternate; }
+        .s-app .f-left { animation: explodeLeft 2s infinite alternate; }
+        .s-app .f-top { animation: explodeTop 2s infinite alternate; }
+        .s-app .f-bottom { animation: explodeBottom 2s infinite alternate; }
+        @keyframes explodeFront { 100% { transform: translateZ(120px); } }
+        @keyframes explodeBack { 100% { transform: rotateY(180deg) translateZ(120px); } }
+        @keyframes explodeRight { 100% { transform: rotateY(90deg) translateZ(120px); } }
+        @keyframes explodeLeft { 100% { transform: rotateY(-90deg) translateZ(120px); } }
+        @keyframes explodeTop { 100% { transform: rotateX(90deg) translateZ(120px); } }
+        @keyframes explodeBottom { 100% { transform: rotateX(-90deg) translateZ(120px); } }
+
+        /* 3. OS */
+        .s-os .cube-wrapper { animation: osSpin 8s infinite linear; }
+        @keyframes osSpin { 
+            0% { transform: scale(var(--s)) rotateX(20deg) rotateY(0); } 
+            100% { transform: scale(var(--s)) rotateX(20deg) rotateY(360deg); } 
+        }
+        .s-os .face { border-color: var(--c-os); background: rgba(255, 0, 64, 0.05); opacity: 0.5; }
+        .s-os .laser-plane { display: block; opacity: 1; animation: laserScan 2s infinite linear; }
+        @keyframes laserScan { 
+            0% { transform: translate(-50%, -50%) rotateX(90deg) translateZ(-100px); } 
+            50% { transform: translate(-50%, -50%) rotateX(90deg) translateZ(100px); } 
+            100% { transform: translate(-50%, -50%) rotateX(90deg) translateZ(-100px); } 
+        }
+
+        /* 4. DRIVER */
+        .s-driver .cube-wrapper { animation: driverSpin 6s infinite linear; }
+        @keyframes driverSpin { 
+            0% { transform: scale(var(--s)) rotateX(-15deg) rotateY(0deg); } 
+            100% { transform: scale(var(--s)) rotateX(-15deg) rotateY(360deg); } 
+        }
+        .s-driver .face { 
+            background: rgba(189, 0, 255, 0.1); border: 2px solid var(--c-driver);
+            box-shadow: 0 0 20px var(--c-driver), inset 0 0 20px var(--c-driver);
+            color: var(--c-driver); font-family: 'Share Tech Mono', monospace; font-weight: bold; font-size: 30px; text-shadow: 0 0 5px white;
+        }
+
+        /* 5. BIOS */
+        .s-bios .face { background-color: #001100; background-image: linear-gradient(var(--c-bios) 1px, transparent 1px), linear-gradient(90deg, var(--c-bios) 1px, transparent 1px); background-size: 15px 15px; border: 2px solid var(--c-bios); box-shadow: 0 0 30px var(--c-bios) inset; color: var(--c-bios); }
+        .s-bios .cube-wrapper { animation: processingPulse 0.5s infinite alternate; }
+        @keyframes processingPulse { 
+            0% { transform: scale(var(--s)); } 
+            100% { transform: scale(calc(var(--s) * 1.05)); } 
+        }
+        .s-bios .bios-scan, .s-bios .binary-floater { display: block; }
+
+        /* 6. HARDWARE */
+        .s-hw .cube-wrapper { opacity: 0; pointer-events: none; }
+        .s-hw .printer-modern { display: block; opacity: 1; animation: rumble 0.1s infinite; }
+        .s-hw .paper-in { animation: feedIn 6s infinite ease-in-out; }
+        .s-hw .paper-out { animation: slideAndFloat 6s infinite ease-in-out; }
+        .s-hw .scan-laser { animation: scan 1s infinite alternate; opacity: 0.8; }
+        .s-hw .led-o { animation: blink 0.2s infinite; opacity: 1; }
+        .s-hw .paper-content { animation: txtReveal 6s infinite linear; }
+
+        @keyframes rumble { 
+            0% { transform: scale(var(--s)) rotateX(15deg) translateX(0); } 
+            50% { transform: scale(var(--s)) rotateX(15deg) translateX(0.5px); } 
+            100% { transform: scale(var(--s)) rotateX(15deg) translateX(0); } 
+        }
+        @keyframes feedIn { 0% { top: -55px; opacity: 1; } 20% { top: 10px; opacity: 0; } 100% { top: 10px; opacity: 0; } }
+        @keyframes slideAndFloat {
+            0% { transform: translateZ(10px) rotateX(60deg) translateY(-140px); opacity: 1; }
+            40% { transform: translateZ(10px) rotateX(60deg) translateY(0); opacity: 1; }
+            60% { transform: translateZ(10px) rotateX(60deg) translateY(0); opacity: 1; }
+            80% { opacity: 1; transform: translateZ(50px) rotateX(20deg) translateY(200px) rotateZ(5deg); }
+            100% { opacity: 0; transform: translateZ(20px) rotateX(40deg) translateY(350px) rotateZ(-5deg); }
+        }
+        @keyframes scan { from { left: 20px; width: 20px; } to { left: 240px; width: 20px; } }
+        @keyframes blink { 0%, 100% { opacity: 1; box-shadow: 0 0 8px orange; } 50% { opacity: 0.2; box-shadow: none; } }
+        @keyframes txtReveal { 0% { opacity: 0; } 5% { opacity: 0; } 30% { opacity: 1; } 100% { opacity: 1; } }
+
+        /* --- MOBILE TWEAK (Stage Height) --- */
+        @media (max-width: 900px) {
+            .interface { display: flex; flex-direction: column; gap: 0; width: 100%; margin: 0; }
+            .stage { height: 200px; width: 100%; border-bottom: none; border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
+            .panel { height: auto; border-top-left-radius: 0; border-top-right-radius: 0; border-left: 3px solid var(--curr); padding: 15px; border-top: 1px solid rgba(255,255,255,0.1); }
+            .title-display { font-size: 20px; margin: 0 0 5px 0; }
+            .step-display { font-size: 10px; margin-bottom: 5px; }
+            .monitor-box { font-size: 10px; padding: 5px; margin-bottom: 8px; }
+            .desc-display { height: auto; max-height: 150px; font-size: 13px; }
+            .btn-play { font-size: 12px; padding: 6px; }
+            .labels span { font-size: 7px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="cyber-grid"></div>
+
+    <div class="interface s-user active-state" id="ui">
+        
+        <div class="stage">
+            <div class="holo-ring hr1"></div>
+            <div class="holo-ring hr2"></div>
+
+            <!-- LOGIC CUBE -->
+            <div class="cube-wrapper" id="wrap">
+                <div class="cube">
+                    <div class="bios-scan"></div>
+                    <div class="face f-front">DOC</div>
+                    <div class="face f-back">DOC</div>
+                    <div class="face f-right">DOC</div>
+                    <div class="face f-left">DOC</div>
+                    <div class="face f-top"></div>
+                    <div class="face f-bottom"></div>
+                    <div class="binary-floater bin-1" style="--tx: -50px; --ty: -50px;">01</div>
+                    <div class="binary-floater bin-2" style="--tx: 50px; --ty: -50px;">10</div>
+                    <div class="binary-floater bin-3" style="--tx: -50px; --ty: 50px;">11</div>
+                    <div class="binary-floater bin-4" style="--tx: 50px; --ty: 50px;">00</div>
+                    <div class="laser-plane"></div>
+                </div>
+            </div>
+
+            <!-- PRINTER MODERN -->
+            <div class="printer-modern">
+                <div class="pm-tray-back"></div>
+                <div class="paper-stack"></div> 
+                <div class="paper-in"></div> 
+
+                <div class="pm-body">
+                    <div class="pm-lid">
+                        <div class="pm-controls">
+                            <div class="pm-btn"><div class="led-o"></div></div> 
+                            <div class="pm-btn"><div class="led-g"></div></div> 
+                        </div>
+                    </div>
+                    <div class="upper-face">
+                        <div class="pm-brand">CANON <span>PIXMA</span></div>
+                    </div>
+                    <div class="mouth-hole"></div>
+                    <div class="scan-laser"></div>
+                    <div class="paper-out">
+                        <div class="paper-content">
+                            <div class="doc-header">LAPORAN</div>
+                            <div class="doc-lines">
+                                <div class="d-line"></div>
+                                <div class="d-line"></div>
+                                <div class="d-line short"></div>
+                                <div class="d-line"></div>
+                            </div>
+                            <div class="doc-result">SUKSES</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="pm-tray-front"></div>
+            </div>
+        </div>
+
+        <div class="panel">
+            <div>
+                <div class="step-display" id="disp-step">LANGKAH 01 // 6</div>
+                <h1 class="title-display" id="disp-title">PENGGUNA</h1>
+                <div class="monitor-box" id="disp-mon">INPUT: PRINT</div>
+                <div class="desc-display" id="disp-desc">
+                    Materi akan muncul di sini.
+                </div>
+            </div>
+
+            <div class="control-group">
+                <div class="labels">
+                    <span>USER</span><span>APP</span><span>OS</span><span>DRV</span><span>BIOS</span><span>HW</span>
+                </div>
+                <input type="range" min="0" max="100" value="0" id="slider" oninput="update()">
+                <button class="btn-play" id="playBtn" onclick="togglePlay()">▶ AUTO PLAY</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const slider = document.getElementById('slider');
+        const ui = document.getElementById('ui');
+        const faces = document.querySelectorAll('.face');
+        const playBtn = document.getElementById('playBtn');
+        const dispStep = document.getElementById('disp-step');
+        const dispTitle = document.getElementById('disp-title');
+        const dispMon = document.getElementById('disp-mon');
+        const dispDesc = document.getElementById('disp-desc');
+
+        let glitchInterval = null;
+        let playInterval = null;
+        let isPlaying = false;
+
+        function update() {
+            const val = parseInt(slider.value);
+            
+            if(glitchInterval) { clearInterval(glitchInterval); glitchInterval = null; }
+            faces.forEach(f => {
+                f.innerText = "";
+                f.style.opacity = "1";
+            });
+
+            if (val < 16) {
+                setMode("s-user", "--c-user", "01", "PENGGUNA", "INPUT: PRINT", 
+                "Bayangkan kamu klik tombol Print pada aplikasi pengolah kata. Ini adalah awal interaksi untuk mencetak dokumen.");
+                faces.forEach(f => f.innerText = "DOC");
+            } else if (val >= 16 && val < 33) {
+                setMode("s-app", "--c-app", "02", "APLIKASI", "PROCESS: WORD", 
+                "Perintah dari aplikasi pengolah kata tidak langsung ke printer, melainkan dikirim terlebih dahulu ke Sistem Operasi.");
+                faces.forEach(f => f.innerText = "APP");
+            } else if (val >= 33 && val < 50) {
+                setMode("s-os", "--c-os", "03", "OS", "SPOOLING...", 
+                "Sistem Operasi bekerja secara multitasking memprioritaskan instruksi ini. Ia tidak langsung ke printer, tapi berkomunikasi dengan Device Driver.");
+                faces.forEach(f => f.innerText = "OS");
+            } else if (val >= 50 && val < 66) {
+                setMode("s-driver", "--c-driver", "04", "DRIVER", "BINARY CODE", 
+                "Driver juga tidak langsung mengirim perintah ke printer. Driver meneruskan perintah ke program yang disebut BIOS.");
+                glitchInterval = setInterval(() => {
+                    faces.forEach(f => {
+                        f.innerText = Math.random() > 0.5 ? "1\n0" : "0\n1";
+                    });
+                    dispMon.innerText = "BIN: " + Math.random().toString(2).substr(2,8);
+                }, 150);
+            } else if (val >= 66 && val < 83) {
+                setMode("s-bios", "--c-bios", "05", "BIOS", "SYSTEM CHECK", 
+                "BIOS (Basic Input/Output System) yang dimuat dari cip memori menerima perintah driver, lalu berkomunikasi langsung dengan printer.");
+                faces.forEach(f => f.innerText = "CHIP");
+            } else {
+                setMode("s-hw", "--c-hw", "06", "HARDWARE", "PRINTING...", 
+                "Setelah menerima komunikasi dari BIOS, Perangkat Keras (Printer) akhirnya langsung bekerja mencetak dokumen.");
+                faces.forEach(f => f.innerText = "");
+            }
+        }
+
+        function setMode(cls, varName, step, title, mon, desc) {
+            ui.className = "interface active-state"; // Reset class dasar
+            ui.classList.add(cls); // Tambah class state baru
+            
+            ui.style.setProperty('--curr', `var(${varName})`);
+            dispStep.innerText = `LANGKAH ${step} // 6`;
+            dispTitle.innerText = title;
+            dispMon.innerHTML = mon;
+            dispDesc.innerText = desc;
+        }
+
+        function togglePlay() {
+            if (isPlaying) { clearInterval(playInterval); playBtn.innerText = "▶ AUTO PLAY"; } 
+            else {
+                playInterval = setInterval(() => {
+                    let val = parseInt(slider.value);
+                    if (val >= 100) val = -1;
+                    slider.value = val + 1;
+                    update();
+                }, 100);
+                playBtn.innerText = "⏸ PAUSE";
+            }
+            isPlaying = !isPlaying;
+        }
+
+        update();
+    </script>
+</body>
+</html>

@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Red OS Final Complete</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+  /* --- 1. SETUP --- */
+  body {
+    margin: 0; padding: 0;
+    height: 100vh; width: 100vw;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: flex-start;
+    background-color: transparent;
+    font-family: 'Inter', sans-serif;
+    user-select: none; overflow: hidden;
+  }
+
+  /* --- 2. SCALER --- */
+  #scaler {
+    width: 720px;
+    transform-origin: top center;
+    transition: transform 0.3s ease-out;
+    padding-top: 10px;
+    display: flex; flex-direction: column; align-items: center;
+  }
+
+  /* --- 3. MONITOR DESIGN --- */
+  .monitor-assembly {
+    width: 100%; display: flex; flex-direction: column; align-items: center;
+    position: relative; filter: drop-shadow(0 30px 60px rgba(0,0,0,0.6));
+  }
+
+  .monitor-case {
+    width: 100%; background: #111;
+    border-radius: 28px; padding: 15px 15px 55px 15px;
+    position: relative; z-index: 10; box-shadow: inset 0 0 0 2px #222;
+  }
+
+  .screen-area {
+    width: 100%; aspect-ratio: 16/9;
+    background: #000; border-radius: 12px;
+    position: relative; overflow: hidden; border: 1px solid #333;
+  }
+
+  /* --- 4. LAYERS SYSTEM --- */
+  
+  /* CLI LAYER */
+  .view-cli {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background-color: #050505; color: #0f0; padding: 40px; 
+    font-family: 'JetBrains Mono', monospace; font-size: 13px;
+    z-index: 100; display: flex; flex-direction: column;
+  }
+  
+  /* LOADING LAYER */
+  .view-loading {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: #000; z-index: 90; display: none;
+    flex-direction: column; justify-content: center; align-items: center;
+  }
+
+  /* GUI LAYER (BACKGROUND MERAH CSS - PASTI MUNCUL) */
+  .view-gui {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    /* Gradasi Merah di Tengah (Efek Lampu) */
+    background: radial-gradient(circle at 50% 40%, #ff0000 0%, #aa0000 40%, #2a0000 80%, #000000 100%);
+    z-index: 50; display: none;
+  }
+  /* Pola titik halus biar kayak layar */
+  .view-gui::after {
+    content: ""; position: absolute; top:0; left:0; width:100%; height:100%;
+    background-image: radial-gradient(#ffffff 1px, transparent 1px);
+    background-size: 20px 20px; opacity: 0.1; pointer-events: none;
+  }
+
+  /* TOMBOL CLI */
+  .btn-cli-launch {
+    margin-top: 30px; padding: 10px 20px; 
+    width: fit-content; align-self: flex-start;
+    background: rgba(0, 255, 0, 0.1); border: 1px solid #0f0; color: #0f0;
+    font-family: 'JetBrains Mono', monospace; font-weight: bold; cursor: pointer;
+    box-shadow: 0 0 15px #0f0; animation: pulse 2s infinite; display: none;
+  }
+  @keyframes pulse { 0%{box-shadow:0 0 5px #0f0} 50%{box-shadow:0 0 20px #0f0} 100%{box-shadow:0 0 5px #0f0} }
+
+  /* LOADING SPINNER */
+  .win-sq { width: 35px; height: 35px; background: #00a4ef; display: inline-block; margin: 2px; }
+  .spinner { width: 30px; height: 30px; border: 3px solid #333; border-top-color: #fff; border-radius: 50%; animation: spin 1s infinite; margin-top: 20px;}
+  @keyframes spin { to {transform: rotate(360deg);} }
+
+  /* --- 5. GUI COMPONENTS --- */
+  
+  /* Pop Up Info */
+  .info-badge {
+    position: absolute; top: 30px; right: 30px;
+    width: 220px; padding: 15px; border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.9);
+    border-left: 4px solid; backdrop-filter: blur(20px);
+    opacity: 0; animation: bounceIn 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
+    animation-delay: 0.5s; pointer-events: none;
+  }
+  @keyframes bounceIn {
+    0% { transform: scale(0.3); opacity: 0; }
+    50% { transform: scale(1.05); opacity: 1; }
+    70% { transform: scale(0.9); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  
+  .badge-cli { background: rgba(5, 15, 5, 0.95); border: 1px solid #0f0; color: #0f0; }
+  .badge-gui { background: rgba(30, 10, 10, 0.8); border: 1px solid #ff3b30; color: #fff; }
+
+  /* Desktop Icons (KIRI) */
+  .desktop-icons {
+    position: absolute; top: 20px; left: 20px;
+    display: flex; flex-direction: column; gap: 15px;
+  }
+  .dt-icon {
+    width: 60px; display: flex; flex-direction: column; align-items: center;
+    cursor: pointer; padding: 5px; border-radius: 5px; transition: 0.2s;
+  }
+  .dt-icon:hover { background: rgba(255,255,255,0.15); }
+  .dt-icon img { width: 40px; height: 40px; margin-bottom: 5px; }
+  .dt-text { color: white; font-size: 11px; text-shadow: 0 1px 3px black; }
+
+  /* Window Apps */
+  .window {
+    position: absolute; width: 340px; min-height: 200px;
+    background: #fff; border-radius: 8px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    display: none; flex-direction: column; 
+    top: 50%; left: 50%; transform: translate(-50%, -50%);
+    z-index: 150; animation: popCenter 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  @keyframes popCenter { 0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; } 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; } }
+
+  .win-head {
+    padding: 8px 12px; display: flex; justify-content: space-between; align-items: center;
+    color: white; border-radius: 8px 8px 0 0; cursor: grab; font-weight: bold; font-size: 12px;
+  }
+  .win-head:active { cursor: grabbing; }
+  
+  .head-word { background: #185ABD; } .head-excel { background: #107C41; }
+  .head-ppt { background: #C43E1C; } .head-chrome { background: #333; }
+  .head-music { background: #1DB954; } .head-files { background: #E6B62D; color:#000 !important; }
+  .head-calc { background: #555; }
+
+  .win-body { flex: 1; padding: 0; background: #fff; border-radius: 0 0 8px 8px; position: relative; }
+  .close-btn { width: 15px; height: 15px; background: rgba(255,255,255,0.3); border-radius: 50%; cursor: pointer; }
+  .close-btn:hover { background: #ff5f57; }
+
+  /* Apps Content */
+  .music-player { padding: 20px; text-align: center; background: #111; color: white; height: 100%; display:flex; flex-direction:column; justify-content:center; }
+  .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; padding: 10px; background: #eee; height: 100%; }
+  .calc-btn { background: white; border: none; padding: 10px; font-size: 12px; cursor: pointer; }
+  .file-list { padding: 10px; font-size: 11px; }
+  .file-item { padding: 8px; border-bottom: 1px solid #eee; display: flex; gap: 10px; align-items: center; cursor: pointer; }
+
+  /* START MENU (KOTAK PUTIH DI ATAS TOMBOL START) */
+  .start-menu {
+    position: absolute; bottom: 60px; left: 10px;
+    width: 200px; background: #fff;
+    border-radius: 8px; padding: 8px;
+    display: none; flex-direction: column; gap: 5px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.5); z-index: 2000;
+    animation: slideUp 0.2s;
+  }
+  @keyframes slideUp { from{transform:translateY(10px); opacity:0;} to{transform:translateY(0); opacity:1;} }
+  
+  .start-item { 
+    display: flex; align-items: center; gap: 10px; 
+    padding: 8px; border-radius: 4px; cursor: pointer; 
+    font-size: 12px; color: #333; transition: 0.2s;
+  }
+  .start-item:hover { background: #eee; }
+  .start-item img { width: 20px; }
+
+  /* TASKBAR */
+  .taskbar {
+    position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%);
+    height: 50px; width: 94%;
+    background: rgba(20,20,20,0.95); backdrop-filter: blur(10px);
+    border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);
+    display: flex; align-items: center; padding: 0 10px; 
+    gap: 10px; z-index: 1000;
+    overflow-x: auto; scrollbar-width: none;
+  }
+  .taskbar::-webkit-scrollbar { display: none; }
+
+  .btn-start-win { color: #00a4ef; font-size: 24px; cursor: pointer; flex-shrink: 0; padding: 5px;}
+  .btn-start-win:hover { filter: brightness(1.2); background: rgba(255,255,255,0.1); border-radius: 4px; }
+  
+  .search-box { 
+    background: #333; color: #ccc; padding: 5px 8px; 
+    border-radius: 4px; font-size: 10px; width: 120px; flex-shrink: 0;
+    display: flex; align-items: center; gap: 8px; 
+  }
+  
+  .taskbar-icons { display: flex; gap: 6px; margin: 0 auto; flex-shrink: 0; }
+  .tb-icon { width: 30px; height: 30px; padding: 3px; cursor: pointer; border-radius: 6px; flex-shrink: 0; }
+  .tb-icon:hover { background: rgba(255,255,255,0.15); transform: translateY(-3px); }
+  .tb-icon img { width: 100%; height: 100%; object-fit: contain; }
+  
+  .btn-exit {
+    background: #d32f2f; color: white; border: none; font-weight: bold;
+    padding: 6px 10px; font-size: 10px; border-radius: 6px; cursor: pointer;
+    flex-shrink: 0; margin-left: auto; 
+  }
+
+  /* HARDWARE */
+  .chin-controls {
+    position: absolute; bottom: 0; left: 0; width: 100%; height: 60px;
+    display: flex; justify-content: center; align-items: center;
+  }
+  .logo { color: #444; font-weight: 800; font-size: 11px; letter-spacing: 3px; }
+  .white-dot { position: absolute; left: 30px; width: 6px; height: 6px; background: #333; border-radius: 50%; transition: 0.5s; }
+  .active-gui .white-dot { background: #fff; box-shadow: 0 0 10px #fff; }
+  .power-btn { position: absolute; right: 30px; font-size: 18px; color: #333; cursor: pointer; }
+  .active-gui .power-btn { color: #00ffea; text-shadow: 0 0 10px #00ffea; }
+  .stand-neck { width: 140px; height: 50px; background: #1a1a1a; margin: 0 auto; margin-top: -5px; z-index: 5; }
+  .stand-base { width: 260px; height: 8px; background: linear-gradient(90deg, #222, #333, #222); border-radius: 4px; margin: 0 auto; z-index: 5; box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
+
+</style>
+</head>
+<body>
+
+<div id="scaler">
+  <div class="monitor-assembly">
+    
+    <div class="monitor-case">
+      <div class="screen-area">
+
+        <!-- 1. CLI LAYER -->
+        <div class="view-cli" id="cliLayer">
+          <div class="info-badge badge-cli">
+            <span style="font-weight:bold; font-size:12px; border-bottom:1px solid #0f0; display:block; margin-bottom:5px;">Mode C.L.I</span>
+            <ul style="margin:0; padding-left:15px; font-size:10px; line-height:1.5;">
+              <li>Perintah Teks Manual</li>
+              <li>Tanpa Gambar/Ikon</li>
+              <li>Kontrol Penuh Sistem</li>
+            </ul>
+          </div>
+          
+          <div id="cli-text">BIOS Date 01/15/25 15:24:12 Ver: 08.00.15<br>CPU: Intel Core i9-14900K @ 5.80GHz<br>Memory Test: 65536K OK<br>Detecting Primary Master ... VISION SSD 2TB<br>---------------------------------------<br>Loading CLI Interface...<br></div>
+          <button id="btnLaunch" class="btn-cli-launch" onclick="launchOS()">>> ACCESS GUI SYSTEM <<</button>
+        </div>
+
+        <!-- 2. LOADING LAYER -->
+        <div class="view-loading" id="loadingLayer">
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:4px;">
+            <div class="win-sq"></div><div class="win-sq"></div><div class="win-sq"></div><div class="win-sq"></div>
+          </div>
+          <div class="spinner"></div>
+          <div style="color:white; margin-top:15px; font-size:12px;">LOADING RESOURCES...</div>
+        </div>
+
+        <!-- 3. GUI LAYER -->
+        <div class="view-gui" id="guiLayer">
+          
+          <div class="info-badge badge-gui">
+            <span style="font-weight:bold; font-size:12px; border-bottom:1px solid rgba(255,255,255,0.3); display:block; margin-bottom:5px;">Mode G.U.I</span>
+            <ul style="margin:0; padding-left:15px; font-size:10px; line-height:1.5;">
+              <li>Visual Interaktif (Gambar)</li>
+              <li>Mudah (Klik & Geser)</li>
+              <li>User Friendly</li>
+            </ul>
+          </div>
+
+          <!-- Desktop Icons (Left) -->
+          <div class="desktop-icons">
+            <div class="dt-icon" onclick="openApp('win-word')"><img src="https://img.icons8.com/fluency/48/microsoft-word-2019.png"><span class="dt-text">Word</span></div>
+            <div class="dt-icon" onclick="openApp('win-excel')"><img src="https://img.icons8.com/fluency/48/microsoft-excel-2019.png"><span class="dt-text">Excel</span></div>
+            <div class="dt-icon" onclick="openApp('win-chrome')"><img src="https://img.icons8.com/color/48/chrome--v1.png"><span class="dt-text">Chrome</span></div>
+            <div class="dt-icon" onclick="openApp('win-files')"><img src="https://img.icons8.com/color/48/folder-invoices--v1.png"><span class="dt-text">Files</span></div>
+          </div>
+
+          <!-- Apps Windows -->
+          <div class="window" id="win-word"><div class="win-head head-word"><span>Word</span><div class="close-btn" onclick="closeApp('win-word', event)"></div></div><div class="win-body" style="padding:15px;"><h3 style="color:#185ABD; margin:0;">Tugas.docx</h3><p style="font-size:11px;">GUI memudahkan pengetikan.</p></div></div>
+          <div class="window" id="win-excel"><div class="win-head head-excel"><span>Excel</span><div class="close-btn" onclick="closeApp('win-excel', event)"></div></div><div class="win-body"><div style="display:flex; justify-content:center; align-items:center;"><table border="1" style="font-size:10px; width:80%; text-align:center; margin-top:20px;"><tr><td>Item</td><td>Qty</td></tr><tr><td>CPU</td><td>1</td></tr></table></div></div></div>
+          <div class="window" id="win-ppt"><div class="win-head head-ppt"><span>PPT</span><div class="close-btn" onclick="closeApp('win-ppt', event)"></div></div><div class="win-body" style="text-align:center; padding-top:20px; color:#C43E1C; font-weight:bold;">SLIDE PRESENTASI</div></div>
+          <div class="window" id="win-chrome"><div class="win-head head-chrome"><span>Chrome</span><div class="close-btn" onclick="closeApp('win-chrome', event)"></div></div><div class="win-body" style="text-align:center; padding-top:15px;"><span style="font-size:16px; font-weight:bold;">Google</span><br><input type="text" placeholder="Search..." style="margin-top:5px; font-size:10px;"></div></div>
+          <div class="window" id="win-music"><div class="win-head head-music"><span>Spotify</span><div class="close-btn" onclick="closeApp('win-music', event)"></div></div><div class="win-body music-player"><i class="fas fa-music" style="font-size:30px; color:#1DB954;"></i><br>Lo-Fi Radio</div></div>
+          <div class="window" id="win-files"><div class="win-head head-files"><span>Files</span><div class="close-btn" onclick="closeApp('win-files', event)"></div></div><div class="win-body" style="padding:10px;"><div class="file-item"><i class="fas fa-folder" style="color:#E6B62D"></i> Docs</div><div class="file-item"><i class="fas fa-folder" style="color:#E6B62D"></i> Pics</div></div></div>
+          <div class="window" id="win-calc"><div class="win-head head-calc"><span>Calc</span><div class="close-btn" onclick="closeApp('win-calc', event)"></div></div><div class="win-body"><div style="background:#333; color:white; padding:10px; text-align:right;">0</div><div class="calc-grid"><button class="calc-btn">7</button><button class="calc-btn">8</button><button class="calc-btn">9</button><button class="calc-btn">4</button><button class="calc-btn">5</button><button class="calc-btn">6</button><button class="calc-btn">1</button><button class="calc-btn">2</button><button class="calc-btn">3</button><button class="calc-btn">0</button></div></div></div>
+
+          <!-- Start Menu (POP UP) -->
+          <div class="start-menu" id="startMenu">
+            <div class="start-item" onclick="openApp('win-word')"><img src="https://img.icons8.com/fluency/48/microsoft-word-2019.png"> Word</div>
+            <div class="start-item" onclick="openApp('win-excel')"><img src="https://img.icons8.com/fluency/48/microsoft-excel-2019.png"> Excel</div>
+            <div class="start-item" onclick="openApp('win-ppt')"><img src="https://img.icons8.com/fluency/48/microsoft-powerpoint-2019.png"> PowerPoint</div>
+            <div style="border-top:1px solid #ccc; margin:5px 0;"></div>
+            <div class="start-item" onclick="openApp('win-music')"><img src="https://img.icons8.com/color/48/spotify--v1.png"> Music Player</div>
+            <div class="start-item" onclick="openApp('win-calc')"><img src="https://img.icons8.com/color/48/calculator--v1.png"> Calculator</div>
+          </div>
+
+          <!-- Taskbar -->
+          <div class="taskbar">
+             <div class="btn-start-win" onclick="toggleStart()"><i class="fab fa-windows"></i></div>
+             <div class="search-box"><i class="fas fa-search"></i> Search</div>
+             
+             <div class="taskbar-icons">
+               <div class="tb-icon" onclick="openApp('win-word')"><img src="https://img.icons8.com/fluency/48/microsoft-word-2019.png"></div>
+               <div class="tb-icon" onclick="openApp('win-excel')"><img src="https://img.icons8.com/fluency/48/microsoft-excel-2019.png"></div>
+               <div class="tb-icon" onclick="openApp('win-ppt')"><img src="https://img.icons8.com/fluency/48/microsoft-powerpoint-2019.png"></div>
+               <div class="tb-icon" onclick="openApp('win-chrome')"><img src="https://img.icons8.com/color/48/chrome--v1.png"></div>
+               <div class="tb-icon" onclick="openApp('win-music')"><img src="https://img.icons8.com/color/48/spotify--v1.png"></div>
+               <div class="tb-icon" onclick="openApp('win-files')"><img src="https://img.icons8.com/color/48/folder-invoices--v1.png"></div>
+             </div>
+             
+             <button class="btn-exit" onclick="shutdown()">EXIT</button>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="chin-controls">
+        <div class="white-dot"></div><div class="logo">LOGOS</div><div class="power-btn" onclick="shutdown()"><i class="fas fa-power-off"></i></div>
+      </div>
+    </div>
+    
+    <div class="stand-neck"></div><div class="stand-base"></div>
+  </div>
+</div>
+
+<script>
+  // --- 1. SCALING LOGIC ---
+  function resizeScaler() {
+    const scaler = document.getElementById('scaler');
+    const containerWidth = window.innerWidth;
+    const baseWidth = 740;
+    if (containerWidth < baseWidth) {
+      const scale = (containerWidth - 30) / baseWidth; 
+      scaler.style.transform = `scale(${scale})`;
+    } else {
+      scaler.style.transform = `scale(1)`;
+    }
+  }
+  window.addEventListener('resize', resizeScaler);
+  window.addEventListener('load', resizeScaler);
+  resizeScaler();
+
+  // --- 2. CLI LOGIC ---
+  const extraCmds = ["> User: Admin", "> Ready for input...", "> _"];
+  let step = 0;
+  const out = document.getElementById("cli-text");
+  const btnLaunch = document.querySelector(".btn-cli-launch");
+  
+  function typeCLI() {
+    if(step < extraCmds.length) {
+        out.innerHTML = out.innerHTML.replace("_","") + extraCmds[step] + "<br>";
+        step++;
+        setTimeout(typeCLI, 300);
+    } else {
+        btnLaunch.style.display = "inline-block";
+    }
+  }
+  setTimeout(typeCLI, 1000);
+
+  // --- 3. SYSTEM LAUNCHER ---
+  const mon = document.querySelector(".monitor-case"); 
+  const loading = document.getElementById("loadingLayer");
+  const cliLayer = document.getElementById("cliLayer");
+  const guiLayer = document.getElementById("guiLayer");
+
+  function launchOS() {
+    cliLayer.style.display = 'none'; 
+    loading.style.display = 'flex';
+    setTimeout(() => {
+      loading.style.display = 'none';
+      guiLayer.style.display = 'block'; 
+      mon.classList.add("active-gui"); 
+    }, 3000);
+  }
+
+  function shutdown() {
+    mon.classList.remove("active-gui");
+    guiLayer.style.display = 'none'; 
+    cliLayer.style.display = 'flex'; 
+    document.getElementById("startMenu").style.display = "none";
+    document.querySelectorAll('.window').forEach(w => w.style.display='none');
+  }
+
+  // --- 4. WINDOW & APPS ---
+  let zIndex = 200;
+  function openApp(id) {
+    const w = document.getElementById(id);
+    w.style.display = "flex";
+    w.style.top = "50%"; w.style.left = "50%"; 
+    w.style.transform = "translate(-50%, -50%)"; 
+    bringToFront(w);
+    document.getElementById("startMenu").style.display = "none"; // Tutup Start Menu
+  }
+
+  function closeApp(id, event) {
+    if(event) event.stopPropagation();
+    document.getElementById(id).style.display = "none"; 
+  }
+  
+  function bringToFront(elm) { zIndex++; elm.style.zIndex = zIndex; }
+  
+  function toggleStart() {
+    const s = document.getElementById("startMenu");
+    s.style.display = (s.style.display === "flex") ? "none" : "flex";
+    s.style.zIndex = zIndex + 999;
+  }
+
+  // --- 5. DRAGGABLE ---
+  document.querySelectorAll('.window').forEach(win => {
+    win.addEventListener('mousedown', () => bringToFront(win));
+    win.addEventListener('touchstart', () => bringToFront(win), {passive: true});
+
+    const header = win.querySelector('.win-head');
+    
+    header.onmousedown = function(e) {
+      e.preventDefault();
+      const rect = win.getBoundingClientRect();
+      const parent = win.offsetParent.getBoundingClientRect();
+      win.style.transform = "none"; 
+      win.style.left = (rect.left - parent.left) + "px";
+      win.style.top = (rect.top - parent.top) + "px";
+
+      let startX = e.clientX, startY = e.clientY;
+      document.onmousemove = function(e) {
+        e.preventDefault();
+        let dx = startX - e.clientX;
+        let dy = startY - e.clientY;
+        startX = e.clientX; startY = e.clientY;
+        win.style.top = (win.offsetTop - dy) + "px";
+        win.style.left = (win.offsetLeft - dx) + "px";
+      };
+      document.onmouseup = function() { document.onmousemove = null; document.onmouseup = null; };
+    };
+
+    header.ontouchstart = function(e) {
+      const rect = win.getBoundingClientRect();
+      const parent = win.offsetParent.getBoundingClientRect();
+      win.style.transform = "none"; 
+      win.style.left = (rect.left - parent.left) + "px";
+      win.style.top = (rect.top - parent.top) + "px";
+
+      let startX = e.touches[0].clientX, startY = e.touches[0].clientY;
+      document.ontouchmove = function(e) {
+        let dx = startX - e.touches[0].clientX;
+        let dy = startY - e.touches[0].clientY;
+        startX = e.touches[0].clientX; startY = e.touches[0].clientY;
+        win.style.top = (win.offsetTop - dy) + "px";
+        win.style.left = (win.offsetLeft - dx) + "px";
+      };
+      document.ontouchend = function() { document.ontouchmove = null; };
+    };
+  });
+</script>
+
+</body>
+</html>

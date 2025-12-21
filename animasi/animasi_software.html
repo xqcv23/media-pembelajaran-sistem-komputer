@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Phone Anatomy - 40% Compact</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;800&family=Fira+Code:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  /* =========================================
+     STYLE ANIMASI HP (JARAK DIKURANGI 40%)
+     ========================================= */
+  body { margin: 0; padding: 0; background: #fff; font-family: 'Outfit', sans-serif; }
+
+  /* CONTAINER UTAMA */
+  #soft-sim-wrapper {
+      position: relative;
+      width: 100%; height: 600px;
+      background-color: #050505;
+      background-image: radial-gradient(circle at 50% 50%, #1a1025 0%, #000 80%);
+      font-family: 'Segoe UI', sans-serif; color: white;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 12px; overflow: hidden; margin-top: 10px;
+  }
+
+  /* PANEL TEKS (UI) */
+  #soft-sim-wrapper .ui-container {
+      position: absolute; left: 5%; width: 35%; 
+      z-index: 999; transition: all 0.5s ease; pointer-events: auto;
+  }
+  #soft-sim-wrapper .glass-card {
+      background: rgba(15, 10, 20, 0.95);
+      border: 1px solid #443355; border-left: 5px solid #a688fa;
+      padding: 20px; border-radius: 12px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.8); backdrop-filter: blur(10px);
+  }
+  #soft-sim-wrapper h3 { color: #a688fa; margin: 0 0 5px 0; font-size: 0.8rem; letter-spacing: 2px; }
+  #soft-sim-wrapper h1 { margin: 0 0 10px 0; font-size: 1.8rem; font-weight: 800; line-height: 1.1; color: #fff; }
+  #soft-sim-wrapper p { color: #ccc; line-height: 1.4; font-size: 0.9rem; margin-bottom: 20px; }
+  
+  #soft-sim-wrapper button {
+      background: linear-gradient(90deg, #6a4c93, #a688fa);
+      color: white; border: none; padding: 12px 0;
+      border-radius: 8px; font-weight: 800; cursor: pointer; 
+      box-shadow: 0 5px 15px rgba(106, 76, 147, 0.4);
+      text-transform: uppercase; width: 100%; letter-spacing: 1px; transition: 0.3s;
+      position: relative; z-index: 1000;
+  }
+  #soft-sim-wrapper button:hover { transform: scale(1.02); box-shadow: 0 5px 25px rgba(166, 136, 250, 0.6); }
+
+  /* STAGE 3D */
+  #soft-sim-wrapper .stage {
+      position: absolute; right: 0; width: 60%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+      perspective: 1500px; z-index: 10; pointer-events: none;
+  }
+  #soft-sim-wrapper .hover-engine {
+      width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
+      transform-style: preserve-3d; animation: floating 4s ease-in-out infinite;
+  }
+  @keyframes floating {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-20px); }
+      100% { transform: translateY(0px); }
+  }
+
+  #soft-sim-wrapper .phone-solid {
+      position: relative; width: 260px; height: 520px;
+      transform-style: preserve-3d;
+      transition: transform 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+      transform: rotateY(-30deg) rotateX(10deg) scale(0.6);
+      pointer-events: auto;
+  }
+
+  /* LAYERS COMMON */
+  #soft-sim-wrapper .layer {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      border-radius: 48px; /* Curve Standar HP */
+      transition: all 0.8s ease-in-out;
+      transform-style: preserve-3d; backface-visibility: hidden;
+  }
+
+  /* 1. LAYER BACK */
+  #soft-sim-wrapper .layer-back {
+      background: linear-gradient(135deg, #433058, #2a1a3a, #180d24); 
+      transform: translateZ(-5px); z-index: 1; border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: inset 0 0 30px rgba(0,0,0,0.5), 1px 1px 0 #2a1a3a, 2px 2px 0 #2a1a3a, 3px 3px 0 #2a1a3a, 4px 4px 0 #1f122b, 5px 5px 0 #1f122b, 6px 6px 0 #1f122b, -30px 40px 60px rgba(0,0,0,0.7);
+  }
+  #soft-sim-wrapper .camera-block {
+      position: absolute; top: 20px; left: 20px; width: 110px; height: 120px;
+      background: #1a0a2a; border-radius: 38px;
+      border-top: 1px solid rgba(255,255,255,0.2); border-left: 1px solid rgba(255,255,255,0.1);
+      transform: translateZ(2px); box-shadow: 5px 5px 15px rgba(0,0,0,0.6); z-index: 10;
+  }
+  #soft-sim-wrapper .lens { width: 46px; height: 46px; border-radius: 50%; position: absolute; background: radial-gradient(circle at 40% 40%, #333 0%, #000 70%); box-shadow: inset 0 0 2px 1px #000, 0 0 0 2px #111, 0 0 0 4px #554466; }
+  #soft-sim-wrapper .optic-glare { position: absolute; top: 25%; left: 25%; width: 25%; height: 20%; border-radius: 50%; background: rgba(150, 100, 255, 0.7); filter: blur(4px); transform: rotate(-45deg); }
+  #soft-sim-wrapper .flash { position: absolute; top: 22px; right: 22px; width: 12px; height: 12px; border-radius: 50%; background: #fff; }
+  #soft-sim-wrapper .lidar { position: absolute; bottom: 25px; right: 22px; width: 11px; height: 11px; border-radius: 50%; background: #000; border: 1px solid #444; }
+
+  /* 2. LAYER HARDWARE */
+  #soft-sim-wrapper .layer-hw {
+      background: #080808; border: 1px solid #333; 
+      transform: translateZ(0px); z-index: 5; opacity: 1; overflow: hidden;
+      box-shadow: inset 0 0 50px #000;
+  }
+  #soft-sim-wrapper .pcb-tex {
+      width: 100%; height: 100%; opacity: 0.3;
+      background-image: linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
+      background-size: 20px 20px;
+  }
+  #soft-sim-wrapper .battery-real {
+      position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%) translateZ(2px);
+      width: 80%; height: 45%; background: linear-gradient(135deg, #151515, #222);
+      border-radius: 8px; border: 1px solid #333; display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-end;
+      padding: 15px; box-sizing: border-box; box-shadow: 0 5px 20px rgba(0,0,0,0.9), inset 1px 1px 0 rgba(255,255,255,0.1);
+  }
+  #soft-sim-wrapper .battery-flex {
+      position: absolute; top: -15px; right: 20px; width: 40px; height: 30px;
+      background: #c77d00; border-left: 2px solid #e09e24; border-right: 2px solid #8f5900; border-radius: 4px 4px 0 0; z-index: -1;
+  }
+  #soft-sim-wrapper .battery-flex::after { content:''; position: absolute; top: -5px; right: 5px; width: 30px; height: 10px; background: #333; border: 1px solid #555; }
+  #soft-sim-wrapper .bat-brand { font-size: 14px; font-weight: 800; color: #666; letter-spacing: 1px; margin-bottom: 2px; }
+  #soft-sim-wrapper .bat-cap { font-size: 24px; font-weight: 800; color: #fff; letter-spacing: 0.5px; }
+  #soft-sim-wrapper .bat-detail { font-size: 9px; color: #555; margin-top: 5px; line-height: 1.3; font-family: monospace; }
+  #soft-sim-wrapper .li-ion { position: absolute; top: 15px; right: 15px; border: 1px solid #555; color: #555; padding: 2px 4px; font-size: 8px; border-radius: 3px; font-weight: bold; }
+  #soft-sim-wrapper .cpu {
+      position: absolute; top: 130px; right: 50px; width: 85px; height: 85px;
+      background: radial-gradient(circle at 30% 30%, #444, #000); border: 1px solid #333; 
+      display: flex; flex-direction: column; align-items: center; justify-content: center; 
+      z-index: 2; transform: translateZ(2px); box-shadow: 0 5px 15px rgba(0,0,0,0.8); border-radius: 6px;
+  }
+  #soft-sim-wrapper .cpu::before { content:''; position: absolute; width: 105%; height: 105%; border: 2px dashed #666; border-radius: 8px; opacity: 0.5; }
+  #soft-sim-wrapper .chip-logo { font-size: 20px; font-weight: 900; background: linear-gradient(to bottom, #d4af37, #f9d976); -webkit-background-clip: text; color: transparent; margin-bottom: 2px; }
+  #soft-sim-wrapper .chip-sub { font-size: 7px; color: #888; font-family: monospace; letter-spacing: 1px; }
+
+  /* 3. LAYER SCREEN */
+  #soft-sim-wrapper .layer-screen {
+      background: #000; z-index: 10; border: 1px solid #333; overflow: hidden;
+      transform: translateZ(1px); box-shadow: 1px 1px 0 #111, 2px 2px 0 #111, 3px 3px 0 #000;
+  }
+  #soft-sim-wrapper .wallpaper { width: 100%; height: 100%; background: radial-gradient(circle at 50% 100%, #5a3c83 0%, #1a0a2a 60%, #000 100%); background-size: cover; }
+  #soft-sim-wrapper .dynamic-island {
+      position: absolute; top: 15px; left: 50%; transform: translateX(-50%);
+      width: 100px; height: 28px; background: #000; border-radius: 20px; z-index: 10;
+      border: 1.5px solid #6a4c93; box-shadow: 0 0 10px rgba(106, 76, 147, 0.4); 
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  #soft-sim-wrapper .cam-lens-front { width: 12px; height: 12px; background: #080808; border-radius: 50%; box-shadow: inset 0 0 2px 1px #222; border: 1px solid #1a1a1a; }
+  #soft-sim-wrapper .cam-sensor-front { width: 8px; height: 8px; background: #0a0a0a; border-radius: 50%; opacity: 0.6; }
+  
+  #soft-sim-wrapper .app-grid { position: absolute; top: 60px; left: 0; width: 100%; padding: 15px; box-sizing: border-box; display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  #soft-sim-wrapper .icon { width: 100%; aspect-ratio: 1; border-radius: 12px; background-size: cover; background-color: #333; box-shadow: 0 3px 6px rgba(0,0,0,0.6); }
+  .i-wa { background-image: url('https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg'); }
+  .i-ig { background-image: url('https://upload.wikimedia.org/wikipedia/commons/e/e7/Instagram_logo_2016.svg'); }
+  .i-tk { background-image: url('https://cdn.icon-icons.com/icons2/3041/PNG/512/tiktok_logo_icon_189233.png'); }
+  .i-yt { background-color: white; background-image: url('https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_%282017%29.svg'); background-size: 65%; background-position: center; background-repeat: no-repeat; }
+
+  /* 4. LAYER CODE */
+  #soft-sim-wrapper .layer-code {
+      background: rgba(18, 18, 24, 0.95); 
+      border: 1px solid #444;
+      background-image: linear-gradient(to bottom, #2d2d2d 20px, transparent 20px);
+      z-index: 8; opacity: 0; 
+      font-family: 'Fira Code', 'Consolas', monospace; font-size: 9px; color: #d4d4d4; 
+      display: flex; flex-direction: column; overflow: hidden; 
+      transform: translateZ(0.6px); box-shadow: 0 0 20px rgba(0,0,0,0.5);
+      border-radius: 45px;
+      padding-top: 25px;
+  }
+  #soft-sim-wrapper .layer-code::before { 
+      content: '● ● ●  main.java'; position: absolute; top: 4px; left: 20px; 
+      font-size: 8px; color: #888; letter-spacing: 2px; font-weight: bold; 
+  }
+  #soft-sim-wrapper .code-content { padding: 10px 20px; display: flex; flex-direction: column; gap: 4px; }
+  #soft-sim-wrapper .line { display: flex; gap: 10px; }
+  #soft-sim-wrapper .ln { color: #555; text-align: right; width: 15px; user-select: none; }
+  #soft-sim-wrapper .kwd { color: #c678dd; font-weight: bold; } #soft-sim-wrapper .cls { color: #e5c07b; } 
+  #soft-sim-wrapper .str { color: #98c379; } #soft-sim-wrapper .mth { color: #61afef; } #soft-sim-wrapper .cmt { color: #5c6370; font-style: italic; }
+
+  /* GHOST LAYERS (OS & Util) */
+  #soft-sim-wrapper .layer-os {
+      background: rgba(100, 50, 255, 0.1); border: 2px solid #8a2be2;
+      box-shadow: 0 0 30px rgba(138, 43, 226, 0.3); backdrop-filter: blur(2px); 
+      z-index: 7; opacity: 0; display: flex; align-items: center; justify-content: center; transform: translateZ(0.5px);
+  }
+  #soft-sim-wrapper .os-logo { font-size: 90px; filter: drop-shadow(0 0 20px #8a2be2); animation: spinGear 5s linear infinite; }
+  @keyframes spinGear { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+  #soft-sim-wrapper .layer-util {
+      border: 2px dashed #a688fa; background: radial-gradient(circle, rgba(166, 136, 250, 0.1), transparent);
+      z-index: 12; opacity: 0; pointer-events: none; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  }
+  #soft-sim-wrapper .antivirus-container { position: relative; width: 120px; height: 120px; display: flex; align-items: center; justify-content: center; }
+  #soft-sim-wrapper .shield-icon { font-size: 60px; z-index: 2; filter: drop-shadow(0 0 10px #a688fa); }
+  #soft-sim-wrapper .scan-circle { position: absolute; width: 100%; height: 100%; border: 2px solid #a688fa; border-radius: 50%; animation: pulse 2s infinite; }
+  #soft-sim-wrapper .scan-radar { position: absolute; width: 100%; height: 100%; border-radius: 50%; background: conic-gradient(from 0deg, transparent 0deg, rgba(166, 136, 250, 0.4) 60deg, transparent 60deg); animation: radarSpin 2s linear infinite; }
+  @keyframes pulse { 0% { transform: scale(0.8); opacity: 0.8; } 100% { transform: scale(1.3); opacity: 0; } }
+  @keyframes radarSpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+  /* =========================================
+     PERBAIKAN JARAK ANTAR KOMPONEN (REDUCE 40%)
+     ========================================= */
+  
+  /* Saat tombol ditekan (Exploded) - Jarak dikurangi sekitar 40% dari original */
+  #soft-sim-wrapper .exploded .layer-back   { transform: translateZ(-150px); } /* Original -250px */
+  #soft-sim-wrapper .exploded .layer-hw     { transform: translateZ(-75px); opacity: 1; filter: grayscale(0%); } /* Original -120px */
+  #soft-sim-wrapper .exploded .layer-os     { transform: translateZ(0px); opacity: 0.3; }
+  #soft-sim-wrapper .exploded .layer-code   { transform: translateZ(75px); opacity: 0.3; } /* Original 120px */
+  #soft-sim-wrapper .exploded .layer-screen { transform: translateZ(150px); opacity: 1; } /* Original 250px */
+  #soft-sim-wrapper .exploded .layer-util   { transform: translateZ(180px); opacity: 0; } /* Original 300px */
+
+  /* FOCUS STATES - Background Layer di set ke 240px (Original 400px) */
+  
+  /* Focus HW */
+  #soft-sim-wrapper .focus-hw .layer-screen, 
+  #soft-sim-wrapper .focus-hw .layer-code, 
+  #soft-sim-wrapper .focus-hw .layer-os { opacity: 0.3; transform: translateZ(240px); }
+  #soft-sim-wrapper .focus-hw .layer-hw { opacity: 1; filter: grayscale(0%); transform: scale(1.1) translateZ(-40px); box-shadow: 0 0 50px #a688fa; }
+
+  /* Focus OS */
+  #soft-sim-wrapper .focus-os .layer-screen, #soft-sim-wrapper .focus-os .layer-code { opacity: 0.3; transform: translateZ(240px); }
+  #soft-sim-wrapper .focus-os .layer-hw { opacity: 0.4; transform: translateZ(-240px); filter: grayscale(50%); } 
+  #soft-sim-wrapper .focus-os .layer-back { opacity: 0.3; transform: translateZ(-240px); }
+  #soft-sim-wrapper .focus-os .layer-os { opacity: 1; transform: scale(1.1) translateZ(0px); border-color: white; }
+
+  /* Focus Code */
+  #soft-sim-wrapper .focus-code .layer-screen { opacity: 0.3; transform: translateZ(240px); }
+  #soft-sim-wrapper .focus-code .layer-hw { opacity: 0.4; transform: translateZ(-240px); filter: grayscale(50%); } 
+  #soft-sim-wrapper .focus-code .layer-back { opacity: 0.3; transform: translateZ(-240px); }
+  #soft-sim-wrapper .focus-code .layer-code { opacity: 1; transform: scale(1.1) translateZ(75px); border-color: #a688fa; box-shadow: 0 0 30px rgba(166, 136, 250, 0.5); }
+
+  /* Focus Apps */
+  #soft-sim-wrapper .focus-apps .layer-back, 
+  #soft-sim-wrapper .focus-apps .layer-hw, 
+  #soft-sim-wrapper .focus-apps .layer-os, 
+  #soft-sim-wrapper .focus-apps .layer-code { 
+      opacity: 0.3; 
+      transform: translateZ(-240px); 
+  }
+  #soft-sim-wrapper .focus-apps .layer-screen { opacity: 1; transform: scale(1.05) translateZ(0px); box-shadow: 0 0 50px rgba(166, 136, 250, 0.2); }
+
+  /* Focus Util */
+  #soft-sim-wrapper .focus-util .layer-screen { opacity: 0.4; filter: blur(2px); }
+  #soft-sim-wrapper .focus-util .layer-util { opacity: 1; transform: translateZ(180px); box-shadow: inset 0 0 50px #a688fa; }
+
+  /* OVERLAY */
+  #soft-sim-wrapper #summary {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.95); z-index: 1000;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none; transition: 0.5s;
+  }
+  #soft-sim-wrapper #summary.show { opacity: 1; pointer-events: auto; }
+  #soft-sim-wrapper .sum-box { max-width: 500px; padding: 30px; text-align: center; border: 1px solid #443355; background: #0f0a15; border-radius: 10px; }
+  #soft-sim-wrapper .sum-list { text-align: left; margin: 30px 0; color: #ddd; font-size: 0.85rem; list-style:none; padding:0; }
+  #soft-sim-wrapper .sum-list li { margin-bottom: 10px; padding-bottom: 5px; border-bottom: 1px solid #333; }
+  #soft-sim-wrapper .tag { padding: 3px 8px; border-radius: 4px; font-weight: bold; font-size: 0.7rem; margin-right: 10px; color: black; display:inline-block; margin-bottom:4px; }
+
+  /* MOBILE FIX */
+  @media(max-width: 768px) { 
+      #soft-sim-wrapper { flex-direction: column; height: 600px !important; position: relative; overflow: hidden; }
+      #soft-sim-wrapper .ui-container { position: absolute !important; top: 0 !important; width: 90% !important; left: 5% !important; height: auto !important; padding-top: 20px !important; z-index: 200; }
+      #soft-sim-wrapper .glass-card { width: 100% !important; background: rgba(20, 10, 30, 0.9); backdrop-filter: blur(10px); padding: 15px !important; }
+      #soft-sim-wrapper h1 { font-size: 1.3rem !important; }
+      #soft-sim-wrapper p { font-size: 0.8rem !important; margin-bottom: 10px; }
+      #soft-sim-wrapper h3 { font-size: 0.7rem !important; }
+      #soft-sim-wrapper button { padding: 8px 0 !important; font-size: 0.8rem !important; margin-top: 5px; }
+      #soft-sim-wrapper .stage { position: absolute !important; bottom: 0 !important; width: 100% !important; height: 65% !important; display: flex; align-items: center; justify-content: center; z-index: 10; perspective: 1200px; pointer-events: none; }
+      #soft-sim-wrapper .hover-engine { animation: floating 4s ease-in-out infinite !important; }
+      #soft-sim-wrapper .phone-solid { transform: rotateY(-30deg) rotateX(10deg) scale(0.38) !important; margin-top: -60px; pointer-events: auto; }
+  }
+</style>
+</head>
+<body>
+
+<div id="soft-sim-wrapper">
+    <div class="ui-container">
+        <div class="glass-card">
+            <h3 id="step-count">MATERI 1 / 6</h3>
+            <h1 id="step-title">PENGANTAR SISTEM</h1>
+            <p id="step-desc">Sebuah HP yang tampak canggih sebenarnya adalah tumpukan komponen. Mari kita bedah lapisan software sesuai urutan kerjanya.</p>
+            <button onclick="soft_next()" id="btn-soft-next">BONGKAR HP</button>
+        </div>
+    </div>
+    <div class="stage">
+        <div class="hover-engine">
+            <div class="phone-solid" id="phone">
+                <!-- 1. BACK -->
+                <div class="layer layer-back">
+                    <div class="camera-block">
+                        <div class="lens" style="top:12px; left:12px"><div class="optic-glare"></div></div>
+                        <div class="lens" style="bottom:12px; left:12px"><div class="optic-glare"></div></div>
+                        <div class="lens" style="top:50%; right:12px; transform:translateY(-50%)"><div class="optic-glare"></div></div>
+                        <div class="flash"></div><div class="lidar"></div>
+                    </div>
+                </div>
+                
+                <!-- 2. HW -->
+                <div class="layer layer-hw">
+                    <div class="pcb-tex"></div>
+                    <div class="battery-real">
+                        <div class="battery-flex"></div>
+                        <div class="li-ion">Li-ion Polymer</div>
+                        <div class="bat-brand">POWER CELL</div>
+                        <div class="bat-cap">5000 mAh</div>
+                        <div class="bat-detail">Nominal Voltage 3.85V<br>Charge Voltage 4.4V<br>CAUTION: Do not puncture.</div>
+                    </div>
+                    <div class="cpu">
+                        <div class="chip-logo">A17</div>
+                        <div class="chip-sub">BIONIC</div>
+                    </div>
+                </div>
+                
+                <!-- 3. OS -->
+                <div class="layer layer-os"><div class="os-logo">⚙️</div></div>
+                
+                <!-- 4. LANGUAGE (MELENGKUNG) -->
+                <div class="layer layer-code">
+                    <div class="code-content">
+                        <div class="line"><span class="ln">1</span> <span><span class="cmt">// LANGUAGE LAYER</span></span></div>
+                        <div class="line"><span class="ln">2</span> <span><span class="kwd">public class</span> <span class="cls">Translator</span> {</span></div>
+                        <div class="line"><span class="ln">3</span> <span>  <span class="kwd">private</span> <span class="cls">int</span> core = 8;</span></div>
+                        <div class="line"><span class="ln">4</span> <span></span></div>
+                        <div class="line"><span class="ln">5</span> <span>  <span class="kwd">void</span> <span class="mth">connectHardware</span>() {</span></div>
+                        <div class="line"><span class="ln">6</span> <span>    <span class="cls">Code</span>.sendTo(<span class="str">"Binary"</span>);</span></div>
+                        <div class="line"><span class="ln">7</span> <span>    <span class="kwd">return</span> <span class="kwd">true</span>;</span></div>
+                        <div class="line"><span class="ln">8</span> <span>  }</span></div>
+                        <div class="line"><span class="ln">9</span> <span>}</span></div>
+                    </div>
+                </div>
+                
+                <!-- 5. APPS -->
+                <div class="layer layer-screen">
+                    <div class="wallpaper"></div>
+                    <div class="dynamic-island">
+                        <div class="cam-lens-front"></div>
+                        <div class="cam-sensor-front"></div>
+                    </div>
+                    <div class="app-grid">
+                        <div class="icon i-wa"></div><div class="icon i-ig"></div><div class="icon i-tk"></div>
+                        <div class="icon i-yt"></div>
+                    </div>
+                </div>
+                
+                <!-- 6. UTIL -->
+                <div class="layer layer-util">
+                    <div class="antivirus-container">
+                        <div class="scan-radar"></div><div class="scan-circle"></div><div class="shield-icon">🛡️</div>
+                    </div>
+                    <div style="color:#a688fa; margin-top:15px; font-weight:bold; text-shadow: 0 0 10px #a688fa;">SYSTEM PROTECTED</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="summary">
+        <div class="sum-box">
+            <h1 style="color:#a688fa">RINGKASAN MATERI</h1>
+            <ul class="sum-list">
+                <li><span class="tag" style="background:#444; color:white">1. HARDWARE</span> Perangkat Keras. Fisik mesin (CPU, RAM, Baterai).</li>
+                <li><span class="tag" style="background:#6a4c93; color:white">2. SISTEM OPERASI</span> Penghubung. Mengelola resource hardware (Android/iOS).</li>
+                <li><span class="tag" style="background:#a688fa; color:black">3. BAHASA PEMROGRAMAN</span> Instruksi. Kode untuk membuat software (Java/C++).</li>
+                <li><span class="tag" style="background:#E1306C; color:white">4. APLIKASI</span> Perangkat Lunak Pengolah. Untuk tugas spesifik user.</li>
+                <li><span class="tag" style="background:#8a2be2; color:white">5. UTILITY</span> Perangkat Lunak Bantu. Menjaga kinerja (Antivirus).</li>
+            </ul>
+            <button onclick="soft_resetAll()">ULANGI PRESENTASI</button>
+        </div>
+    </div>
+</div>
+
+<script>
+  const AudioContext = window.AudioContext || window.webkitAudioContext;
+  let audioCtx;
+  
+  function sfxClick() { 
+    try {
+        if (!audioCtx) audioCtx = new AudioContext(); 
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const o=audioCtx.createOscillator(), g=audioCtx.createGain(); 
+        o.type='triangle'; o.frequency.setValueAtTime(800,audioCtx.currentTime); 
+        o.frequency.exponentialRampToValueAtTime(300,audioCtx.currentTime+0.1); 
+        g.gain.setValueAtTime(0.1,audioCtx.currentTime); 
+        g.gain.exponentialRampToValueAtTime(0.01,audioCtx.currentTime+0.1); 
+        o.connect(g); g.connect(audioCtx.destination); 
+        o.start(); o.stop(audioCtx.currentTime+0.1); 
+    } catch(e) { console.log("Audio ignored"); }
+  }
+
+  let softSim_step = 0;
+  const softSim_data = [
+      { t: "ANATOMI SISTEM", d: "Sistem Komputer/HP terdiri dari beberapa lapisan yang saling bekerja sama. Klik tombol untuk melihat urutan dari yang paling dasar.", b: "MULAI BEDAH" },
+      { t: "1. HARDWARE (PERANGKAT KERAS)", d: "Ini adalah fondasi paling bawah. Fisik yang bisa dipegang. Berisi rangkaian elektronik, CPU, dan Baterai. Tanpa software, ini benda mati.", b: "LANJUT KE OS" },
+      { t: "2. SISTEM OPERASI (OS)", d: "Perhatikan GIR BERPUTAR. Ini adalah OS (Operating System). Dia bertugas sebagai 'Manajer' yang mengendalikan Hardware agar bisa dipakai.", b: "LANJUT KE BAHASA" },
+      { t: "3. BAHASA PEMROGRAMAN", d: "Di atas OS, ada Bahasa Pemrograman (Coding). Ini adalah instruksi atau 'Bahasa' yang dipakai manusia untuk memerintah mesin.", b: "LANJUT KE APLIKASI" },
+      { t: "4. APLIKASI PENGOLAH", d: "Hasil dari bahasa pemrograman adalah APLIKASI. Software ini yang kita pakai sehari-hari untuk tugas spesifik (Chat, Medsos, Foto).", b: "LANJUT KE UTILITY" },
+      { t: "5. UTILITY (PROGRAM BANTU)", d: "Terakhir adalah UTILITY. Contohnya ANTIVIRUS (lihat radar aktif). Tugasnya membantu merawat sistem, mendeteksi error, dan menjaga keamanan.", b: "LIHAT KESIMPULAN" }
+  ];
+
+  function soft_next() {
+      sfxClick();
+      softSim_step++;
+      if(softSim_step > 5) { document.getElementById('summary').classList.add('show'); return; }
+      soft_updateUI(softSim_step);
+  }
+
+  function soft_updateUI(s) {
+      const phone = document.getElementById('phone');
+      if(!phone) return;
+      document.getElementById('step-count').innerText = `MATERI ${s} / 6`;
+      document.getElementById('step-title').innerText = softSim_data[s].t;
+      document.getElementById('step-desc').innerText = softSim_data[s].d;
+      document.getElementById('btn-soft-next').innerText = softSim_data[s].b;
+      phone.className = 'phone-solid exploded'; 
+      if(s === 1) phone.classList.add('focus-hw');
+      if(s === 2) phone.classList.add('focus-os');
+      if(s === 3) phone.classList.add('focus-code');
+      if(s === 4) phone.classList.add('focus-apps');
+      if(s === 5) phone.classList.add('focus-util');
+  }
+
+  function soft_resetAll() {
+      sfxClick();
+      const phone = document.getElementById('phone');
+      if(!phone) return;
+      softSim_step = 0;
+      document.getElementById('summary').classList.remove('show');
+      phone.className = 'phone-solid';
+      document.getElementById('step-count').innerText = `MATERI 1 / 6`;
+      document.getElementById('step-title').innerText = softSim_data[0].t;
+      document.getElementById('step-desc').innerText = softSim_data[0].d;
+      document.getElementById('btn-soft-next').innerText = softSim_data[0].b;
+  }
+</script>
+</body>
+</html>
