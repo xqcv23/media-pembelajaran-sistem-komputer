@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulasi CPU - Final Mobile Ready</title>
+<style>
+  /* === LAYOUT UTAMA === */
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #ffffff;
+    display: flex; justify-content: center; align-items: center;
+    min-height: 100vh; margin: 0; color: #333; overflow: hidden;
+  }
+
+  .lab-card {
+    background: #fff; border-radius: 12px; padding: 25px 20px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05); border: 1px solid #e0e0e0;
+    display: flex; flex-direction: column; align-items: center;
+    width: 90%; max-width: 380px; text-align: center; position: relative;
+  }
+
+  .lab-label {
+    font-weight: 800; color: #1e293b; margin-bottom: 20px; font-size: 1.1rem;
+    letter-spacing: 0.5px; text-transform: uppercase;
+    border-bottom: 3px solid #3b82f6; padding-bottom: 8px;
+  }
+
+  /* PANEL STATISTIK */
+  .stats-panel {
+    display: flex; gap: 10px; margin-bottom: 20px; width: 100%; justify-content: center;
+  }
+  .stat-box { 
+    background: #f8fafc; padding: 8px 10px; border-radius: 8px;
+    border: 1px solid #e2e8f0; min-width: 75px;
+  }
+  .stat-val {
+    font-weight: 800; font-family: monospace; font-size: 1.2rem; color: #333; transition: color 0.3s;
+  }
+  .stat-label {
+    font-size: 0.6rem; color: #64748b; text-transform: uppercase; margin-top: 4px; font-weight: 600;
+  }
+  .stat-val.safe { color: #10b981; }
+  .stat-val.warn { color: #f59e0b; }
+  .stat-val.danger { color: #ef4444; }
+
+  /* AREA CPU */
+  .cpu-container {
+    position: relative; width: 160px; height: 160px;
+    display: flex; justify-content: center; align-items: center; margin-bottom: 5px;
+  }
+
+  /* ICON KIPAS SMOKE GREY */
+  .fan-icon {
+    position: absolute; width: 120px; height: 120px; z-index: 5;
+    pointer-events: none; animation: spin 3s linear infinite;
+    filter: drop-shadow(0 4px 4px rgba(0,0,0,0.15)); 
+  }
+  @keyframes spin { 100% { transform: rotate(360deg); } }
+
+  .binary-stream { position: absolute; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
+  .bit {
+    position: absolute; font-family: monospace; font-weight: bold; color: #3b82f6;
+    font-size: 11px; opacity: 0; animation: flowIn linear forwards;
+  }
+  @keyframes flowIn {
+    0% { transform: translate(var(--tx), var(--ty)) scale(0.5); opacity: 0; }
+    50% { opacity: 1; }
+    100% { transform: translate(0, 0) scale(0); opacity: 0; }
+  }
+
+  /* CPU BOARD */
+  .cpu-plate {
+    width: 130px; height: 130px; background: #1b5e20; border-radius: 6px;
+    border: 1px solid #000; display: flex; justify-content: center; align-items: center;
+    position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.3); z-index: 2;
+  }
+  .cpu-plate::before {
+    content: ''; position: absolute; inset: 5px; border: 2px dashed #ffd700; opacity: 0.4; border-radius: 4px;
+  }
+  
+  .cpu-ihs {
+    width: 90px; height: 90px;
+    background: linear-gradient(135deg, #f5f5f5 0%, #dcdcdc 50%, #9e9e9e 100%);
+    border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.4); position: relative; z-index: 3;
+    transition: background 0.3s ease-out; border: 1px solid #aaa;
+  }
+  
+  .cpu-ihs.warm { background: linear-gradient(135deg, #fff1eb 0%, #ffe0b2 100%); border-color: #fbbf24; }
+  .cpu-ihs.hot { 
+    background: linear-gradient(135deg, #ff9a9e 0%, #ff5252 100%); 
+    border-color: #ff1744; box-shadow: 0 0 25px rgba(255, 0, 0, 0.6);
+    animation: vibrate 0.1s infinite;
+  }
+
+  /* TEKS PUTIH SAAT PANAS */
+  .cpu-ihs.hot .cpu-text { color: #ffffff !important; text-shadow: 0 1px 2px rgba(0,0,0,0.3); }
+  .cpu-ihs.hot .cpu-subtext { color: rgba(255,255,255,0.9) !important; }
+
+  @keyframes vibrate {
+    0% { transform: translate(1px, 1px); } 25% { transform: translate(-1px, -1px); }
+    50% { transform: translate(-1px, 1px); } 75% { transform: translate(1px, -1px); }
+    100% { transform: translate(1px, 1px); }
+  }
+
+  .warning-text {
+    position: absolute; top: -35px; left: 50%; transform: translateX(-50%);
+    background: #ef4444; color: white; padding: 4px 8px; border-radius: 4px;
+    font-weight: bold; font-size: 0.75rem; opacity: 0; transition: opacity 0.3s;
+    pointer-events: none; white-space: nowrap; z-index: 10;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  }
+  .warning-text.show { opacity: 1; animation: blink 0.5s infinite; }
+  @keyframes blink { 50% { opacity: 0.5; } }
+
+  .cpu-text { font-size: 0.85rem; font-weight: 800; color: #444; z-index: 4; transition: color 0.3s; }
+  .cpu-subtext { font-size: 0.5rem; color: #666; margin-top: 2px; transition: color 0.3s; }
+
+  /* CONTROLS */
+  input[type=range] {
+    width: 100%; margin-top: 20px; cursor: pointer; accent-color: #ef4444;
+    height: 6px; border-radius: 5px; background: #e2e8f0;
+  }
+  .controls-row {
+    display: flex; justify-content: space-between; align-items: center;
+    width: 100%; margin-top: 15px;
+  }
+  .instruction { font-size: 0.75rem; color: #64748b; text-align: left; font-weight: 500; }
+  .mute-btn {
+    background: white; border: 1px solid #cbd5e1; border-radius: 6px;
+    cursor: pointer; padding: 5px 8px; font-size: 1rem; color: #64748b; transition: 0.2s;
+  }
+  .mute-btn:hover { background: #f1f5f9; color: #333; border-color: #94a3b8; }
+
+  /* === KHUSUS HP (Mobile Responsive) === */
+  @media (max-width: 480px) {
+    .lab-card { padding: 20px 15px; width: 95%; }
+    .lab-label { font-size: 0.95rem; margin-bottom: 15px; }
+    .cpu-container { transform: scale(0.9); margin-bottom: 0; }
+    .stat-val { font-size: 1.1rem; }
+    input[type=range] { margin-top: 15px; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="lab-card">
+    <div class="lab-label">PROCESS LAB: PHYSICS EDITION</div>
+
+    <div class="stats-panel">
+      <div class="stat-box">
+        <div class="stat-val safe" id="tempDisplay">35°C</div>
+        <div class="stat-label">Suhu (Heat)</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-val" id="loadDisplay">0%</div>
+        <div class="stat-label">Beban (Load)</div>
+      </div>
+    </div>
+    
+    <div class="cpu-container">
+      <div class="warning-text" id="warnText">⚠️ OVERHEAT!</div>
+      <div class="binary-stream" id="binaryContainer"></div>
+
+      <!-- KIPAS SMOKE GREY -->
+      <svg class="fan-icon" id="fanVisual" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="50" r="48" stroke="rgba(0,0,0,0.3)" stroke-width="1.5" fill="none"/>
+        <g fill="rgba(0, 0, 0, 0.15)" stroke="rgba(0,0,0,0.4)" stroke-width="0.5">
+          <path d="M50 50 C50 30 60 10 70 10 C60 10 55 30 50 50 Z" />
+          <path d="M50 50 C65 40 85 45 90 55 C80 50 65 50 50 50 Z" />
+          <path d="M50 50 C65 60 70 80 70 90 C65 80 55 70 50 50 Z" />
+          <path d="M50 50 C45 70 30 85 20 85 C30 80 40 70 50 50 Z" />
+          <path d="M50 50 C30 65 10 60 5 50 C15 55 35 55 50 50 Z" />
+          <path d="M50 50 C35 35 25 15 30 5 C35 15 40 30 50 50 Z" />
+          <path d="M50 50 C45 35 45 15 50 5 Z" style="opacity:0"/> 
+        </g>
+        <circle cx="50" cy="50" r="6" fill="#333" stroke="rgba(0,0,0,0.5)"/>
+      </svg>
+
+      <div class="cpu-plate">
+        <div class="cpu-ihs" id="labCpuIhs">
+          <span class="cpu-text">CORE i9</span>
+          <span class="cpu-subtext">3.50 GHZ</span>
+        </div>
+      </div>
+    </div>
+
+    <input type="range" min="0" max="100" value="0" id="loadSlider">
+    
+    <div class="controls-row">
+      <div class="instruction">Geser slider untuk menambah beban</div>
+      <button class="mute-btn" id="muteBtn" title="Matikan Suara">🔊</button>
+    </div>
+  </div>
+
+<script>
+  let targetLoad = 0;
+  let currentLoad = 0;
+  let currentTemp = 35;
+  let isMuted = false;
+
+  const slider = document.getElementById('loadSlider');
+  const tempDisplay = document.getElementById('tempDisplay');
+  const loadDisplay = document.getElementById('loadDisplay');
+  const ihs = document.getElementById('labCpuIhs');
+  const fanVisual = document.getElementById('fanVisual');
+  const warnText = document.getElementById('warnText');
+  const muteBtn = document.getElementById('muteBtn');
+  const binaryContainer = document.getElementById('binaryContainer');
+
+  function physicsLoop() {
+    targetLoad = parseInt(slider.value);
+    let targetTemp = 35 + (targetLoad * 0.6);
+    currentTemp += (targetTemp - currentTemp) * 0.03;
+
+    let tempFactor = Math.max(0, (currentTemp - 35) / (95 - 35)); 
+    let spinDuration = 3 - (tempFactor * 2.9); 
+    fanVisual.style.animationDuration = `${spinDuration}s`;
+    fanVisual.style.opacity = 0.8; 
+
+    loadDisplay.innerText = targetLoad + "%";
+    tempDisplay.innerText = Math.round(currentTemp) + "°C";
+
+    if(currentTemp < 55) { 
+        tempDisplay.className = "stat-val safe"; ihs.className = "cpu-ihs"; 
+    }
+    else if(currentTemp < 78) { 
+        tempDisplay.className = "stat-val warn"; ihs.className = "cpu-ihs warm"; 
+    }
+    else { 
+        tempDisplay.className = "stat-val danger"; ihs.className = "cpu-ihs hot"; 
+    }
+
+    if(currentTemp > 85) warnText.classList.add('show');
+    else warnText.classList.remove('show');
+
+    if(Math.random() * 100 < targetLoad) spawnBit();
+    updateAudio(tempFactor);
+    requestAnimationFrame(physicsLoop);
+  }
+
+  let audioCtx, noiseSource, gainNode, filterNode;
+  
+  function initAudio() {
+    if (audioCtx) return;
+    const AC = window.AudioContext || window.webkitAudioContext;
+    audioCtx = new AC();
+    const bufferSize = audioCtx.sampleRate * 2;
+    const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+
+    noiseSource = audioCtx.createBufferSource();
+    noiseSource.buffer = buffer; noiseSource.loop = true;
+    filterNode = audioCtx.createBiquadFilter(); filterNode.type = 'lowpass';
+    gainNode = audioCtx.createGain(); gainNode.gain.value = 0;
+    noiseSource.connect(filterNode); filterNode.connect(gainNode); gainNode.connect(audioCtx.destination);
+    noiseSource.start();
+  }
+
+  function updateAudio(speedPct) {
+    if (!audioCtx) return;
+    if (isMuted) {
+      gainNode.gain.setTargetAtTime(0, audioCtx.currentTime, 0.1);
+    } else {
+      let volume = speedPct > 0.1 ? speedPct * 0.2 : 0;
+      gainNode.gain.setTargetAtTime(volume, audioCtx.currentTime, 0.1);
+      let freq = 100 + (speedPct * 900);
+      filterNode.frequency.setTargetAtTime(freq, audioCtx.currentTime, 0.1);
+    }
+  }
+
+  slider.addEventListener('mousedown', () => initAudio());
+  slider.addEventListener('touchstart', () => initAudio());
+  muteBtn.addEventListener('click', () => { 
+      isMuted = !isMuted; muteBtn.innerText = isMuted ? "🔇" : "🔊"; 
+  });
+
+  function spawnBit() {
+    if(binaryContainer.childElementCount > 20) return; 
+    const bit = document.createElement('div');
+    bit.classList.add('bit');
+    bit.innerText = Math.random() > 0.5 ? '1' : '0';
+    const angle = Math.random() * Math.PI * 2;
+    const r = 90;
+    bit.style.setProperty('--tx', Math.cos(angle) * r + 'px');
+    bit.style.setProperty('--ty', Math.sin(angle) * r + 'px');
+    bit.style.animationDuration = (Math.random() * 0.5 + 0.5) + 's'; 
+    binaryContainer.appendChild(bit);
+    setTimeout(() => bit.remove(), 1000);
+  }
+
+  requestAnimationFrame(physicsLoop);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<style>
+  /* --- SETUP GLOBAL --- */
+  body {
+    background-color: #e0e5ec;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    font-family: 'Segoe UI', Roboto, Helvetica, sans-serif;
+  }
+
+  .container {
+    transform: scale(1.3); /* Skala diperbesar agar pas di Google Site */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* --- 1. FISIK MONITOR (Bezel & Frame) --- */
+  .monitor-frame {
+    width: 450px;
+    height: 260px;
+    background: #111;
+    border-radius: 8px;
+    padding: 12px 12px 35px 12px; /* Dagu bawah lebih lebar */
+    box-shadow: 
+      0 0 0 2px #2a2a2a,
+      0 20px 50px rgba(0,0,0,0.5),
+      inset 0 0 10px rgba(0,0,0,0.8);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* --- 2. LAYAR (LCD PANEL) --- */
+  .screen-panel {
+    width: 100%;
+    height: 100%;
+    background-color: #000;
+    border-radius: 4px;
+    position: relative;
+    overflow: hidden;
+    cursor: default;
+  }
+
+  /* Efek Pantulan Cahaya (Glare) di pojok */
+  .screen-panel::after {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 100%; height: 100%;
+    background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0) 40%);
+    pointer-events: none;
+    z-index: 99;
+  }
+
+  /* --- 3. KONTEN LAYAR (ANIMATED UI) --- */
+  
+  /* Container Wallpaper Animasi */
+  .os-interface {
+    width: 100%;
+    height: 100%;
+    /* Gradasi Animasi (Aurora Effect) */
+    background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
+    
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    
+    opacity: 0; /* Awalnya tersembunyi */
+    transition: opacity 1s ease;
+  }
+
+  @keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  /* Widget Jam Digital (Tengah Layar) */
+  .widget-clock {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px); /* Efek kaca buram (Glassmorphism) */
+    padding: 20px 40px;
+    border-radius: 15px;
+    text-align: center;
+    color: white;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    border: 1px solid rgba(255,255,255,0.3);
+    transform: translateY(20px);
+    opacity: 0;
+    transition: all 0.8s ease 0.5s; /* Delay muncul */
+  }
+
+  .time-text {
+    font-size: 3rem;
+    font-weight: 200;
+    margin: 0;
+    line-height: 1;
+  }
+
+  .date-text {
+    font-size: 0.9rem;
+    margin-top: 5px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+
+  /* Ikon Desktop (Bawah) */
+  .taskbar {
+    position: absolute;
+    bottom: 10px;
+    display: flex;
+    gap: 15px;
+    background: rgba(0,0,0,0.3);
+    padding: 8px 15px;
+    border-radius: 20px;
+    transform: translateY(50px); /* Sembunyi di bawah */
+    transition: transform 0.5s ease 1s; /* Delay muncul paling akhir */
+  }
+
+  .app-icon {
+    width: 30px; height: 30px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+    background: rgba(255,255,255,0.9);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    transition: transform 0.2s;
+  }
+  .app-icon:hover { transform: scale(1.2); }
+
+  /* --- 4. LOADING SPINNER (BOOTING) --- */
+  .boot-loader {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    border: 4px solid #333;
+    border-top: 4px solid #00d2ff;
+    border-radius: 50%;
+    width: 30px; height: 30px;
+    animation: spin 1s linear infinite;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  @keyframes spin { 0% { transform: translate(-50%, -50%) rotate(0deg); } 100% { transform: translate(-50%, -50%) rotate(360deg); } }
+
+  /* --- 5. TOMBOL & LED --- */
+  .controls {
+    position: absolute;
+    bottom: 8px; right: 20px;
+    display: flex; align-items: center; gap: 10px;
+  }
+
+  .led {
+    width: 5px; height: 5px;
+    background: #300;
+    border-radius: 50%;
+    box-shadow: inset 0 0 2px rgba(0,0,0,0.5);
+    transition: 0.3s;
+  }
+
+  .power-btn {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    border: none;
+    background: radial-gradient(circle, #333 30%, #111 100%);
+    color: #666;
+    display: flex; justify-content: center; align-items: center;
+    cursor: pointer;
+    font-size: 10px;
+    box-shadow: 0 1px 1px rgba(255,255,255,0.1);
+  }
+  .power-btn:hover { color: #fff; }
+  .power-btn:active { transform: scale(0.95); }
+
+  .brand {
+    position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%);
+    color: #444; font-size: 10px; font-weight: 800; letter-spacing: 2px;
+  }
+
+  /* --- 6. KAKI MONITOR --- */
+  .stand-neck {
+    width: 100px; height: 50px; background: #1a1a1a; margin-top: -5px; z-index: -1;
+  }
+  .stand-base {
+    width: 200px; height: 10px; background: #222; border-radius: 10px 10px 2px 2px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.3); transform: perspective(300px) rotateX(20deg);
+  }
+
+  /* --- LOGIKA AKTIF (CLASS IS-ON) --- */
+  
+  /* Saat dinyalakan */
+  .monitor-frame.is-on .led {
+    background: #00ffff; /* LED Biru Neon */
+    box-shadow: 0 0 8px #00ffff;
+  }
+
+  /* Layar menyala (Backlight) */
+  .monitor-frame.is-on .screen-panel {
+    background-color: #1a1a1a;
+  }
+
+  /* Tampilkan Loader dulu */
+  .monitor-frame.is-on .boot-loader {
+    opacity: 1;
+  }
+  
+  /* Sembunyikan Loader saat OS siap (diatur via JS) */
+  .monitor-frame.is-on.os-ready .boot-loader {
+    opacity: 0;
+  }
+
+  /* Tampilkan OS */
+  .monitor-frame.is-on.os-ready .os-interface {
+    opacity: 1;
+  }
+  
+  /* Animasi Masuk Widget */
+  .monitor-frame.is-on.os-ready .widget-clock {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .monitor-frame.is-on.os-ready .taskbar {
+    transform: translateY(0);
+  }
+
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- MONITOR UNIT -->
+  <div class="monitor-frame" id="monitor">
+    
+    <div class="screen-panel">
+      <!-- 1. Loading Spinner -->
+      <div class="boot-loader"></div>
+
+      <!-- 2. Tampilan OS (Output Visual) -->
+      <div class="os-interface">
+        
+        <!-- Jam Tengah -->
+        <div class="widget-clock">
+          <h1 class="time-text" id="clock">12:00</h1>
+          <div class="date-text">SYSTEM READY</div>
+        </div>
+
+        <!-- Icon Bar Bawah -->
+        <div class="taskbar">
+          <div class="app-icon" title="Menu">🪟</div>
+          <div class="app-icon" style="background:#00d2ff" title="Browser">🌐</div>
+          <div class="app-icon" style="background:#ffcc00" title="Folder">📁</div>
+          <div class="app-icon" style="background:#333; color:white;" title="Terminal">_></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- BRAND & KONTROL -->
+    <div class="brand">PRO DISPLAY</div>
+    <div class="controls">
+      <div class="led"></div>
+      <button class="power-btn" onclick="togglePower()">⏻</button>
+    </div>
+
+  </div>
+
+  <!-- KAKI -->
+  <div class="stand-neck"></div>
+  <div class="stand-base"></div>
+
+  <p style="color:#666; font-size:14px; margin-top:30px;">Klik tombol Power (⏻) untuk menyalakan</p>
+
+</div>
+
+<script>
+  const monitor = document.getElementById('monitor');
+  const clockEl = document.getElementById('clock');
+  let isOn = false;
+
+  function togglePower() {
+    isOn = !isOn;
+
+    if (isOn) {
+      // 1. Nyalakan Listrik & Backlight
+      monitor.classList.add('is-on');
+      
+      // 2. Update Jam Realtime
+      updateClock();
+
+      // 3. Simulasi Booting (Tunggu 1.5 detik loading, baru masuk OS)
+      setTimeout(() => {
+        if(isOn) monitor.classList.add('os-ready');
+      }, 1500);
+
+    } else {
+      // Matikan Total
+      monitor.classList.remove('is-on', 'os-ready');
+    }
+  }
+
+  function updateClock() {
+    const now = new Date();
+    clockEl.innerText = now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0');
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brainware Responsive Fix</title>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Teko:wght@300;600&family=Rajdhani:wght@500;700&display=swap');
+
+    :root {
+        --neon: #00f3ff;
+        --purple: #bc13fe;
+        --dark: #09090b;
+        --panel: #13131a;
+    }
+
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+    body {
+        margin: 0;
+        background-color: var(--dark);
+        font-family: 'Rajdhani', sans-serif;
+        color: white;
+        /* Default: Laptop tidak ada scroll body */
+        overflow: hidden; 
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+    }
+
+    .bg-video {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: radial-gradient(circle at 50% 50%, #1a1a40 0%, #000 90%);
+        z-index: -1;
+    }
+
+    /* --- CONTAINER UTAMA --- */
+    .interface {
+        width: 100%;
+        max-width: 1200px;
+        /* Laptop: Tinggi KUNCI 600px biar rapi */
+        height: 600px; 
+        display: flex;
+        gap: 10px;
+        padding: 10px;
+        position: relative;
+    }
+
+    /* --- PANEL KIRI (LIST TOMBOL) --- */
+    .panel-list {
+        width: 250px;
+        background: rgba(0,0,0,0.3);
+        border: 1px solid #333;
+        display: flex;
+        flex-direction: column;
+        flex-shrink: 0;
+    }
+    .list-header { padding: 15px; text-align: center; background: var(--panel); border-bottom: 1px solid #333; }
+    .game-title { font-family: 'Teko'; font-size: 2rem; color: var(--neon); line-height: 1; margin: 0; }
+    
+    .scroll-list { flex: 1; overflow-y: auto; padding: 5px; }
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-thumb { background: var(--neon); }
+    ::-webkit-scrollbar-track { background: #111; }
+
+    .agent-btn {
+        background: rgba(255,255,255,0.05); color: #aaa; padding: 12px 10px; margin-bottom: 4px;
+        cursor: pointer; font-weight: bold; font-size: 0.9rem; border-left: 3px solid transparent; transition: 0.2s;
+    }
+    .agent-btn:hover { background: #222; color: white; }
+    .agent-btn.active { background: var(--neon); color: black; border-left: 3px solid white; box-shadow: 0 0 15px var(--neon); }
+
+    /* --- PANEL TENGAH (VISUAL) --- */
+    .panel-visual {
+        flex: 1; border: 1px solid #333; position: relative; display: flex; justify-content: center; align-items: center;
+        background: radial-gradient(circle, rgba(0,243,255,0.05) 0%, transparent 70%);
+    }
+    .holo-floor {
+        position: absolute; bottom: 80px; width: 200px; height: 50px; border: 2px solid var(--neon); border-radius: 50%;
+        transform: rotateX(60deg); animation: spin 8s linear infinite; box-shadow: 0 0 20px var(--neon);
+    }
+    .icon-box { font-size: 6rem; animation: float 3s infinite; filter: drop-shadow(0 0 10px var(--neon)); }
+
+    /* --- PANEL KANAN (INFO) --- */
+    .panel-info {
+        width: 300px; background: var(--panel); border-top: 2px solid var(--neon); padding: 20px;
+        display: flex; flex-direction: column; flex-shrink: 0;
+    }
+    .info-content { overflow-y: auto; flex: 1; }
+    .role-title { font-family: 'Teko'; font-size: 2.5rem; color: white; margin: 0; line-height: 1; }
+    .role-class { color: var(--neon); font-size: 0.9rem; font-weight: bold; letter-spacing: 2px; margin-bottom: 15px; }
+    .role-desc { font-size: 0.95rem; color: #ccc; line-height: 1.5; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 15px; }
+    
+    /* Stats */
+    .stat-row { margin-bottom: 10px; }
+    .stat-label { font-size: 0.75rem; color: #888; display: flex; justify-content: space-between; margin-bottom: 2px; }
+    .bar-bg { width: 100%; height: 6px; background: #222; }
+    .bar-fill { height: 100%; background: var(--neon); width: 0%; transition: width 0.5s; }
+
+    /* Animasi */
+    @keyframes spin { from { transform: rotateX(60deg) rotateZ(0deg); } to { transform: rotateX(60deg) rotateZ(360deg); } }
+    @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+    .glitch-anim { animation: glitch 0.3s; }
+    @keyframes glitch { 0% { opacity: 1; transform: translate(0); } 20% { transform: translate(-3px, 3px); filter: hue-rotate(90deg); } 100% { opacity: 1; transform: translate(0); } }
+
+
+    /* --- KHUSUS HP (MEDIA QUERY) --- */
+    @media (max-width: 768px) {
+        body {
+            /* PENTING: Izinkan scroll di body HP */
+            overflow-y: auto; 
+            height: auto;
+            display: block; /* Matikan flex center body biar bisa scroll */
+        }
+
+        .interface {
+            /* PENTING: Jangan dikunci tingginya di HP */
+            height: auto; 
+            flex-direction: column; /* Tumpuk ke bawah */
+            padding: 10px;
+            gap: 15px;
+        }
+
+        /* URUTAN TAMPILAN HP */
+        /* 1. Visual (Atas) */
+        .panel-visual {
+            order: 1;
+            height: 200px; /* Tinggi fix */
+            width: 100%;
+        }
+        .holo-floor { bottom: 40px; width: 120px; }
+        .icon-box { font-size: 5rem; }
+
+        /* 2. Tombol (Tengah) - Agar mudah diklik */
+        .panel-list {
+            order: 2;
+            width: 100%;
+            height: 250px; /* Batasi tingginya, scroll di dalam */
+            border: 1px solid var(--neon); /* Tambah border biar jelas area klik */
+        }
+        .scroll-list { background: rgba(0,0,0,0.6); }
+
+        /* 3. Info (Bawah) */
+        .panel-info {
+            order: 3;
+            width: 100%;
+            height: auto; /* Biarkan memanjang sesuai teks */
+            border-left: 2px solid var(--neon);
+            border-top: none;
+            margin-bottom: 50px; /* Jarak bawah biar scroll enak */
+        }
+    }
+</style>
+</head>
+<body>
+
+    <div class="bg-video"></div>
+
+    <div class="interface">
+        
+        <!-- PANEL LIST (KIRI) -->
+        <div class="panel-list">
+            <div class="list-header">
+                <div class="game-title">BRAINWARE</div>
+            </div>
+            <div class="scroll-list">
+                <div class="agent-btn" onclick="selectRole('operator')">1. Operator Komputer</div>
+                <div class="agent-btn" onclick="selectRole('teknisi')">2. Teknisi Komputer</div>
+                <div class="agent-btn" onclick="selectRole('pm')">3. Manajer Proyek</div>
+                <div class="agent-btn" onclick="selectRole('trainer')">4. Trainer</div>
+                <div class="agent-btn" onclick="selectRole('network')">5. Spesialis Jaringan</div>
+                <div class="agent-btn" onclick="selectRole('konsultan')">6. Konsultan</div>
+                <div class="agent-btn" onclick="selectRole('analis')">7. Sistem Analis</div>
+                <div class="agent-btn" onclick="selectRole('prog')">8. Programmer</div>
+                <div class="agent-btn" onclick="selectRole('dbadmin')">9. Administrator DB</div>
+                <div class="agent-btn" onclick="selectRole('desainer')">10. Desainer Grafis</div>
+            </div>
+        </div>
+
+        <!-- PANEL VISUAL (TENGAH) -->
+        <div class="panel-visual">
+            <div class="holo-floor"></div>
+            <div class="visual-container" id="visualStage">
+                <div style="font-size:4rem; opacity:0.5; animation:float 3s infinite;">💠</div>
+            </div>
+        </div>
+
+        <!-- PANEL INFO (KANAN) -->
+        <div class="panel-info">
+            <div class="info-content">
+                <h2 class="role-title" id="rTitle">SELECT</h2>
+                <div class="role-class" id="rClass">SYSTEM STANDBY</div>
+                <div class="role-desc" id="rDesc">Silakan klik salah satu tombol di daftar untuk melihat penjelasan.</div>
+                
+                <div id="statsContainer" style="opacity:0;">
+                    <div class="stat-row">
+                        <div class="stat-label"><span>TECHNICAL</span><span id="val1">0%</span></div>
+                        <div class="bar-bg"><div class="bar-fill" id="bar1"></div></div>
+                    </div>
+                    <div class="stat-row">
+                        <div class="stat-label"><span>LOGIC</span><span id="val2">0%</span></div>
+                        <div class="bar-bg"><div class="bar-fill" id="bar2"></div></div>
+                    </div>
+                    <div class="stat-row">
+                        <div class="stat-label"><span>ART / MGMT</span><span id="val3">0%</span></div>
+                        <div class="bar-bg"><div class="bar-fill" id="bar3"></div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const db = {
+            operator: { title: "OPERATOR", class: "USER LEVEL", desc: "Mengikuti instruksi dari programmer dan bertanggung jawab terhadap pemrosesan data sehari-hari.", stats: [40, 30, 20], html: `<div class="icon-box">⌨️</div>` },
+            teknisi: { title: "TEKNISI", class: "MAINTENANCE", desc: "Memahami berbagai masalah perangkat keras (hardware), menganalisis kerusakan, dan memperbaikinya.", stats: [95, 60, 30], html: `<div class="icon-box">🔧</div>` },
+            pm: { title: "PROYEK MGR", class: "LEADER", desc: "Memimpin tim, mengatur waktu, koordinasi antarbagian, dan mengelola keuangan proyek.", stats: [50, 80, 95], html: `<div class="icon-box">👔</div>` },
+            trainer: { title: "TRAINER", class: "EDUCATOR", desc: "Memiliki keahlian luas dan bertanggung jawab mendidik atau mengajar orang lain sesuai bidangnya.", stats: [70, 60, 95], html: `<div class="icon-box">👨‍🏫</div>` },
+            network: { title: "NET SPEC", class: "INFRASTRUCTURE", desc: "Sangat ahli dan menguasai bidang jaringan komputer (kabel, router, server, dll).", stats: [90, 85, 40], html: `<div class="icon-box">📡</div>` },
+            konsultan: { title: "KONSULTAN", class: "ADVISOR", desc: "Memberikan nasihat dan solusi masalah berdasarkan penelitian dan kajian yang matang.", stats: [80, 90, 90], html: `<div class="icon-box">🤝</div>` },
+            analis: { title: "SYS ANALYST", class: "ARCHITECT", desc: "Memonitor, mengevaluasi, dan merancang program yang akan dibuat. Memprediksi kebutuhan sistem.", stats: [80, 100, 50], html: `<div class="icon-box">🧠</div>` },
+            prog: { title: "PROGRAMMER", class: "CREATOR", desc: "Membuat dan mempersiapkan program pendukung sistem komputer menggunakan bahasa pemrograman.", stats: [95, 100, 70], html: `<div class="icon-box">💻</div>` },
+            dbadmin: { title: "DB ADMIN", class: "DATA KEEPER", desc: "Berfokus pada pengelolaan sistem database, memonitor aplikasi, dan menjaga keamanan data.", stats: [90, 95, 20], html: `<div class="icon-box">🗄️</div>` },
+            desainer: { title: "DESAINER", class: "ARTIST", desc: "Memiliki keterampilan desain grafis dan animasi untuk membuat tampilan visual aplikasi.", stats: [60, 50, 100], html: `<div class="icon-box">🎨</div>` }
+        };
+
+        const stage = document.getElementById('visualStage');
+        const rTitle = document.getElementById('rTitle');
+        const rClass = document.getElementById('rClass');
+        const rDesc = document.getElementById('rDesc');
+        const statsBox = document.getElementById('statsContainer');
+        const bars = [document.getElementById('bar1'), document.getElementById('bar2'), document.getElementById('bar3')];
+        const vals = [document.getElementById('val1'), document.getElementById('val2'), document.getElementById('val3')];
+        const btns = document.querySelectorAll('.agent-btn');
+
+        function selectRole(key) {
+            btns.forEach(b => b.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            const data = db[key];
+            
+            stage.classList.remove('glitch-anim');
+            void stage.offsetWidth;
+            stage.classList.add('glitch-anim');
+
+            setTimeout(() => {
+                stage.innerHTML = data.html;
+                rTitle.innerText = data.title;
+                rClass.innerText = data.class;
+                rDesc.innerText = data.desc;
+            }, 100);
+
+            statsBox.style.opacity = 1;
+            data.stats.forEach((val, index) => {
+                bars[index].style.width = '0%';
+                setTimeout(() => {
+                    bars[index].style.width = val + '%';
+                    vals[index].innerText = val + '%';
+                    if(val >= 90) bars[index].style.backgroundColor = "#00f3ff";
+                    else if(val >= 60) bars[index].style.backgroundColor = "#bc13fe";
+                    else bars[index].style.backgroundColor = "#555";
+                }, 200);
+            });
+        }
+    </script>
+</body>
+</html>

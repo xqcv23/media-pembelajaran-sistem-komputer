@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HCI: Final Fix (Space & Log)</title>
+    <style>
+        /* --- TEMA --- */
+        :root {
+            --bg: #0f172a;
+            --box-bg: #1e293b;
+            --line-color: #475569;
+            --terminal-bg: #020617;
+            --c-input: #3b82f6; --c-cpu: #ef4444; --c-output: #10b981; --c-storage: #f59e0b; --c-feedback: #d946ef;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: #f3f4f6;
+            font-family: 'Segoe UI', monospace;
+            display: flex; flex-direction: column; align-items: center;
+            min-height: 100vh;
+            margin: 0; padding: 10px;
+            overflow-x: hidden;
+        }
+
+        h1 { 
+            margin: 10px 0 20px 0; 
+            text-transform: uppercase; letter-spacing: 2px; 
+            text-align: center; font-size: 1.1rem; 
+        }
+
+        /* --- CONTROLS --- */
+        .controls {
+            z-index: 100;
+            background: rgba(30, 41, 59, 0.95); 
+            padding: 12px;
+            border-radius: 8px; border: 1px solid #475569;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            display: flex; gap: 8px; 
+            flex-wrap: wrap; justify-content: center;
+            margin-bottom: 20px; 
+        }
+
+        input { background: #0f172a; border: 1px solid #475569; color: white; padding: 8px; border-radius: 4px; width: 150px; }
+        button { background: var(--c-input); color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-weight: bold;}
+        button:hover { opacity: 0.9; }
+        button:disabled { background: #475569; cursor: not-allowed; }
+
+        /* --- DIAGRAM CONTAINER --- */
+        .diagram-container {
+            width: 100%;
+            display: flex; justify-content: center;
+            transform-origin: top center;
+            transition: transform 0.3s ease;
+            padding-bottom: 50px; 
+        }
+
+        /* --- GRID LAYOUT --- */
+        .diagram-grid {
+            display: grid;
+            grid-template-columns: 130px 40px 130px 40px 130px;
+            grid-template-rows: 90px 40px 90px 50px auto; 
+            justify-items: center; align-items: center;
+            position: relative;
+        }
+
+        /* --- BOX STANDAR --- */
+        .box {
+            width: 100%; height: 100%;
+            background: var(--box-bg);
+            border: 2px solid #475569; border-radius: 8px;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            z-index: 10; transition: 0.3s;
+            position: relative;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+        .box i { font-size: 1.6rem; margin-bottom: 4px; color: #94a3b8; font-style: normal; }
+        .box h3 { font-size: 0.8rem; margin: 0; color: #e2e8f0; margin-top: 3px; font-weight: 600; }
+        
+        .box-input { border-bottom: 4px solid var(--c-input); }
+        .box-cpu { border-bottom: 4px solid var(--c-cpu); }
+        .box-storage { border-bottom: 4px solid var(--c-storage); }
+        .box.active { transform: scale(1.05); border-color: white !important; box-shadow: 0 0 15px rgba(255,255,255,0.2); }
+
+        /* --- MONITOR --- */
+        .monitor-wrapper {
+            width: 100%; height: 100%; 
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: space-between;
+            position: relative; z-index: 10;
+        }
+        .monitor-bezel {
+            width: 100%; flex-grow: 1; 
+            background: #334155; border-radius: 6px; padding: 4px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            display: flex; align-items: center; justify-content: center;
+            border: 1px solid #475569; transition: 0.3s;
+            margin-bottom: -2px; z-index: 12;
+        }
+        .monitor-screen { width: 100%; height: 100%; background: #000; border-radius: 4px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        
+        /* --- TEXT & CURSOR FIX --- */
+        .monitor-text { 
+            color: var(--c-output); 
+            font-family: 'Courier New', monospace; 
+            font-size: 0.9rem; 
+            font-weight: bold; 
+            text-shadow: 0 0 5px var(--c-output); 
+            
+            /* INI SOLUSINYA: Agar spasi terbaca */
+            white-space: pre-wrap; 
+        }
+        
+        .cursor {
+            display: inline-block; 
+            width: 3px;         
+            height: 14px;       
+            background: var(--c-output); 
+            margin-left: 1px;
+            position: relative; 
+            top: 2px;           
+            animation: blink 0.8s infinite;
+        }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+        
+        .monitor-stand-neck { width: 16px; height: 15px; background: #1e293b; z-index: 10; }
+        .monitor-stand-base { width: 60px; height: 6px; background: #334155; border-radius: 4px 4px 0 0; margin-bottom: 0; }
+        .monitor-wrapper.active .monitor-bezel { border-color: var(--c-output); box-shadow: 0 0 20px rgba(16, 185, 129, 0.4); transform: scale(1.05); }
+        .monitor-wrapper.active .monitor-screen { background: #022c22; }
+
+        /* --- PARTICLES --- */
+        .pipe-h { width: 140%; height: 4px; background: var(--line-color); position: relative; z-index: 1; border-radius: 2px; }
+        .pipe-v { width: 4px; height: 160%; background: var(--line-color); position: relative; z-index: 1; }
+        .comet { position: absolute; background: white; opacity: 0; box-shadow: 0 0 8px white; border-radius: 50%; width: 6px; height: 6px; }
+
+        /* --- FEEDBACK LINE --- */
+        .feedback-track {
+            position: absolute;
+            top: 45px; left: 65px; right: 65px; height: 180px;      
+            border: 2px dashed var(--line-color); border-top: none; border-radius: 0 0 20px 20px;
+            z-index: 0; pointer-events: none; opacity: 0.3; transition: 0.5s;
+        }
+        
+        .fb-ball { 
+            position: absolute; width: 10px; height: 10px; 
+            background: var(--c-feedback); border-radius: 50%; 
+            box-shadow: 0 0 10px var(--c-feedback); opacity: 0; z-index: 5;
+            transform: translate(-50%, -50%);
+        }
+
+        @keyframes fb-move {
+            0% { top: 45px; left: calc(100% - 65px); opacity: 1; } 
+            30% { top: 225px; left: calc(100% - 65px); } 
+            70% { top: 225px; left: 65px; } 
+            100% { top: 45px; left: 65px; opacity: 1; } 
+        }
+
+        .terminal-container {
+            grid-column: 1 / span 5; grid-row: 5; width: 100%; height: 120px; 
+            background: var(--terminal-bg); border: 1px solid #333; border-left: 4px solid #64748b;
+            border-radius: 6px; padding: 10px; box-sizing: border-box; overflow-y: auto; font-size: 0.75rem;
+            display: flex; flex-direction: column; z-index: 20; 
+        }
+        .log-line { margin: 2px 0; border-left: 2px solid transparent; padding-left: 6px; animation: fadeIn 0.3s; }
+        .log-info { border-color: var(--c-input); color: #93c5fd; }
+        .log-proc { border-color: var(--c-cpu); color: #fca5a5; }
+        .log-store { border-color: var(--c-storage); color: #fcd34d; }
+        .log-out { border-color: var(--c-output); color: #86efac; }
+        .log-feed { border-color: var(--c-feedback); color: #f0abfc; font-weight: bold; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateX(-5px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes shoot-r { 0% { left: 0; opacity: 1; } 100% { left: 100%; opacity: 1; } }
+        @keyframes shoot-d { 0% { top: 0; opacity: 1; } 100% { top: 100%; opacity: 1; } }
+        @keyframes shoot-u { 0% { top: 100%; opacity: 1; } 100% { top: 0; opacity: 1; } }
+
+        @media (max-width: 600px) {
+            .diagram-container { transform: scale(0.55); margin-top: 0px; margin-bottom: -50px; margin-left: -5px; }
+            .controls { width: 90%; margin-bottom: 10px; }
+            h1 { font-size: 1rem; margin-bottom: 15px; }
+            body { overflow-y: auto; padding-bottom: 50px;} 
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Simulasi Interaksi Manusia & Komputer</h1>
+
+    <div class="controls">
+        <input type="text" id="userInput" placeholder="Ketik Data..." autocomplete="off">
+        <button id="btnRun" onclick="runSystem()">PROSES</button>
+        <button onclick="resetSystem()" style="background:#475569;">RESET</button>
+    </div>
+
+    <div class="diagram-container">
+        <div class="diagram-grid">
+            <div class="box box-input" id="bInput" style="grid-column:1; grid-row:1"><i>⌨️</i><h3>INPUT</h3></div>
+            <div class="pipe-h" style="grid-column:2; grid-row:1"><div class="comet" id="c1"></div></div>
+            <div class="box box-cpu" id="bCpu" style="grid-column:3; grid-row:1"><i>⚙️</i><h3>CPU</h3></div>
+            <div class="pipe-h" style="grid-column:4; grid-row:1"><div class="comet" id="c2"></div></div>
+            
+            <div class="monitor-wrapper" id="bOut" style="grid-column:5; grid-row:1">
+                <div class="monitor-bezel">
+                    <div class="monitor-screen">
+                        <span class="monitor-text" id="screenText"></span><span class="cursor" id="cursor"></span>
+                    </div>
+                </div>
+                <div class="monitor-stand-neck"></div>
+                <div class="monitor-stand-base"></div>
+                <h3 style="margin: 0; margin-top: 2px; font-size:0.8rem; color:#e2e8f0; font-weight: 600;">OUTPUT</h3>
+            </div>
+
+            <div class="pipe-v" style="grid-column:3; grid-row:2"><div class="comet" id="c3"></div></div>
+            <div class="box box-storage" id="bStore" style="grid-column:3; grid-row:3"><i>💾</i><h3>STORAGE</h3></div>
+
+            <div class="feedback-track" id="fbTrack"></div>
+            <div class="fb-ball" id="fbBall"></div>
+
+            <div class="terminal-container" id="terminal">
+                <div style="color: #64748b;">// Menunggu Input User...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const terminal = document.getElementById('terminal');
+        const btn = document.getElementById('btnRun');
+        const screenText = document.getElementById('screenText');
+        const cursor = document.getElementById('cursor'); 
+        const userInput = document.getElementById('userInput');
+        
+        const boxes = { in: document.getElementById('bInput'), cpu: document.getElementById('bCpu'), out: document.getElementById('bOut'), store: document.getElementById('bStore') };
+        const comets = { c1: document.getElementById('c1'), c2: document.getElementById('c2'), c3: document.getElementById('c3') };
+        const fb = { track: document.getElementById('fbTrack'), ball: document.getElementById('fbBall') };
+
+        let isProcessing = false;
+
+        function addLog(msg, type) {
+            const div = document.createElement('div');
+            const time = new Date().toLocaleTimeString('id-ID', { hour12: false, hour: '2-digit', minute:'2-digit', second:'2-digit' });
+            div.className = `log-line log-${type}`;
+            div.innerHTML = `<span style="opacity:0.5">[${time}]</span> ${msg}`;
+            terminal.appendChild(div);
+            terminal.scrollTop = terminal.scrollHeight;
+        }
+
+        function wait(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+        // FUNGSI RESET
+        function resetSystem() {
+            userInput.value = "";
+            screenText.innerText = "";
+            cursor.style.display = "none";
+            terminal.innerHTML = '<div style="color: #64748b;">// System Reset. Menunggu Input...</div>';
+            
+            Object.values(boxes).forEach(b => b.classList.remove('active'));
+            boxes.in.style.borderColor = '';
+            
+            Object.values(comets).forEach(c => c.style.animation = 'none');
+            fb.ball.style.animation = 'none';
+            fb.ball.style.opacity = 0;
+            
+            fb.track.style.borderColor = '#475569'; 
+            fb.track.style.boxShadow = 'none'; 
+            fb.track.style.opacity = '0.3';
+
+            btn.disabled = false;
+            isProcessing = false;
+        }
+
+        async function runSystem() {
+            const val = userInput.value;
+            if(!val) { alert("Isi teks dulu!"); return; }
+            if(isProcessing) return; 
+
+            isProcessing = true;
+            btn.disabled = true;
+            
+            // CLEAR LOG LAMA SAAT PROSES BARU DI KLIK
+            terminal.innerHTML = ""; 
+            screenText.innerText = ""; 
+            cursor.style.display = "none";
+            
+            const check = async (ms) => {
+                await wait(ms);
+                if(!isProcessing) throw "RESET";
+            };
+
+            try {
+                // 1. INPUT
+                addLog(`User mengetik: "${val}"`, 'info');
+                boxes.in.classList.add('active');
+                await check(600);
+                
+                addLog("Mengirim ke CPU...", 'info');
+                comets.c1.style.animation = 'shoot-r 0.6s linear forwards';
+                await check(600);
+                comets.c1.style.animation = 'none';
+                boxes.in.classList.remove('active');
+
+                // 2. CPU
+                addLog("CPU Memproses...", 'proc');
+                boxes.cpu.classList.add('active');
+                await check(800);
+
+                // 3. STORAGE
+                addLog("Simpan ke Storage...", 'store');
+                comets.c3.style.animation = 'shoot-d 0.5s linear forwards';
+                await check(500);
+                comets.c3.style.animation = 'none';
+
+                boxes.store.classList.add('active');
+                await check(600);
+                
+                addLog("Ambil dari Storage...", 'proc');
+                comets.c3.style.animation = 'shoot-u 0.5s linear forwards';
+                boxes.store.classList.remove('active');
+                await check(500);
+                comets.c3.style.animation = 'none';
+                boxes.cpu.classList.remove('active');
+
+                // 4. OUTPUT
+                addLog("Tampilkan Output...", 'out');
+                comets.c2.style.animation = 'shoot-r 0.5s linear forwards';
+                await check(500);
+                comets.c2.style.animation = 'none';
+
+                boxes.out.classList.add('active');
+                cursor.style.display = "inline-block"; 
+                
+                // Typing Effect
+                for (let i = 0; i < val.length; i++) {
+                    if(!isProcessing) throw "RESET";
+                    screenText.innerText += val.charAt(i);
+                    await wait(80); 
+                }
+
+                addLog(`Layar: "${val}"`, 'out');
+                await check(1500);
+
+                // 5. FEEDBACK
+                boxes.out.classList.remove('active');
+                addLog("Feedback Visual...", 'feed');
+                
+                fb.track.style.borderColor = '#d946ef';
+                fb.track.style.boxShadow = '0 0 10px rgba(217, 70, 239, 0.2)';
+                fb.track.style.opacity = '1';
+                
+                fb.ball.style.animation = 'fb-move 1.5s linear forwards';
+                await check(1500);
+
+                boxes.in.classList.add('active');
+                boxes.in.style.borderColor = '#d946ef';
+                addLog("Selesai.", 'feed');
+
+                await check(1500);
+                
+                // FINISH (TETAP MENYIMPAN HASIL)
+                boxes.in.classList.remove('active');
+                boxes.in.style.borderColor = '';
+                fb.ball.style.opacity = 0;
+                
+                btn.disabled = false;
+                isProcessing = false;
+
+            } catch (e) {
+                if (e === "RESET") {
+                    console.log("Reset trigger");
+                } else {
+                    console.error(e);
+                }
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CLI Simulator - Mobile Input Fix</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* RESET */
+        * { box-sizing: border-box; }
+        body {
+            margin: 0; padding: 0;
+            background: #1e1e1e;
+            height: 100vh; height: 100dvh;
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Segoe UI', sans-serif;
+            overflow: hidden; 
+        }
+
+        /* WINDOW */
+        .app-window {
+            width: 95%; max-width: 1000px; height: 90vh;
+            background-color: #1e1e1e;
+            border-radius: 8px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            display: flex; flex-direction: column;
+            border: 1px solid #333;
+            text-align: left; 
+            position: relative;
+        }
+
+        /* HEADER */
+        .title-bar {
+            background-color: #252526; height: 35px;
+            display: flex; align-items: center; padding: 0 15px;
+            font-size: 13px; color: #ccc; border-bottom: 1px solid #111;
+            flex-shrink: 0; user-select: none;
+        }
+        .dots { display: flex; gap: 8px; margin-right: 15px; }
+        .dot { width: 12px; height: 12px; border-radius: 50%; }
+        .red { background: #ff5f56; } .yellow { background: #ffbd2e; } .green { background: #27c93f; }
+
+        /* MAIN AREA */
+        .main-area { 
+            display: flex; 
+            flex: 1; 
+            height: 100%; 
+            overflow: hidden; 
+            position: relative;
+        }
+
+        /* TERMINAL CONTAINER */
+        .terminal-container {
+            flex: 3; 
+            background-color: #0e0e0e; 
+            padding: 15px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            color: #d4d4d4;
+            overflow-y: auto; 
+            overflow-x: auto; /* Scroll Horizontal Aktif */
+            white-space: nowrap; 
+            display: block; 
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* Scrollbar Styling */
+        .terminal-container::-webkit-scrollbar { width: 8px; height: 8px; }
+        .terminal-container::-webkit-scrollbar-track { background: #1e1e1e; }
+        .terminal-container::-webkit-scrollbar-thumb { background: #444; border-radius: 4px; }
+
+        /* LINE & INPUT */
+        .line { margin-bottom: 2px; display: block; }
+        #currentLine { display: flex; align-items: center; margin-top: 5px; }
+        
+        .prompt { color: #d4d4d4; margin-right: 5px; }
+        .dir-blue { color: #569cd6; font-weight: bold; }
+        .file-white { color: #ce9178; }
+        .cmd-text { color: #dcdcaa; }
+
+        .cursor {
+            display: inline-block; width: 8px; height: 16px; background: #d4d4d4;
+            animation: blink 1s step-end infinite; vertical-align: middle;
+        }
+        @keyframes blink { 50% { opacity: 0; } }
+
+        /* SIDEBAR DEFAULT */
+        .sidebar {
+            flex: 1; background-color: #252526; border-left: 1px solid #333;
+            display: flex; flex-direction: column; text-align: left;
+            min-width: 200px;
+        }
+        .sidebar-header {
+            padding: 15px; font-weight: bold; color: #fff; background: #333;
+            font-size: 12px; text-transform: uppercase;
+        }
+        .cmd-list { padding: 10px; overflow-y: auto; }
+        .cmd-item {
+            background: #2d2d2d; margin-bottom: 10px; padding: 12px;
+            border-radius: 4px; border-left: 3px solid #555;
+            cursor: pointer; transition: 0.2s; user-select: none;
+        }
+        .cmd-item:hover { background: #383838; border-left-color: #007acc; }
+        .cmd-item:active { background: #505050; }
+        
+        .code-pill {
+            display: inline-block; background: #000; color: #4ec9b0;
+            padding: 3px 8px; border-radius: 4px; font-size: 13px;
+            font-weight: bold; font-family: 'JetBrains Mono', monospace; margin-bottom: 5px;
+        }
+        .desc { font-size: 11px; color: #aaa; }
+
+        /* FORM HIDDEN (PENTING BUAT HP) */
+        #cmdForm {
+            position: fixed; top: 0; left: 0; width: 1px; height: 1px; opacity: 0; z-index: -1;
+        }
+        
+        /* TABLE DEFAULT DESKTOP */
+        .master-table {
+            border-collapse: collapse;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            color: #d4d4d4;
+            margin-top: 5px;
+            width: auto;
+            table-layout: fixed;
+        }
+        .master-table td { padding: 2px 0; vertical-align: top; }
+        
+        .col-1 { width: 100px; } 
+        .col-2 { width: 100px; text-align: right; padding-right: 15px; } 
+        .col-3 { width: 120px; text-align: right; }
+        .col-4 { width: 30px; }
+        .col-5 { width: auto; min-width: 150px; }
+
+
+        /* =========================================
+           RESPONSIVE MOBILE
+           ========================================= */
+        @media screen and (max-width: 768px) {
+            body { background: #000; align-items: flex-start; }
+            .app-window { width: 100%; height: 100%; border: none; border-radius: 0; }
+            .main-area { flex-direction: column; }
+
+            .terminal-container {
+                flex: 1; width: 100%; padding: 10px; padding-bottom: 20px;
+                font-size: 11px; 
+            }
+
+            .sidebar {
+                flex: none; height: auto; border-left: none; border-top: 1px solid #333; width: 100%;
+            }
+            .sidebar-header { display: none; }
+
+            .cmd-list {
+                display: flex; flex-direction: row; overflow-x: auto;
+                padding: 10px; gap: 10px; background: #1e1e1e;
+            }
+            .cmd-item {
+                margin-bottom: 0; min-width: 90px;
+                display: flex; flex-direction: column; align-items: center; justify-content: center;
+                text-align: center; border-left: none; border-bottom: 3px solid #555;
+                padding: 8px;
+            }
+            
+            /* TABEL MOBILE */
+            .master-table { font-size: 11px; }
+            .col-1 { width: 75px; } 
+            .col-2 { width: 45px; padding-right: 5px; } 
+            .col-3 { width: 70px; } 
+            .col-4 { width: 15px; } 
+            .col-5 { width: auto; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="app-window">
+        <div class="title-bar">
+            <div class="dots"><div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div></div>
+            <span style="margin-left: 10px;">Admin: CMD</span>
+        </div>
+
+        <div class="main-area">
+            <div class="terminal-container" id="terminal" onclick="focusInput()">
+                <div id="output">
+                    <div class="line">Microsoft Windows [Version 10.0.19045]</div>
+                    <div class="line">(c) Microsoft Corporation.</div>
+                    <div class="line"><br></div>
+                </div>
+                
+                <div class="line" id="currentLine">
+                    <span class="prompt">C:\Users\Siswa></span>
+                    <span id="typedText" class="command-text"></span><span class="cursor"></span>
+                </div>
+            </div>
+
+            <div class="sidebar">
+                <div class="sidebar-header">Materi Praktikum</div>
+                <div class="cmd-list">
+                    <div class="cmd-item" onclick="autoType('dir')">
+                        <span class="code-pill">dir</span><div class="desc">List File</div>
+                    </div>
+                    <div class="cmd-item" onclick="autoType('tree')">
+                        <span class="code-pill">tree</span><div class="desc">Pohon Folder</div>
+                    </div>
+                    <div class="cmd-item" onclick="autoType('cls')">
+                        <span class="code-pill">cls</span><div class="desc">Hapus Layar</div>
+                    </div>
+                    <div class="cmd-item" onclick="autoType('ver')">
+                        <span class="code-pill">ver</span><div class="desc">Versi Win</div>
+                    </div>
+                    <div class="cmd-item" onclick="autoType('help')">
+                        <span class="code-pill">help</span><div class="desc">Bantuan</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 
+       PERBAIKAN UTAMA:
+       Input dibungkus FORM agar tombol 'Enter/Go' di HP memicu event submit.
+    -->
+    <form id="cmdForm" action="#" onsubmit="return false;">
+        <input type="text" id="hiddenInput" autocomplete="off" spellcheck="false">
+    </form>
+
+    <script>
+        const outputDiv = document.getElementById('output');
+        const typedText = document.getElementById('typedText');
+        const hiddenInput = document.getElementById('hiddenInput');
+        const terminal = document.getElementById('terminal');
+        const cmdForm = document.getElementById('cmdForm');
+
+        const responses = {
+            'dir': 
+`<div class='line'> Volume in drive C has no label.</div>
+<div class='line'> Volume Serial Number is 9CD1-1174</div>
+<div class='line'><br></div>
+<div class='line'> Directory of C:\\Users\\Siswa</div>
+<div class='line'><br></div>
+<table class="master-table">
+    <tr><td class="col-1">20/10/23</td><td class="col-2">08:00</td><td class="col-3"><span class='dir-blue'>&lt;DIR&gt;</span></td><td class="col-4"></td><td class="col-5">.</td></tr>
+    <tr><td class="col-1">20/10/23</td><td class="col-2">08:00</td><td class="col-3"><span class='dir-blue'>&lt;DIR&gt;</span></td><td class="col-4"></td><td class="col-5">..</td></tr>
+    <tr><td class="col-1">20/10/23</td><td class="col-2">08:30</td><td class="col-3"><span class='dir-blue'>&lt;DIR&gt;</span></td><td class="col-4"></td><td class="col-5"><span class='dir-blue'>Documents</span></td></tr>
+    <tr><td class="col-1">20/10/23</td><td class="col-2">09:00</td><td class="col-3"><span class='dir-blue'>&lt;DIR&gt;</span></td><td class="col-4"></td><td class="col-5"><span class='dir-blue'>Downloads</span></td></tr>
+    <tr><td class="col-1">22/09/23</td><td class="col-2">11:00</td><td class="col-3">1,024</td><td class="col-4"></td><td class="col-5"><span class='file-white'>tugas.docx</span></td></tr>
+    <tr><td class="col-1">22/09/23</td><td class="col-2">12:00</td><td class="col-3">55,000</td><td class="col-4"></td><td class="col-5"><span class='file-white'>foto.jpg</span></td></tr>
+    <tr><td class="col-1"></td><td class="col-2">2 File(s)</td><td class="col-3">56,024</td><td class="col-4"></td><td class="col-5">bytes</td></tr>
+    <tr><td class="col-1"></td><td class="col-2">4 Dir(s)</td><td class="col-3">99 M</td><td class="col-4"></td><td class="col-5">bytes free</td></tr>
+</table>`,
+            
+            'tree': 
+`<div class='line'>Folder PATH listing for volume Local Disk</div>
+<div class='line'>Volume serial number is 0000-0000</div>
+<div class='line'><span class='dir-blue'>C:.</span></div>
+<div class='line'>├───<span class='dir-blue'>Documents</span></div>
+<div class='line'>│   ├───<span class='dir-blue'>Tugas_IPA</span></div>
+<div class='line'>│   └───<span class='dir-blue'>Tugas_IPS</span></div>
+<div class='line'>├───<span class='dir-blue'>Downloads</span></div>
+<div class='line'>└───<span class='file-white'>foto_liburan.jpg</span></div>`,
+            
+            'help': 
+`<div class='line' style='color:#4ec9b0'>Commands List:</div>
+<table class="master-table">
+    <tr><td style="width:60px"><span class='code-pill'>DIR</span></td><td>List files</td></tr>
+    <tr><td><span class='code-pill'>TREE</span></td><td>Show structure</td></tr>
+    <tr><td><span class='code-pill'>CLS</span></td><td>Clear screen</td></tr>
+    <tr><td><span class='code-pill'>VER</span></td><td>Show version</td></tr>
+</table>`,
+
+            'ver': `<div class='line'>Microsoft Windows [Version 10.0.19045.3693]</div>`
+        };
+
+        function focusInput() { hiddenInput.focus(); }
+        window.onload = focusInput;
+
+        // Listener untuk efek ngetik visual
+        hiddenInput.addEventListener('input', function() {
+            typedText.textContent = this.value;
+            scrollToBottom();
+        });
+
+        // PERBAIKAN: Menggunakan Event 'submit' pada form, bukan 'keydown'
+        cmdForm.addEventListener('submit', function(e) {
+            e.preventDefault(); // Mencegah reload halaman
+            
+            const rawCmd = hiddenInput.value;
+            const cmd = rawCmd.trim().toLowerCase();
+            
+            // Tampilkan history perintah
+            const history = document.createElement('div');
+            history.className = 'line'; 
+            history.innerHTML = `<span class="prompt">C:\\Users\\Siswa></span><span class="command-text">${rawCmd}</span>`;
+            outputDiv.appendChild(history);
+
+            // Reset input
+            hiddenInput.value = ''; 
+            typedText.textContent = '';
+
+            // Proses logika
+            if (cmd === 'cls') {
+                outputDiv.innerHTML = '';
+            } else if (responses[cmd]) {
+                outputDiv.insertAdjacentHTML('beforeend', responses[cmd]);
+            } else if (cmd !== '') {
+                const err = document.createElement('div');
+                err.className = 'line';
+                err.style.color = '#ff5f56';
+                err.textContent = `'${cmd}' is not recognized.`;
+                outputDiv.appendChild(err);
+            }
+            
+            scrollToBottom();
+            
+            // Jaga fokus agar keyboard tidak tertutup (opsional, tergantung browser HP)
+            setTimeout(() => hiddenInput.focus(), 10);
+        });
+
+        function autoType(txt) {
+            hiddenInput.value = txt; 
+            typedText.textContent = txt; 
+            hiddenInput.focus();
+            scrollToBottom();
+        }
+
+        function scrollToBottom() {
+            setTimeout(() => { 
+                terminal.scrollTop = terminal.scrollHeight; 
+                terminal.scrollLeft = 0; 
+            }, 10);
+        }
+    </script>
+</body>
+</html>
