@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Document</title>
+   <link rel="stylesheet" href="../style.css">
+   <script src="./script.js" defer></script>
+</head>
+<body style="display: block;">
+   <h1>Sistem Komputer & Komponennya</h1>
+   <div class="intro-section">
+          <h4>1. Konsep Sistem Komputer</h4>
+          <p><strong>Sistem Komputer</strong> adalah kumpulan elemen-elemen yang saling berinteraksi satu sama lain dalam satu kesatuan untuk mencapai tujuan tertentu. Sistem komputer terdiri dari tiga komponen utama yang tidak dapat dipisahkan:</p>
+          <iframe id="iframe_alur_input" src="./animasi/alur_input.html" onload="resizeIframe(this)" style="border:none; margin-top:15px; margin-bottom:15px;">
+            anjay bang
+          </iframe>
+          <ul class="item-list">
+             <li><strong>Hardware (Perangkat Keras)</strong>: Komponen fisik mesin.</li>
+             <li><strong>Software (Perangkat Lunak)</strong>: Program yang mengontrol mesin.</li>
+             <li><strong>Brainware (Manusia)</strong>: Pengguna yang mengoperasikan komputer.</li>
+          </ul>
+          <p>Alur kerja dasar sistem komputer dimulai dari <strong>Input</strong> (masukan data), kemudian data diolah di bagian <strong>Proses</strong>, dan akhirnya menghasilkan informasi dalam bentuk <strong>Output</strong>.</p>  
+        </div>
+
+        <div style="margin-top:20px; border-top: 1px dashed #cbd5e1; padding-top:20px;">
+          <div class="tab-nav">
+            <button class="tab-btn active" onclick="switchTab(event, 'tabHard')">Hardware</button>
+            <button class="tab-btn" onclick="switchTab(event, 'tabSoft')">Software</button>
+            <button class="tab-btn" onclick="switchTab(event, 'tabBrain')">Brainware</button>
+            <button class="tab-btn" onclick="switchTab(event, 'tabClass')">Penggolongan</button>
+          </div>
+
+          <!-- 1. HARDWARE -->
+          <div id="tabHard" class="content-section active">
+            <h4>a. Perangkat Keras (Hardware)</h4>
+            <p>Merupakan komponen fisik sistem komputer yang dapat disentuh dan dilihat. Hardware dikategorikan menjadi empat bagian utama:</p>
+            
+            <div class="materi-box">
+              <span class="materi-title">1) Perangkat Masukan (Input Device)</span>
+              <p>Berfungsi untuk memasukkan data, perintah, atau instruksi ke dalam komputer.</p>
+              <ul class="item-list">
+                  <li><strong>Mouse:</strong> Perangkat penunjuk kursor. Memiliki fungsi <em>klik kanan</em> (menu shortcut), <em>klik kiri</em> (pilih), <em>scroll</em> (gulir halaman), dan <em>drag & drop</em>.</li>
+                  <li><strong>Keyboard:</strong> Papan ketik untuk input karakter. Terdiri dari:
+                    <br>- <em>Typing Keys</em>: Huruf, angka, tanda baca.
+                    <br>- <em>Function Keys (F1-F12)</em>: Fungsi khusus.
+                    <br>- <em>Numeric Keys</em>: Tombol angka (seperti kalkulator).
+                    <br>- <em>Control Keys</em>: Ctrl, Alt, Esc, Arrow keys.
+                  </li>
+                  <li><strong>Touch Screen:</strong> Layar sentuh yang memungkinkan input instruksi melalui sentuhan jari atau stylus (banyak dipakai di HP/Tablet).</li>
+                  <li><strong>Barcode Reader:</strong> Pemindai kode batang (barcode) menggunakan cahaya untuk membaca kode digital, kemudian dikirim ke komputer (sering di kasir).</li>
+              </ul>
+            </div>
+
+            <div class="materi-box">
+              <span class="materi-title">2) Unit Pemrosesan (Processing Unit)</span>
+              <p>Bagian ini adalah "otak" komputer yang mengolah data input menjadi informasi.</p>
+              <ul class="item-list">
+                  <li><strong>CPU (Central Processing Unit):</strong> Komponen elektronik utama (mikroprosesor) yang mengontrol semua fungsi sistem. CPU terdiri dari:
+                     <br>- <strong>Unit Kontrol (Control Unit):</strong> Mengatur lalu lintas data, mengambil instruksi dari memori, dan mengoordinasikan perangkat I/O.
+                     <br>- <strong>ALU (Arithmetic Logic Unit):</strong> Melakukan operasi matematika (tambah, kurang) dan logika (AND, OR, perbandingan).
+                  </li>
+                  <li>Cara kerjanya: CPU mengambil instruksi dari memori (fetch), menerjemahkannya (decode), dan menjalankannya (execute).</li>
+              </ul>
+            </div>
+
+            <div class="materi-box">
+              <span class="materi-title">3) Unit Memori (Storage)</span>
+              <p>Tempat penyimpanan data dan instruksi.</p>
+              <ul class="item-list">
+                  <li><strong>Memori Utama (RAM - Random Access Memory):</strong> Menyimpan data sementara saat program berjalan. Bersifat <em>volatil</em> (data hilang jika listrik mati).</li>
+                  <li><strong>ROM (Read Only Memory):</strong> Menyimpan program dasar untuk <em>booting</em> awal komputer.</li>
+                  <li><strong>Memori Sekunder (Storage):</strong> Penyimpanan permanen dan berkapasitas besar. Bersifat <em>non-volatil</em> (data tetap ada walau listrik mati). Contoh: Harddisk (HDD), SSD, Flashdrive.</li>
+              </ul>
+            </div>
+
+            <div class="materi-box">
+              <span class="materi-title">4) Perangkat Keluaran (Output Device)</span>
+              <p>Menampilkan hasil pemrosesan data kepada pengguna.</p>
+              <ul class="item-list">
+                  <li><strong>Monitor:</strong> Menampilkan output visual/layar secara langsung (softcopy).</li>
+                  <li><strong>Printer:</strong> Mencetak hasil output ke dalam bentuk kertas (hardcopy).</li>
+                  <li><strong>Speaker:</strong> Mengeluarkan output dalam bentuk suara/audio.</li>
+              </ul>
+            </div>
+          </div>
+          
+          <!-- 2. SOFTWARE -->
+          <div id="tabSoft" class="content-section">
+            <h4>b. Perangkat Lunak (Software)</h4>
+            <p>Kumpulan kode program yang membantu hardware bekerja. Software tidak memiliki wujud fisik, tetapi berupa instruksi digital.</p>
+            
+            <div class="materi-box">
+              <span class="materi-title">1) Sistem Operasi (Operating System)</span>
+              <p>Software paling mendasar yang berfungsi sebagai penghubung antara manusia dan hardware. OS mengelola sumber daya komputer.</p>
+              <ul class="item-list">
+                  <li><strong>Contoh Umum:</strong> Microsoft Windows, MacOS (Apple), Linux, Android (Mobile), Chrome OS.</li>
+              </ul>
+            </div>
+
+            <div class="materi-box">
+              <span class="materi-title">2) Bahasa Pemrograman (Programming Language)</span>
+              <p>Software yang berisi instruksi untuk membuat program lain, memungkinkan manusia berkomunikasi dengan mesin melalui kode.</p>
+              <ul class="item-list">
+                  <li><strong>Contoh:</strong> Python, Java, PHP, JavaScript, C++, Ruby.</li>
+              </ul>
+            </div>
+
+            <div class="materi-box">
+              <span class="materi-title">3) Aplikasi (Application)</span>
+              <p>Software yang dibuat untuk tujuan spesifik membantu tugas sehari-hari pengguna.</p>
+              <ul class="item-list">
+                  <li><strong>Pengolah Kata/Angka:</strong> Microsoft Office (Word, Excel, PowerPoint).</li>
+                  <li><strong>Database/Presentasi:</strong> Aplikasi basis data dan slide presentasi.</li>
+              </ul>
+            </div>
+
+            <div class="materi-box">
+              <span class="materi-title">4) Utility (Program Bantu)</span>
+              <p>Program tambahan untuk memelihara dan melindungi kinerja sistem komputer.</p>
+              <ul class="item-list">
+                  <li><strong>Contoh:</strong> Antivirus (Norton, McAfee, Kaspersky), Disk Defragmenter, Screensaver, Firewall.</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- 3. BRAINWARE -->
+          <div id="tabBrain" class="content-section">
+            <h4>c. Brainware (Pengguna)</h4>
+            <p>Brainware adalah orang yang menggunakan, mengoperasikan, atau mengatur sistem komputer. Tanpa manusia, komputer tidak bisa berjalan sendiri. Berikut adalah tingkatan dan jenis brainware:</p>
+            
+            <div class="materi-box">
+              <ul class="item-list">
+                  <li><strong>1. Operator Komputer:</strong> Pengguna akhir yang menjalankan instruksi/aplikasi (contoh: mengetik dokumen, input data).</li>
+                  <li><strong>2. Teknisi Komputer:</strong> Orang yang ahli memperbaiki kerusakan fisik hardware dan masalah perangkat. Bertanggung jawab atas pemeliharaan.</li>
+                  <li><strong>3. Manajer Proyek:</strong> Memimpin proyek pengembangan sistem, mengatur waktu, dan koordinasi antar tim.</li>
+                  <li><strong>4. Trainer:</strong> Orang yang memiliki pengetahuan untuk mendidik/mengajar orang lain tentang komputer.</li>
+                  <li><strong>5. Spesialis Jaringan:</strong> Ahli dalam mengelola, merancang, dan memelihara jaringan komputer (network).</li>
+                  <li><strong>6. Konsultan:</strong> Penasihat yang memberikan rekomendasi solusi terkait masalah sistem komputer.</li>
+                  <li><strong>7. Sistem Analis:</strong> Bertanggung jawab merancang sistem yang akan dibangun, memprediksi kebutuhan, dan mengevaluasi sistem.</li>
+                  <li><strong>8. Programmer:</strong> Orang yang menulis kode program untuk menciptakan software/aplikasi pendukung sistem.</li>
+                  <li><strong>9. Administrator Database:</strong> Mengelola, memonitor, dan merawat basis data organisasi.</li>
+                  <li><strong>10. Desainer Grafis:</strong> Memiliki keahlian membuat objek visual/animasi menggunakan komputer.</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- 4. PENGGOLONGAN KOMPUTER -->
+          <div id="tabClass" class="content-section">
+             <h4>d. Penggolongan Komputer</h4>
+             <p>Komputer dapat diklasifikasikan berdasarkan data yang diolah, penggunaan, kapasitas, dan generasinya.</p>
+
+             <div class="materi-box">
+               <span class="materi-title">1) Berdasarkan Data yang Diolah</span>
+               <ul class="item-list">
+                  <li><strong>Komputer Analog:</strong> Mengolah data kualitatif/fisik (suhu, tekanan). Contoh: Termometer, Voltmeter, Seismometer.</li>
+                  <li><strong>Komputer Digital:</strong> Mengolah data angka/logika. Contoh: Laptop, Kalkulator, Mesin ATM.</li>
+                  <li><strong>Komputer Hybrid:</strong> Kombinasi keduanya. Contoh: Mesin di rumah sakit (EKG), Mesin Dispenser SPBU.</li>
+               </ul>
+             </div>
+
+             <div class="materi-box">
+               <span class="materi-title">2) Berdasarkan Penggunaannya</span>
+               <ul class="item-list">
+                  <li><strong>Special Purpose Computer:</strong> Untuk satu tujuan khusus. Contoh: Server, Router, Mikrokontroler.</li>
+                  <li><strong>General Purpose Computer:</strong> Untuk berbagai tujuan umum. Contoh: Laptop, PC Desktop.</li>
+               </ul>
+             </div>
+
+             <div class="materi-box">
+               <span class="materi-title">3) Berdasarkan Kapasitas & Ukuran</span>
+               <ul class="item-list">
+                  <li><strong>Komputer Mikro:</strong> PC Desktop, Laptop.</li>
+                  <li><strong>Komputer Mini:</strong> Komputer server menengah (IBM AS/400).</li>
+                  <li><strong>Komputer Kecil:</strong> Small-scale mainframe.</li>
+                  <li><strong>Komputer Menengah:</strong> Medium-scale mainframe.</li>
+                  <li><strong>Komputer Besar:</strong> Mainframe (untuk sensus/perbankan besar).</li>
+                  <li><strong>Komputer Super:</strong> Kecepatan proses sangat tinggi. Contoh: IBM ASCI White (simulasi nuklir).</li>
+               </ul>
+             </div>
+
+             <div class="materi-box">
+               <span class="materi-title">4) Berdasarkan Generasi</span>
+               <ul class="item-list">
+                  <li><strong>Generasi 1 (1940-1956):</strong> Tabung vakum, besar (ENIAC, EDVAC).</li>
+                  <li><strong>Generasi 2 (1957-1963):</strong> Transistor (IBM 1401).</li>
+                  <li><strong>Generasi 3 (1964-1971):</strong> Integrated Circuit/IC (CDC 1700).</li>
+                  <li><strong>Generasi 4 (1972-sekarang):</strong> Mikroprosesor (IBM PC, Apple).</li>
+                  <li><strong>Generasi 5:</strong> AI & masa depan (sedang dikembangkan).</li>
+               </ul>
+             </div>
+          </div>
+        </div>
+</body>
+</html>

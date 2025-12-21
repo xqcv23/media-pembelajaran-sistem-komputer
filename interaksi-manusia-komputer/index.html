@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Document</title>
+   <link rel="stylesheet" href="../style.css">
+   <script src="./script.js" defer></script>
+</head>
+<body style="display: block;">
+   <h1>Interaksi Manusia dan Komputer</h1>
+   <div class="intro-section">
+            <h4>1. Konsep Dasar & Definisi</h4>
+            <div class="materi-box">
+                <p><strong>Human-Computer Interaction (HCI)</strong> atau interaksi manusia dan komputer adalah sebuah hubungan antara manusia dan komputer yang mempunyai karakteristik tertentu untuk mencapai suatu tujuan tertentu dengan menjalankan sistem yang disebut <strong>Interface (Antarmuka)</strong>.</p>
+                <p>Tujuan utama dari antarmuka adalah:</p>
+                <ul class="item-list">
+                    <li>Menciptakan komunikasi yang efektif antara perangkat dan manusia.</li>
+                    <li>Menutup atau menyembunyikan kerumitan/kompleksitas sistem agar mudah digunakan.</li>
+                </ul>
+            </div>
+
+            <div class="materi-box">
+                <span class="materi-title">Alur Proses Komunikasi</span>
+                <p>Proses ini diawali dari unit <strong>Input</strong> (menggunakan perangkat input), masuk ke <strong>Unit Pemrosesan/CPU</strong>, lalu disimpan di <strong>Storage</strong>, dan berujung pada <strong>Output</strong> (layar atau print out).</p>
+                <p>Pada proses ini akan menghasilkan sebuah <strong>Feedback (Umpan Balik)</strong> yang menjadi bentuk interaksi nyata. Jenis feedback dapat berupa:</p>
+                <ul class="item-list">
+                    <li>Kotak Dialog (Dialog Box).</li>
+                    <li>Pesan sukses (sesuai).</li>
+                    <li>Pesan <em>Error</em> (kesalahan).</li>
+                </ul>
+            </div>
+            
+            <div class="materi-box">
+                <span class="materi-title">Ilmu Gabungan</span>
+                <p>Dalam perkembangannya, HCI menjadi ilmu gabungan dari berbagai disiplin ilmu seperti <strong>Psikologi</strong>, <strong>Desain Grafis</strong>, <strong>Tipografi</strong>, dan <strong>Ergonomik</strong>. Hal ini bertujuan agar pengguna tidak hanya terampil, tetapi juga merasa nyaman saat menggunakan komputer.</p>
+            </div>
+        </div>
+
+        <div style="margin-top:20px; border-top: 1px dashed #cbd5e1; padding-top:20px;">
+            <div class="tab-nav">
+                <button class="tab-btn active" onclick="switchTab(event, 'tabCLI')">CLI (Text)</button>
+                <button class="tab-btn" onclick="switchTab(event, 'tabGUI')">GUI (Visual)</button>
+                <button class="tab-btn" onclick="switchTab(event, 'tabBanding')">Perbedaan</button>
+            </div>
+
+            <!-- TAB CLI -->
+            <div id="tabCLI" class="content-section active">
+                <h4>2. Command Line Interface (CLI)</h4>
+                <div class="materi-box">
+                    <span class="materi-title">Definisi CLI</span>
+                    <p>CLI merupakan jenis antarmuka berbasis teks. Pengguna mengetikkan perintah (<em>command</em>) tertentu lalu diakhiri dengan menekan tombol <strong>Enter</strong> pada keyboard. Aplikasi CLI pada Windows dikenal dengan nama <strong>Command Prompt (CMD)</strong> yang sudah ada sejak zaman MS-DOS.</p>
+                </div>
+
+                <div class="materi-box">
+                    <span class="materi-title">Cara Mengakses CMD di Windows</span>
+                    <ul class="item-list">
+                        <li><strong>Cara 1:</strong> Buka kotak <em>Run</em> (kombinasi tombol Win + R), ketik "cmd" atau "CMD", lalu klik OK.</li>
+                        <li><strong>Cara 2:</strong> Buka Start Menu -> Windows System -> Command Prompt.</li>
+                        <li><strong>Cara 3:</strong> Gunakan fasilitas <em>Search</em>, ketik "cmd", lalu pilih Command Prompt.</li>
+                    </ul>
+                </div>
+
+                <div class="materi-box">
+                    <span class="materi-title">Contoh Perintah Dasar CLI</span>
+                    <p>Tampilan awal CMD biasanya menunjukkan lokasi folder pengguna saat ini (misal: <code>C:\\Users\\NamaUser></code>). Berikut beberapa perintah dasar:</p>
+                    <ul class="item-list">
+                        <li><strong>dir</strong>: Menampilkan daftar direktori, file, dan folder yang ada di lokasi aktif.</li>
+                        <li><strong>tree</strong>: Menampilkan struktur folder dan subfolder secara visual menyerupai pohon (tree) yang terhubung garis.</li>
+                        <li><strong>help</strong>: Meminta bantuan informasi tentang perintah apa saja yang disediakan oleh CMD.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- TAB GUI -->
+            <div id="tabGUI" class="content-section">
+                <h4>3. Graphic User Interface (GUI)</h4>
+                <div class="materi-box">
+                    <span class="materi-title">Definisi GUI</span>
+                    <p>GUI merupakan jenis interaksi pengguna dengan perangkat yang menggunakan kotak dialog secara visual. Interaksi dilakukan melalui gambar, ikon, jendela (window), dan menu.</p>
+                </div>
+
+                <div class="materi-box">
+                    <span class="materi-title">Karakteristik & Interaksi</span>
+                    <ul class="item-list">
+                        <li>Menggunakan sentuhan lewat mouse, stylus (touch pen), atau jari pada layar sentuh.</li>
+                        <li>Tampilan berupa grafik dan teks yang minimal.</li>
+                        <li>Bersifat interaktif: pengguna hanya perlu mengeklik tampilan (ikon/menu) yang diinginkan.</li>
+                        <li><strong>Contoh Populer:</strong> Microsoft Windows, MacOS (Apple), dan Android (Smartphone).</li>
+                    </ul>
+                </div>
+
+                <div class="materi-box">
+                    <span class="materi-title">Kelebihan & Kekurangan GUI</span>
+                    <p><strong>Kelebihan:</strong> Lebih sederhana, mudah digunakan (user-friendly), secara visual menarik dan tidak membosankan. Sangat cocok bagi pemula karena mudah dipelajari (hanya klik ikon/dialog).</p>
+                    <p><strong>Kekurangan:</strong> Tidak cocok untuk perangkat dengan spesifikasi rendah karena <strong>memakan memori (RAM) yang cukup besar</strong>. Kecepatan proses tampilan GUI sangat bergantung pada kemampuan hardware.</p>
+                </div>
+            </div>
+
+            <!-- TAB PERBANDINGAN -->
+            <div id="tabBanding" class="content-section">
+                <h4>4. Perbedaan CLI dan GUI</h4>
+                <div class="materi-box">
+                    <p>Berikut adalah perbedaan mendasar dalam proses interaksi antara pengguna dan komputer melalui CLI dan GUI:</p>
+                    <ul class="item-list">
+                        <li><strong>Bentuk Perintah:</strong>
+                            <br> - CLI: Perintah dalam bentuk teks (diketik).
+                            <br> - GUI: Perintah dalam bentuk grafis/gambar (diklik).
+                        </li>
+                        <li><strong>Pemahaman Pengguna:</strong>
+                            <br> - CLI: Pengguna <strong>harus memahami/menghafal</strong> sintaks perintah (misal: harus ketik "DIR" dengan benar, jika salah ketik maka error).
+                            <br> - GUI: Tidak memerlukan pengetahuan mendalam tentang kode/sintaks, cukup memilih ikon.
+                        </li>
+                        <li><strong>Penggunaan Memori (Resource):</strong>
+                            <br> - CLI: <strong>Tidak</strong> menggunakan banyak memori, sangat ringan.
+                            <br> - GUI: Menggunakan memori yang <strong>cukup besar</strong> untuk merender visual.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+</body>
+</html>

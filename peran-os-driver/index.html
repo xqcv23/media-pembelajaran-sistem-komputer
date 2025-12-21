@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Document</title>
+   <link rel="stylesheet" href="../style.css">
+   <script src="./script.js" defer></script>
+</head>
+<body style="display: block;">
+   <h1>Peran OS & Driver dalam Interaksi</h1>
+   <div class="intro-section">
+            <h4>1. Pengertian Sistem Operasi</h4>
+            <p><strong>Sistem Operasi (OS)</strong> adalah perangkat lunak yang berfungsi sebagai penghubung antara manusia dengan perangkat yang digunakan sehingga dapat berfungsi dengan baik. Saat komputer pertama kali dinyalakan (booting), komputer akan menjalankan sistem operasi terlebih dahulu sebelum aplikasi lain (seperti Word atau Browser) bisa berjalan.</p>
+        </div>
+
+        <div style="margin-top:20px; border-top: 1px dashed #cbd5e1; padding-top:20px;">
+          <div class="tab-nav">
+            <button class="tab-btn active" onclick="switchTab(event, 'tabFungsi')">Fungsi OS</button>
+            <button class="tab-btn" onclick="switchTab(event, 'tabDriver')">Driver & Interaksi</button>
+            <button class="tab-btn" onclick="switchTab(event, 'tabInstall')">Kategori & Instalasi</button>
+          </div>
+
+          <!-- TAB FUNGSI OS -->
+          <div id="tabFungsi" class="content-section active">
+            <h4>Fungsi Utama Sistem Operasi</h4>
+            <div class="materi-box">
+                <ul class="item-list">
+                    <li><strong>a. Menjalankan Operasi Dasar:</strong> OS adalah perangkat lunak pertama yang harus diinstal. Tanpanya, aplikasi lain tidak bisa berjalan.</li>
+                    <li><strong>b. Mengatur Kerja Hardware dan Software:</strong> OS berperan sebagai jembatan yang mengelola RAM, CPU, dan perangkat lain agar bekerja selaras.</li>
+                    <li><strong>c. Wadah Program atau Aplikasi:</strong> Aplikasi "hidup" dan menyatu di dalam OS, tidak bisa berdiri sendiri.</li>
+                    <li><strong>d. Menyajikan Tampilan:</strong> Menampilkan antarmuka (teks atau grafis) di layar monitor agar bisa dibaca pengguna.</li>
+                    <li><strong>e. Mengkoordinasikan Kerja Perangkat:</strong> Menyederhanakan instruksi hardware yang kompleks agar aplikasi bisa bekerja lebih efisien.</li>
+                    <li><strong>f. Mengoptimalkan Fungsi Perangkat:</strong> Mengatur waktu kerja CPU dan penyimpanan data di memori untuk kinerja terbaik.</li>
+                    <li><strong>g. Mengawasi dan Melindungi:</strong> Memberikan hak akses (siapa yang boleh membuka file) dan menjaga keamanan sistem dari pengguna yang tidak berhak.</li>
+                </ul>
+            </div>
+          </div>
+
+          <!-- TAB DRIVER & INTERAKSI -->
+          <div id="tabDriver" class="content-section">
+            <h4>2. Driver dan Model Interaksi</h4>
+            <div class="materi-box">
+                <span class="materi-title">Apa itu Driver?</span>
+                <p>Driver adalah <strong>software</strong> khusus yang bertugas mengontrol setiap hardware yang dipasang. Berbeda dengan aplikasi biasa, driver bersifat spesifik untuk menerjemahkan perintah OS agar dimengerti oleh hardware tertentu.</p>
+            </div>
+            
+            <div class="materi-box">
+                <span class="materi-title">Model Tingkatan Interaksi</span>
+                <p>Bayangkan saat kamu mengeklik tombol "Print" di Microsoft Word. Prosesnya berlapis dari atas ke bawah:</p>
+                <div style="background:#eff6ff; padding:15px; border-radius:8px; text-align:center; font-weight:bold; color:#1e3a8a; border:1px solid #bfdbfe;">
+                    Pengguna (Klik Print) <br>⬇<br> 
+                    Aplikasi (Word) <br>⬇<br> 
+                    Sistem Operasi (Windows) <br>⬇<br> 
+                    Driver (Printer Driver) <br>⬇<br> 
+                    BIOS <br>⬇<br> 
+                    Perangkat Keras (Printer mencetak)
+                </div>
+                <p style="margin-top:15px; font-size:0.9rem;"><em>Catatan:</em> Sistem operasi bekerja secara <strong>multitasking</strong> (mampu menjalankan banyak perintah sekaligus) dan memprioritaskan instruksi mana yang harus dikerjakan driver terlebih dahulu.</p>
+            </div>
+          </div>
+
+          <!-- TAB KATEGORI & INSTALASI -->
+          <div id="tabInstall" class="content-section">
+             <h4>3. Kategori Perangkat & Instalasi</h4>
+             <p>Tidak semua hardware membutuhkan instalasi driver manual. Sistem operasi modern biasanya sudah memiliki <em>driver generik</em> (bawaan).</p>
+             
+             <div class="materi-box">
+                <span class="materi-title">Tabel Kebutuhan Driver</span>
+                <table class="custom-table">
+                    <tr>
+                        <th width="50%">Tidak Perlu Driver Khusus (Biasanya langsung jalan)</th>
+                        <th width="50%">Mungkin Perlu Driver Khusus</th>
+                    </tr>
+                    <tr>
+                        <td>CPU, Harddisk, Motherboard, Keyboard, Mouse, Monitor, RAM, Speaker, UPS.</td>
+                        <td>Modem, Network Card, Printer, Scanner, Sound Card, Bluetooth, VGA Card, Wi-Fi, Webcam.</td>
+                    </tr>
+                </table>
+             </div>
+
+             <div class="materi-box">
+                <span class="materi-title">Proses Instalasi Driver</span>
+                <p>Jika hardware tidak dikenali, kamu perlu menginstal driver secara manual. Caranya:</p>
+                <ul class="item-list">
+                    <li>Masukkan CD/DVD driver atau unduh dari website resmi.</li>
+                    <li>Jalankan file instalasi dan ikuti petunjuk di layar (klik Install/Next).</li>
+                    <li>Tunggu hingga selesai.</li>
+                    <li>Lakukan <strong>Restart</strong> komputer agar driver bisa berfungsi sempurna.</li>
+                </ul>
+             </div>
+          </div>
+        </div>
+</body>
+</html>
