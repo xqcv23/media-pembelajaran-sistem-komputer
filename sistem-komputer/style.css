@@ -67,6 +67,7 @@ h1 {
 }
 
 @media screen and (max-width: 768px) {
+
     p,
     li,
     span {
@@ -84,10 +85,11 @@ h1 {
     h1 {
         font-size: initial;
     }
+
     #iframe_alur_input {
         height: 700px;
     }
-    
+
     #iframe_mouse {
         height: 460px;
         overflow: hidden;
@@ -100,21 +102,27 @@ h1 {
     #iframe_touch {
         height: 230px;
     }
+
     #iframe_cpu {
         height: 400px;
     }
+
     #iframe_hdd_ram {
         height: 400px;
     }
+
     #iframe_monitor {
         height: 250px;
     }
+
     #iframe_printer {
         height: 370px;
     }
+
     #iframe_speaker {
         height: 370px;
     }
+
     #iframe_brainware {
         height: 750px;
     }
