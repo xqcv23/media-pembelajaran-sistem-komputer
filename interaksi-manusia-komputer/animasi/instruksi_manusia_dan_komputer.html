@@ -7,7 +7,7 @@
     <style>
         /* --- TEMA --- */
         :root {
-            --bg: #0f172a;
+            --bg: #e2e8f0;
             --box-bg: #1e293b;
             --line-color: #475569;
             --terminal-bg: #020617;
@@ -21,7 +21,7 @@
             display: flex; flex-direction: column; align-items: center;
             min-height: 100vh;
             margin: 0; padding: 10px;
-            overflow-x: hidden;
+            overflow: hidden;
         }
 
         h1 { 
@@ -175,16 +175,24 @@
         @keyframes shoot-u { 0% { top: 100%; opacity: 1; } 100% { top: 0; opacity: 1; } }
 
         @media (max-width: 600px) {
-            .diagram-container { transform: scale(0.55); margin-top: 0px; margin-bottom: -50px; margin-left: -5px; }
-            .controls { width: 90%; margin-bottom: 10px; }
+            .diagram-container { 
+                transform: scale(0.5);
+                 margin-top: 0px; 
+                 margin-bottom: -50px;
+                  margin-left: -5px; }
+            .controls { 
+                width: 90%;
+                margin-bottom: 10px;
+                transform: scale(0.8);
+            }
             h1 { font-size: 1rem; margin-bottom: 15px; }
-            body { overflow-y: auto; padding-bottom: 50px;} 
+            body { overflow: hidden; padding-bottom: 50px;}
         }
     </style>
 </head>
 <body>
 
-    <h1>Simulasi Interaksi Manusia & Komputer</h1>
+    <h1 style="color: #000;">Simulasi Interaksi Manusia & Komputer</h1>
 
     <div class="controls">
         <input type="text" id="userInput" placeholder="Ketik Data..." autocomplete="off">

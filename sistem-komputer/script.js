@@ -11,3 +11,5 @@ function switchTab(evt, tabName) {
       iframe.style.height = iframe.contentWindow.document.body.scrollHeight + 'px';
       iframe.style.width = "100%";
   }
+
+//   document.getElementById('tes').click();

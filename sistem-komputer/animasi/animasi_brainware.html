@@ -11,6 +11,7 @@
         --neon: #00f3ff;
         --purple: #bc13fe;
         --dark: #09090b;
+        --blue: #2d2dc4;
         --panel: #13131a;
     }
 
@@ -109,9 +110,11 @@
     @media (max-width: 768px) {
         body {
             /* PENTING: Izinkan scroll di body HP */
-            overflow-y: auto; 
+            /* overflow-y: auto;  */
+            overflow: hidden; 
             height: auto;
             display: block; /* Matikan flex center body biar bisa scroll */
+            transform: scale(0.8);
         }
 
         .interface {
@@ -209,7 +212,6 @@
                 </div>
             </div>
         </div>
-
     </div>
 
     <script>
@@ -259,7 +261,7 @@
                     vals[index].innerText = val + '%';
                     if(val >= 90) bars[index].style.backgroundColor = "#00f3ff";
                     else if(val >= 60) bars[index].style.backgroundColor = "#bc13fe";
-                    else bars[index].style.backgroundColor = "#555";
+                    else bars[index].style.backgroundColor = "#d70303";
                 }, 200);
             });
         }
