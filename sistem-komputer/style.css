@@ -1,0 +1,78 @@
+#iframe_alur_input {
+    width: 100%;
+    height: 450px;
+}
+
+#iframe_mouse {
+    width: 100%;
+    height: 700px;
+}
+
+#iframe_keyboard {
+    width: 100%;
+    height: 550px;
+}
+
+#iframe_touch {
+    width: 100%;
+    height: 540px;
+}
+
+#iframe_cpu {
+    width: 100%;
+    height: 450px;
+}
+
+#iframe_hdd_ram {
+    width: 100%;
+    height: 500px;
+}
+
+#iframe_monitor {
+    width: 100%;
+    height: 600px;
+}
+
+#iframe_printer {
+    width: 100%;
+    height: 450px;
+}
+
+#iframe_speaker {
+    width: 100%;
+    height: 500px;
+}
+
+@media screen and (max-width: 768px) {
+    #iframe_alur_input {
+        height: 700px;
+    }
+    
+    #iframe_mouse {
+        height: 460px;
+        overflow: hidden;
+    }
+
+    #iframe_keyboard {
+        height: 350px;
+    }
+
+    #iframe_touch {
+        height: 230px;
+    }
+    #iframe_cpu {
+        height: 370px;
+    }
+    #iframe_hdd_ram {
+        height: 400px;
+    }
+    #iframe_monitor {
+        height: 280px;
+    }
+    #iframe_printer {
+        height: 370px;
+    }
+    #iframe_speaker {
+        height: 370px;
+    }
+}

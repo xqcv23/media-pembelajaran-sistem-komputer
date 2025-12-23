@@ -10,7 +10,7 @@
 
         :root {
             --c-hw: #00ff66;
-            --bg: #08080a;
+            --bg: #e2e8f0;
             /* Waktu total 1 siklus (4 kertas) = 8 detik */
             --cycle: 8s; 
         }
@@ -23,7 +23,9 @@
 
         .printer-modern {
             position: relative; width: 280px; height: 120px;
-            transform: scale(1.0) rotateX(15deg); 
+            /* transform: scale(1.2) !important; */
+            transform: scale(1.2);
+            transform: rotateX(15deg); 
             transform-style: preserve-3d;
             animation: rumble 0.1s infinite;
         }
@@ -125,9 +127,13 @@
 
         /* Animasi Lain */
         @keyframes feedIn { 0% { top: -55px; opacity: 1; } 20% { top: 10px; opacity: 0; } 100% { top: 10px; opacity: 0; } }
-        @keyframes rumble { 0% { transform: scale(1.0) rotateX(15deg) translateX(0); } 50% { transform: scale(1.0) rotateX(15deg) translateX(0.5px); } 100% { transform: scale(1.0) rotateX(15deg) translateX(0); } }
+        @keyframes rumble { 0% { transform: scale(1.1) rotateX(15deg) translateX(0); } 50% { transform: scale(1.1) rotateX(15deg) translateX(0.5px); } 100% { transform: scale(1.1) rotateX(15deg) translateX(0); } }
         @keyframes scan { from { left: 20px; width: 20px; } to { left: 240px; width: 20px; } }
         @keyframes blink { 0%, 100% { opacity: 1; box-shadow: 0 0 8px orange; } 50% { opacity: 0.2; box-shadow: none; } }
+
+        @media screen and (max-width: 768px) {
+            @keyframes rumble { 0% { transform: scale(0.7) rotateX(15deg) translateX(0); } 50% { transform: scale(0.7) rotateX(15deg) translateX(0.5px); } 100% { transform: scale(0.7) rotateX(15deg) translateX(0); } }
+        }
 
     </style>
 </head>
