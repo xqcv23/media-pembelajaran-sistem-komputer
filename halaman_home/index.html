@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>SMAN 8 Samarinda - Home</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;800&display=swap" rel="stylesheet">
+
+  <!-- =========================================
+       BAGIAN CSS (STYLE)
+       ========================================= -->
+  <style>
+    /* --- VARIABLES & RESET --- */
+    :root {
+      --bg-color: #ffffff;
+      --primary: #3b82f6;
+      --cyan: #06b6d4;
+      --pink: #ec4899;
+      --text-dark: #0f172a;
+      --text-grey: #475569;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-dark);
+      min-height: 100vh;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      position: relative;
+    }
+
+    /* BACKGROUND OPTIMIZED */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      background-image:
+        linear-gradient(rgba(59, 130, 246, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(59, 130, 246, 0.05) 1px, transparent 1px),
+        radial-gradient(circle at 0% 0%, rgba(59, 130, 246, 0.1), transparent 40%),
+        radial-gradient(circle at 100% 100%, rgba(6, 182, 212, 0.1), transparent 40%);
+      background-size: 40px 40px, 40px 40px, 100% 100%, 100% 100%;
+    }
+
+    /* --- LAYOUT UTAMA --- */
+    .container {
+      width: 100%;
+      max-width: 1000px;
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+      margin-bottom: 60px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* --- HERO HEADER --- */
+    .hero-header {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .badge-live {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #fff;
+      padding: 6px 16px;
+      border-radius: 50px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--primary);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      margin-bottom: 15px;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      background: #22c55e;
+      border-radius: 50%;
+      box-shadow: 0 0 8px #22c55e;
+    }
+
+    h1 {
+      font-size: 3rem;
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 10px;
+      letter-spacing: -1px;
+      color: #1e3a8a;
+    }
+
+    h1 span {
+      background: linear-gradient(120deg, #2563eb, #06b6d4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .typing-container {
+      font-size: 1.1rem;
+      color: #334155;
+      font-weight: 600;
+      min-height: 1.5em;
+      margin-bottom: 30px;
+      display: inline-block;
+    }
+
+    .typing-container::after {
+      content: '|';
+      color: var(--primary);
+      font-weight: 700;
+      animation: blink 1s step-end infinite;
+      margin-left: 2px;
+    }
+
+    /* --- SLIDER --- */
+    .slider-frame {
+      border-radius: 24px;
+      padding: 0;
+      background: transparent;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .slider-window {
+      height: 260px;
+      width: 100%;
+      overflow: hidden;
+      padding: 10px 0;
+    }
+
+    .slide-track {
+      display: flex;
+      width: calc(300px * 10);
+      animation: scroll 35s linear infinite;
+    }
+
+    .slide {
+      width: 300px;
+      height: 240px;
+      padding: 0 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .photo-card {
+      width: 100%;
+      height: 100%;
+      background: #fff;
+      padding: 8px;
+      border-radius: 20px;
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+    }
+
+    .photo-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 16px;
+    }
+
+    /* --- NAVIGASI --- */
+    .nav-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      position: relative;
+    }
+
+    .nav-card {
+      position: relative;
+      overflow: hidden;
+      background: #fff;
+      border-radius: 20px;
+      padding: 20px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.03);
+      cursor: pointer;
+      text-align: left;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 15px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      user-select: none;
+    }
+
+    .nav-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 30px rgba(59, 130, 246, 0.15);
+      border-color: var(--primary);
+    }
+
+    .nav-card:active {
+      transform: scale(0.98);
+    }
+
+    .nav-icon {
+      font-size: 1.8rem;
+      min-width: 55px;
+      height: 55px;
+      background: #eff6ff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #dbeafe;
+    }
+
+    .nav-text h3 {
+      font-size: 1rem;
+      margin-bottom: 2px;
+      color: var(--text-dark);
+      font-weight: 800;
+    }
+
+    .nav-text p {
+      font-size: 0.75rem;
+      color: var(--text-grey);
+      line-height: 1.3;
+    }
+
+    /* Efek Ripple */
+    span.ripple {
+      position: absolute;
+      border-radius: 50%;
+      transform: scale(0);
+      animation: ripple 0.6s linear;
+      background-color: rgba(59, 130, 246, 0.3);
+      pointer-events: none;
+    }
+
+    /* --- LOKASI & FOOTER --- */
+    .location-wrapper {
+      margin-top: 30px;
+    }
+
+    .location-card {
+      background: #fff;
+      padding: 15px;
+      border-radius: 20px;
+      border: 1px solid #e2e8f0;
+    }
+
+    .location-title {
+      margin-bottom: 10px;
+      font-size: 1.1rem;
+      font-weight: 800;
+    }
+
+    .location-map {
+      border: 0;
+      border-radius: 10px;
+      width: 100%;
+      height: 200px;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 30px 0;
+      color: #94a3b8;
+      font-size: 0.8rem;
+    }
+
+    /* --- MODAL POP UP --- */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      z-index: 999999;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+
+    .modal-content {
+      position: relative;
+      background: #fff;
+      width: 90%;
+      max-width: 450px;
+      padding: 25px;
+      border-radius: 24px;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.05);
+      display: flex;
+      flex-direction: column;
+      transform: scale(0.9);
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      margin: 0;
+    }
+
+    .modal-overlay.active .modal-content {
+      transform: scale(1);
+    }
+
+    .modal-content.wide-popup {
+      max-width: 96%;
+      width: 96%;
+      height: 90vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .modal-content.wide-popup .modal-body {
+      max-height: none;
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      width: 35px;
+      height: 35px;
+      background: #f1f5f9;
+      border-radius: 50%;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #64748b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+    }
+
+    .close-btn:hover {
+      background: #fee2e2;
+      color: #ef4444;
+    }
+
+    .modal-body {
+      overflow-y: auto;
+      margin-top: 20px;
+      color: var(--text-dark);
+      padding-right: 5px;
+      -webkit-overflow-scrolling: touch;
+      max-height: 60vh;
+      word-wrap: break-word;
+      overflow-x: hidden;
+    }
+
+    /* --- ANIMATION KEYFRAMES --- */
+    @keyframes float {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-5px);
+      }
+    }
+
+    @keyframes blink {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0;
+      }
+    }
+
+    @keyframes ripple {
+      to {
+        transform: scale(4);
+        opacity: 0;
+      }
+    }
+
+    @keyframes scroll {
+      0% {
+        transform: translateX(0);
+      }
+
+      100% {
+        transform: translateX(calc(-300px * 5));
+      }
+    }
+
+    /* --- MEDIA QUERIES --- */
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 2.2rem;
+      }
+
+      .nav-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .slider-window {
+        height: 220px;
+      }
+
+      .slide {
+        width: 250px;
+        height: 200px;
+      }
+
+      @keyframes scroll {
+        0% {
+          transform: translateX(0);
+        }
+
+        100% {
+          transform: translateX(calc(-250px * 5));
+        }
+      }
+    }
+
+    /* --- VISI MISI GRID --- */
+    .visi-misi-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    @media (min-width: 640px) {
+      .visi-misi-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- =========================================
+     BAGIAN HTML (STRUKTUR)
+     ========================================= -->
+  <div class="container">
+
+    <!-- HERO SECTION -->
+    <div class="hero-header">
+      <div class="badge-live">
+        <div class="dot"></div> Live Portal
+      </div>
+      <h1>SMAN 8 <span>Samarinda</span></h1>
+      <div class="typing-container" id="typewriter"></div>
+
+      <div class="slider-frame">
+        <div class="slider-window">
+          <div class="slide-track" id="photoSlider">
+            <div class="slide">
+              <div class="photo-card"><img src="https://cdn.imgpile.com/f/ziJ15Gv_xl.jpeg" alt="1"></div>
+            </div>
+            <div class="slide">
+              <div class="photo-card"><img src="https://cdn.imgpile.com/f/LbOTAFU_xl.jpg" alt="2"></div>
+            </div>
+            <div class="slide">
+              <div class="photo-card"><img src="https://cdn.imgpile.com/f/IzCWm6W_xl.jpg" alt="3"></div>
+            </div>
+            <div class="slide">
+              <div class="photo-card"><img src="https://cdn.imgpile.com/f/kgWjAVh_xl.jpg" alt="4"></div>
+            </div>
+            <div class="slide">
+              <div class="photo-card"><img src="https://cdn.imgpile.com/f/Ghhnfqm_xl.jpg" alt="5"></div>
+            </div>
+            <!-- Loop for infinite scroll -->
+            <div class="slide">
+              <div class="photo-card"><img src="https://cdn.imgpile.com/f/ziJ15Gv_xl.jpeg" alt="1"></div>
+            </div>
+            <div class="slide">
+              <div class="photo-card"><img src="https://cdn.imgpile.com/f/LbOTAFU_xl.jpg" alt="2"></div>
+            </div>
+            <div class="slide">
+              <div class="photo-card"><img src="https://cdn.imgpile.com/f/IzCWm6W_xl.jpg" alt="3"></div>
+            </div>
+            <div class="slide">
+              <div class="photo-card"><img src="https://cdn.imgpile.com/f/kgWjAVh_xl.jpg" alt="4"></div>
+            </div>
+            <div class="slide">
+              <div class="photo-card"><img src="https://cdn.imgpile.com/f/Ghhnfqm_xl.jpg" alt="5"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NAVIGATION SECTION -->
+    <div class="nav-grid" id="navSection">
+
+      <!-- Tombol Visi Misi -->
+      <div class="nav-card" onclick="createRipple(event, 'visimisi')">
+        <div class="nav-icon" style="color: #3b82f6;">🚀</div>
+        <div class="nav-text">
+          <h3>Visi & Misi</h3>
+          <p>Lihat tujuan sekolah</p>
+        </div>
+        <div style="margin-left:auto; color:#cbd5e1; font-size:1.5rem; line-height:0;">&rsaquo;</div>
+      </div>
+
+      <!-- Tombol Fasilitas -->
+      <div class="nav-card" onclick="createRipple(event, 'fasilitas')">
+        <div class="nav-icon" style="background: #ecfeff; color: #06b6d4; border-color: #cffafe;">🏫</div>
+        <div class="nav-text">
+          <h3>Fasilitas Sekolah</h3>
+          <p>Sarana belajar modern</p>
+        </div>
+        <div style="margin-left:auto; color:#cbd5e1; font-size:1.5rem; line-height:0;">&rsaquo;</div>
+      </div>
+
+    </div>
+
+
+    <!-- LOCATION SECTION -->
+    <div class="location-wrapper">
+      <div class="location-card">
+        <h3 class="location-title">📍 Lokasi Kami</h3>
+        <iframe class="location-map"
+          src="https://maps.google.com/maps?q=SMAN%208%20Samarinda%20Jalan%20Untung%20Suropati&t=&z=15&ie=UTF8&iwloc=&output=embed"
+          allowfullscreen="" loading="lazy"></iframe>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">&copy; 2025 SMAN 8 Samarinda</div>
+
+    <!-- MODAL COMPONENT -->
+    <div id="infoModal" class="modal-overlay">
+      <div class="modal-content" id="modalCard">
+        <button class="close-btn" onclick="closeModal()">×</button>
+        <h2 id="mTitle" style="color:var(--primary); margin-bottom:15px; font-weight:800; font-size:1.5rem;">Judul</h2>
+        <div class="modal-body" id="mBody"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- =========================================
+     BAGIAN JAVASCRIPT (LOGIKA)
+     ========================================= -->
+  <script>
+    /* --- 1. DATA KONTEN MODAL --- */
+    const contentData = {
+      visimisi: `
+      <div style="text-align:left; color:#334155; padding-bottom: 20px;">
+        <div style="text-align:center; margin-bottom:20px;">
+          <h3 style="color:#06b6d4; font-size:1.8rem;">✨ Visi dan Misi</h3>
+          <h4 style="color:#3b82f6;">SMA Negeri 8 Samarinda</h4>
+          <p style="font-weight:600; font-style:italic; margin-top:10px; font-size:1.1rem; padding: 10px; background: #f0f9ff; border-radius: 8px;">“Unggul, cerdas dan berprestasi di bidang IMTAQ – IPTEK, Sehat, Berwawasan Global dan Peduli Lingkungan.”</p>
+        </div>
+        
+        <div class="visi-misi-grid">
+          <div>
+             <h4 style="background:#06b6d4; color:white; padding:6px 12px; border-radius:6px; display:inline-block; margin-bottom:10px; font-size: 0.95rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">Indikator Visi</h4>
+             <ul style="padding-left:15px; text-align:left; line-height:1.4; list-style-type: none; font-size: 0.9rem;">
+               <li style="margin-bottom: 6px; position:relative; padding-left: 15px;"><span style="position:absolute; left:0; color:#06b6d4;">➤</span> Memiliki karakter Beriman, Bertakwa kepada Tuhan yang Maha Esa, dan berakhlak mulia;</li>
+               <li style="margin-bottom: 6px; position:relative; padding-left: 15px;"><span style="position:absolute; left:0; color:#06b6d4;">➤</span> Memiliki perilaku yang mencerminkan nilai-nilai moral dan etika dalam kehidupan sehari-hari;</li>
+               <li style="margin-bottom: 6px; position:relative; padding-left: 15px;"><span style="position:absolute; left:0; color:#06b6d4;">➤</span> Memiliki kemampuan literasi dan numerasi serta menguasai ilmu pengetahuan dan teknologi yang kreatif, inovatif dan mandiri;</li>
+               <li style="margin-bottom: 6px; position:relative; padding-left: 15px;"><span style="position:absolute; left:0; color:#06b6d4;">➤</span> Mengembangkan keterampilan berteknologi yang bijak dan berintegritas melalui integrasi literasi dan etika digital;</li>
+               <li style="margin-bottom: 6px; position:relative; padding-left: 15px;"><span style="position:absolute; left:0; color:#06b6d4;">➤</span> Memiliki kreativitas, inovasi dan kemandirian dalam kegiatan intrakurikuler, ko-kurikuler, dan ekstrakurikuler;</li>
+               <li style="margin-bottom: 6px; position:relative; padding-left: 15px;"><span style="position:absolute; left:0; color:#06b6d4;">➤</span> Memiliki kecakapan, kecerdasan dan keterampilan berkomunikasi dengan bahasa asing;</li>
+               <li style="margin-bottom: 6px; position:relative; padding-left: 15px;"><span style="position:absolute; left:0; color:#06b6d4;">➤</span> Menjunjung tinggi hak hidup dan menghargai perbedaan antar sesama, baik dalam hal agama, bahasa, budaya dan adat istiadat;</li>
+               <li style="margin-bottom: 6px; position:relative; padding-left: 15px;"><span style="position:absolute; left:0; color:#06b6d4;">➤</span> Memiliki sikap kritis, kreatif, mandiri, dan kolaboratif;</li>
+               <li style="margin-bottom: 6px; position:relative; padding-left: 15px;"><span style="position:absolute; left:0; color:#06b6d4;">➤</span> Memiliki kepedulian terhadap isu-isu yang berhubungan dengan kependudukan baik lokal maupun global;</li>
+               <li style="margin-bottom: 6px; position:relative; padding-left: 15px;"><span style="position:absolute; left:0; color:#06b6d4;">➤</span> Memiliki pemahaman, kepedulian dan bertanggung jawab terhadap isu-isu kependudukan lokal maupun global serta berperan aktif dalam membangun masa depan berkelanjutan; dan</li>
+               <li style="margin-bottom: 6px; position:relative; padding-left: 15px;"><span style="position:absolute; left:0; color:#06b6d4;">➤</span> Memiliki kesadaran untuk cinta dan peduli terhadap lingkungan yang sehat.</li>
+             </ul>
+          </div>
+          
+          <div>
+             <h4 style="background:#3b82f6; color:white; padding:6px 12px; border-radius:6px; display:inline-block; margin-bottom:10px; font-size: 0.95rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">Indikator Misi</h4>
+             <ul style="padding-left:15px; text-align:left; line-height:1.4; list-style-type: none; font-size: 0.9rem;">
+               <li style="margin-bottom: 6px; position:relative; padding-left: 15px;"><span style="position:absolute; left:0; color:#3b82f6;">➤</span> Menumbuhkan kebiasaan untuk beribadah sesuai dengan agama dan kepercayaan masing-masing;</li>
+               <li style="margin-bottom: 6px; position:relative; padding-left: 15px;"><span style="position:absolute; left:0; color:#3b82f6;">➤</span> Mengembangkan sikap dan perilaku relegius di lingkungan dalam dan luar sekolah;</li>
+               <li style="margin-bottom: 6px; position:relative; padding-left: 15px;"><span style="position:absolute; left:0; color:#3b82f6;">➤</span> Mengembangkan sikap bertanggung jawab, jujur, kerja keras, toleransi, kerjasama dan menghargai sesama;</li>
+               <li style="margin-bottom: 6px; position:relative; padding-left: 15px;"><span style="position:absolute; left:0; color:#3b82f6;">➤</span> Meningkatkan kemampuan literasi dan numerasi untuk memecahkan masalah dalam kehidupan sehari-hari;</li>
+               <li style="margin-bottom: 6px; position:relative; padding-left: 15px;"><span style="position:absolute; left:0; color:#3b82f6;">➤</span> Meningkatkan prestasi dibidang akademik dan non akademik;</li>
+               <li style="margin-bottom: 6px; position:relative; padding-left: 15px;"><span style="position:absolute; left:0; color:#3b82f6;">➤</span> Memiliki kemampuan berpikir kritis dan bijak dalam memanfaatkan teknologi;</li>
+               <li style="margin-bottom: 6px; position:relative; padding-left: 15px;"><span style="position:absolute; left:0; color:#3b82f6;">➤</span> Menyediakan kegiatan ekstrakurilkuler yang beragam;</li>
+               <li style="margin-bottom: 6px; position:relative; padding-left: 15px;"><span style="position:absolute; left:0; color:#3b82f6;">➤</span> Membekali murid kecakapan hidup mandiri untuk berwirausaha;</li>
+               <li style="margin-bottom: 6px; position:relative; padding-left: 15px;"><span style="position:absolute; left:0; color:#3b82f6;">➤</span> Membudayakan sikap hormat menghormati kepada sesama atas segala perbedaan;</li>
+               <li style="margin-bottom: 6px; position:relative; padding-left: 15px;"><span style="position:absolute; left:0; color:#3b82f6;">➤</span> Menciptakan budaya sekolah yang hijau, bersih dan sehat;</li>
+               <li style="margin-bottom: 6px; position:relative; padding-left: 15px;"><span style="position:absolute; left:0; color:#3b82f6;">➤</span> Mengembangkan pembelajaran yang menimbulkan rasa peduli murid terhadap masalah kependudukan;</li>
+               <li style="margin-bottom: 6px; position:relative; padding-left: 15px;"><span style="position:absolute; left:0; color:#3b82f6;">➤</span> Membudidayakan dan melestarikan tanaman produktif dan hias di lingkungan sekolah agar menjadikan lingkungan sekolah dan sekitarnya hijau dan lestari;</li>
+               <li style="margin-bottom: 6px; position:relative; padding-left: 15px;"><span style="position:absolute; left:0; color:#3b82f6;">➤</span> Menciptakan rasa aman dan nyaman bagi murid selama kegiatan belajar mengajar di sekolah.</li>
+             </ul>
+          </div>
+        </div>
+      </div>`,
+      fasilitas: `
+      <div style="text-align:center;">
+        <p style="margin-bottom:15px; color:#64748b;">Fasilitas penunjang kreativitas siswa.</p>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+          <div style="background:#f8fafc; padding:10px; border-radius:10px; border:1px solid #e2e8f0;"><b>🖥️ Lab Komputer</b></div>
+          <div style="background:#f8fafc; padding:10px; border-radius:10px; border:1px solid #e2e8f0;"><b>📚 E-Library</b></div>
+          <div style="background:#f8fafc; padding:10px; border-radius:10px; border:1px solid #e2e8f0;"><b>🕌 Masjid Besar</b></div>
+          <div style="background:#f8fafc; padding:10px; border-radius:10px; border:1px solid #e2e8f0;"><b>🏀 Sport Center</b></div>
+        </div>
+      </div>`
+    };
+
+    /* --- 2. SELEKTOR DOM --- */
+    const textEl = document.getElementById('typewriter');
+    const modal = document.getElementById('infoModal');
+    const modalCard = document.getElementById('modalCard');
+    const titleEl = document.getElementById('mTitle');
+    const bodyEl = document.getElementById('mBody');
+    const photoSlider = document.getElementById('photoSlider');
+
+
+    /* --- 3. EFEK MENGETIK --- */
+    const text = "Menyongsong Era Digital dengan Pendidikan Berkarakter.";
+    let idx = 0;
+    function typeWriter() {
+      if (idx < text.length) {
+        textEl.innerHTML += text.charAt(idx);
+        idx++;
+        setTimeout(typeWriter, 50);
+      }
+    }
+    // Jalankan efek ketik
+    typeWriter();
+
+    /* --- 4. LOGIKA MODAL POP UP --- */
+
+    // Fungsi animasi ripple pada tombol
+    function createRipple(event, modalType) {
+      const button = event.currentTarget;
+      const circle = document.createElement("span");
+      const diameter = Math.max(button.clientWidth, button.clientHeight);
+      const radius = diameter / 2;
+      const rect = button.getBoundingClientRect();
+
+      circle.style.width = circle.style.height = `${diameter}px`;
+      circle.style.left = `${event.clientX - rect.left - radius}px`;
+      circle.style.top = `${event.clientY - rect.top - radius}px`;
+      circle.classList.add("ripple");
+
+      const oldRipple = button.getElementsByClassName("ripple")[0];
+      if (oldRipple) oldRipple.remove();
+      button.appendChild(circle);
+
+      setTimeout(() => {
+        openModal(modalType);
+      }, 200);
+    }
+
+    // Fungsi Buka Modal
+    function openModal(type) {
+      titleEl.innerText = type === 'visimisi' ? 'Visi & Misi' : 'Fasilitas Sekolah';
+      bodyEl.innerHTML = contentData[type];
+
+      // Reset classes and styles
+      modalCard.className = 'modal-content';
+      modalCard.style.marginTop = "";
+      modalCard.style.margin = "";
+
+      if (type === 'visimisi') {
+        modalCard.classList.add('wide-popup');
+      }
+
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+
+      // Pause slider saat modal terbuka
+      if (photoSlider) photoSlider.style.animationPlayState = 'paused';
+    }
+
+    // Fungsi Tutup Modal
+    function closeModal() {
+      modal.classList.remove('active');
+      document.body.style.overflow = 'auto';
+      if (photoSlider) photoSlider.style.animationPlayState = 'running';
+    }
+
+    // Event listener klik di luar modal untuk menutup
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeModal();
+    });
+  </script>
+
+</body>
+
+</html>
