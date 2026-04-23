@@ -12,4 +12,11 @@ function switchTab(evt, tabName) {
       iframe.style.width = "100%";
   }
 
-//   document.getElementById('tes').click();
+function goToTab(index) {
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    if(tabBtns[index]) {
+        tabBtns[index].click();
+        const nav = document.querySelector('.tab-nav');
+        if(nav) nav.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+}

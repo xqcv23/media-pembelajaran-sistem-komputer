@@ -7,6 +7,15 @@ function switchTab(evt, tabName) {
     evt.currentTarget.classList.add('active');
   }
 
+function goToTab(index) {
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    if(tabBtns[index]) {
+        tabBtns[index].click();
+        const nav = document.querySelector('.tab-nav');
+        if(nav) nav.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+}
+
   function resizeIframe(iframe) {
       iframe.style.height = iframe.contentWindow.document.body.scrollHeight + 'px';
       iframe.style.width = "100%";

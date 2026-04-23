@@ -9,6 +9,8 @@
    <script src="./script.js" defer></script>
 </head>
 <body style="display: block;">
+   <a href="../index.html" class="btn-exit">×</a>
+
    <h1>Peran OS & Driver dalam Interaksi</h1>
    <div class="intro-section">
             <h4>1. Pengertian Sistem Operasi</h4>
@@ -36,6 +38,9 @@
                     <li><strong>g. Mengawasi dan Melindungi:</strong> Memberikan hak akses (siapa yang boleh membuka file) dan menjaga keamanan sistem dari pengguna yang tidak berhak.</li>
                 </ul>
             </div>
+            <div class="tab-nav-footer">
+              <button class="nav-next" onclick="goToTab(1)">Selanjutnya: Driver ➔</button>
+            </div>
           </div>
 
           <!-- TAB DRIVER & INTERAKSI -->
@@ -57,10 +62,15 @@
                     BIOS <br>⬇<br> 
                     Perangkat Keras (Printer mencetak)
                 </div>
-                    <iframe id="iframe_peran" src="./animasi/peran_sistem_komputer.html" style="border:none; margin-top:15px; margin-bottom:15px;">
-                    tidak support
-                  </iframe>
-                <p style="margin-top:15px; font-size:0.9rem;"><em>Catatan:</em> Sistem operasi bekerja secara <strong>multitasking</strong> (mampu menjalankan banyak perintah sekaligus) dan memprioritaskan instruksi mana yang harus dikerjakan driver terlebih dahulu.</p>
+            <div class="materi-box">
+                <span class="materi-title">🏢 Penjelasan Animasi: Lapisan Interaksi</span>
+                <p>Lihat bagaimana instruksi berjalan dari Pengguna, melewati Aplikasi dan OS, hingga akhirnya menggerakkan Hardware.</p>
+            </div>
+            <iframe id="iframe_peran" src="./animasi/peran_sistem_komputer.html" style="border:none; margin-top:15px; margin-bottom:15px;">tidak support</iframe>
+          </div>
+            <div class="tab-nav-footer">
+              <button class="nav-prev" onclick="goToTab(0)">⬅ Kembali</button>
+              <button class="nav-next" onclick="goToTab(2)">Selanjutnya: Instalasi ➔</button>
             </div>
           </div>
 
@@ -93,6 +103,10 @@
                     <li>Lakukan <strong>Restart</strong> komputer agar driver bisa berfungsi sempurna.</li>
                 </ul>
              </div>
+             <div class="tab-nav-footer">
+               <button class="nav-prev" onclick="goToTab(1)">⬅ Kembali ke Driver</button>
+             </div>
+          </div>
           </div>
         </div>
 </body>

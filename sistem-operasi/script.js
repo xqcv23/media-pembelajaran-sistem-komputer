@@ -11,3 +11,12 @@ function switchTab(evt, tabName) {
       iframe.style.height = iframe.contentWindow.document.body.scrollHeight + 'px';
       iframe.style.width = "100%";
   }
+
+function goToTab(index) {
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    if(tabBtns[index]) {
+        tabBtns[index].click();
+        const nav = document.querySelector('.tab-nav');
+        if(nav) nav.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+}

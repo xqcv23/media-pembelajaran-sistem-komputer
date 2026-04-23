@@ -9,13 +9,24 @@
    <script src="./script.js" defer></script>
 </head>
 <body style="display: block;">
+   <a href="../index.html" class="btn-exit">×</a>
+
    <h1>Sistem Komputer & Komponennya</h1>
    <div class="intro-section">
           <h4>1. Konsep Sistem Komputer</h4>
           <p><strong>Sistem Komputer</strong> adalah kumpulan elemen-elemen yang saling berinteraksi satu sama lain dalam satu kesatuan untuk mencapai tujuan tertentu. Sistem komputer terdiri dari tiga komponen utama yang tidak dapat dipisahkan:</p>
-          <iframe id="iframe_alur_input" src="./animasi/alur_input.html" style="border:none; margin-top:15px; margin-bottom:15px;">
-            anjay bang
-          </iframe>
+            <div class="materi-box">
+              <span class="materi-title">💡 Penjelasan Animasi: Cara Kerja IPO</span>
+              <p>Animasi di bawah menunjukkan siklus <strong>Input-Process-Output</strong> yang merupakan jantung dari cara kerja komputer:</p>
+              <ul class="item-list">
+                  <li><strong>Input:</strong> Data masuk lewat keyboard/mouse.</li>
+                  <li><strong>Process:</strong> CPU mengolah data (cahaya berkedip).</li>
+                  <li><strong>Output:</strong> Hasil tampil di monitor.</li>
+              </ul>
+            </div>
+            <iframe id="iframe_alur_input" src="./animasi/alur_input.html" style="border:none; margin-top:15px; margin-bottom:15px;">
+              anjay bang
+            </iframe>
           <ul class="item-list">
              <li><strong>Hardware (Perangkat Keras)</strong>: Komponen fisik mesin.</li>
              <li><strong>Software (Perangkat Lunak)</strong>: Program yang mengontrol mesin.</li>
@@ -40,26 +51,35 @@
             <div class="materi-box">
               <span class="materi-title">1) Perangkat Masukan (Input Device)</span>
               <p>Berfungsi untuk memasukkan data, perintah, atau instruksi ke dalam komputer.</p>
+            </div>
+
+            <div class="materi-box">
+              <span class="materi-title">🖱️ Mouse</span>
+              <p>Perangkat penunjuk kursor. Memiliki fungsi <em>klik kanan</em> (menu shortcut), <em>klik kiri</em> (pilih), <em>scroll</em> (gulir halaman), dan <em>drag & drop</em>.</p>
+            </div>
+            <iframe id="iframe_mouse" src="./animasi/mouse.html" style="border:none; margin-top:15px; margin-bottom:15px;">tidak support</iframe>
+
+            <div class="materi-box">
+              <span class="materi-title">⌨️ Keyboard</span>
+              <p>Papan ketik untuk input karakter. Terdiri dari:</p>
               <ul class="item-list">
-                  <li><strong>Mouse:</strong> Perangkat penunjuk kursor. Memiliki fungsi <em>klik kanan</em> (menu shortcut), <em>klik kiri</em> (pilih), <em>scroll</em> (gulir halaman), dan <em>drag & drop</em>.</li>
-                  <iframe id="iframe_mouse" src="./animasi/mouse.html" style="border:none; margin-top:15px; margin-bottom:15px;">
-                    tidak support
-                  </iframe>
-                  <li><strong>Keyboard:</strong> Papan ketik untuk input karakter. Terdiri dari:
-                    <br>- <em>Typing Keys</em>: Huruf, angka, tanda baca.
-                    <br>- <em>Function Keys (F1-F12)</em>: Fungsi khusus.
-                    <br>- <em>Numeric Keys</em>: Tombol angka (seperti kalkulator).
-                    <br>- <em>Control Keys</em>: Ctrl, Alt, Esc, Arrow keys.
-                  </li>
-                  <iframe id="iframe_keyboard" src="./animasi/keyword.html" style="border:none; margin-top:15px; margin-bottom:15px;">
-                    tidak support
-                  </iframe>
-                  <li><strong>Touch Screen:</strong> Layar sentuh yang memungkinkan input instruksi melalui sentuhan jari atau stylus (banyak dipakai di HP/Tablet).</li>
-                  <iframe id="iframe_touch" src="./animasi/touch_screen.html" width="100%" height="500px" style="border:none; margin-top:15px; margin-bottom:15px;">
-                    tidak support
-                  </iframe>
-                  <li><strong>Barcode Reader:</strong> Pemindai kode batang (barcode) menggunakan cahaya untuk membaca kode digital, kemudian dikirim ke komputer (sering di kasir).</li>
+                <li><strong>Typing Keys:</strong> Huruf, angka, tanda baca.</li>
+                <li><strong>Function Keys:</strong> Tombol khusus F1-F12.</li>
+                <li><strong>Numeric Keys:</strong> Tombol angka keyboard kanan.</li>
+                <li><strong>Control Keys:</strong> Ctrl, Alt, Esc, dan Arrow keys.</li>
               </ul>
+            </div>
+            <iframe id="iframe_keyboard" src="./animasi/keyword.html" style="border:none; margin-top:15px; margin-bottom:15px;">tidak support</iframe>
+
+            <div class="materi-box">
+              <span class="materi-title">📱 Touch Screen</span>
+              <p>Layar sentuh yang memungkinkan input instruksi melalui sentuhan jari atau stylus (banyak dipakai di HP/Tablet).</p>
+            </div>
+            <iframe id="iframe_touch" src="./animasi/touch_screen.html" width="100%" height="500px" style="border:none; margin-top:15px; margin-bottom:15px;">tidak support</iframe>
+
+            <div class="materi-box">
+              <span class="materi-title">📋 Barcode Reader</span>
+              <p>Pemindai kode batang (barcode) menggunakan cahaya untuk membaca kode digital, kemudian dikirim ke komputer (sering di kasir).</p>
             </div>
 
             <div class="materi-box">
@@ -71,43 +91,40 @@
                      <br>- <strong>ALU (Arithmetic Logic Unit):</strong> Melakukan operasi matematika (tambah, kurang) dan logika (AND, OR, perbandingan).
                   </li>
                   <li>Cara kerjanya: CPU mengambil instruksi dari memori (fetch), menerjemahkannya (decode), dan menjalankannya (execute).</li>
-                  <iframe id="iframe_cpu" src="./animasi/cpu.html" style="border:none; margin-top:15px; margin-bottom:15px;">
-                    tidak support
-                  </iframe>
                 </ul>
             </div>
+            <iframe id="iframe_cpu" src="./animasi/cpu.html" style="border:none; margin-top:15px; margin-bottom:15px;">tidak support</iframe>
 
             <div class="materi-box">
-              <span class="materi-title">3) Unit Memori (Storage)</span>
-              <p>Tempat penyimpanan data dan instruksi.</p>
-              <ul class="item-list">
-                  <li><strong>Memori Utama (RAM - Random Access Memory):</strong> Menyimpan data sementara saat program berjalan. Bersifat <em>volatil</em> (data hilang jika listrik mati).</li>
-                  <li><strong>ROM (Read Only Memory):</strong> Menyimpan program dasar untuk <em>booting</em> awal komputer.</li>
-                  <li><strong>Memori Sekunder (Storage):</strong> Penyimpanan permanen dan berkapasitas besar. Bersifat <em>non-volatil</em> (data tetap ada walau listrik mati). Contoh: Harddisk (HDD), SSD, Flashdrive.</li>
-               <iframe id="iframe_hdd_ram" src="./animasi/hdd_ram.html" style="border:none; margin-top:15px; margin-bottom:15px;">
-                    tidak support
-                  </iframe>
-                </ul>
-
+              <span class="materi-title">📦 Penjelasan Animasi: Alur Data Memori</span>
+              <p>Animasi ini menggambarkan bagaimana data berpindah dari <strong>Hardisk</strong> (penyimpanan permanen) ke <strong>RAM</strong> (penyimpanan sementara) untuk segera diproses oleh CPU.</p>
             </div>
+            <iframe id="iframe_hdd_ram" src="./animasi/hdd_ram.html" style="border:none; margin-top:15px; margin-bottom:15px;">tidak support</iframe>
 
             <div class="materi-box">
               <span class="materi-title">4) Perangkat Keluaran (Output Device)</span>
               <p>Menampilkan hasil pemrosesan data kepada pengguna.</p>
-              <ul class="item-list">
-                  <li><strong>Monitor:</strong> Menampilkan output visual/layar secara langsung (softcopy).</li>
-                   <iframe id="iframe_monitor" src="./animasi/monitor.html" style="border:none; margin-top:15px; margin-bottom:15px;">
-                    tidak support
-                  </iframe>
-                  <li><strong>Printer:</strong> Mencetak hasil output ke dalam bentuk kertas (hardcopy).</li>
-                  <iframe id="iframe_printer" src="./animasi/animasi_printer.html"  style="border:none; margin-top:15px; margin-bottom:15px;">
-                    tidak support
-                  </iframe>
-                  <li><strong>Speaker:</strong> Mengeluarkan output dalam bentuk suara/audio.</li>
-                   <iframe id="iframe_speaker" src="./animasi/speaker.html" style="border:none; margin-top:15px; margin-bottom:15px;">
-                    tidak support
-                  </iframe>
-              </ul>
+            </div>
+
+            <div class="materi-box">
+              <span class="materi-title">🖥️ Monitor</span>
+              <p>Menampilkan output visual/layar secara langsung (softcopy).</p>
+            </div>
+            <iframe id="iframe_monitor" src="./animasi/monitor.html" style="border:none; margin-top:15px; margin-bottom:15px;">tidak support</iframe>
+
+            <div class="materi-box">
+              <span class="materi-title">🖨️ Printer</span>
+              <p>Mencetak hasil output ke dalam bentuk kertas (hardcopy).</p>
+            </div>
+            <iframe id="iframe_printer" src="./animasi/animasi_printer.html"  style="border:none; margin-top:15px; margin-bottom:15px;">tidak support</iframe>
+
+            <div class="materi-box">
+              <span class="materi-title">🔊 Speaker</span>
+              <p>Mengeluarkan output dalam bentuk suara/audio.</p>
+            </div>
+            <iframe id="iframe_speaker" src="./animasi/speaker.html" style="border:none; margin-top:15px; margin-bottom:15px;">tidak support</iframe>
+            <div class="tab-nav-footer">
+              <button class="nav-next" onclick="goToTab(1)">Selanjutnya: Software ➔</button>
             </div>
           </div>
           
@@ -147,9 +164,15 @@
               <ul class="item-list">
                   <li><strong>Contoh:</strong> Antivirus (Norton, McAfee, Kaspersky), Disk Defragmenter, Screensaver, Firewall.</li>
               </ul>
-                  <iframe id="iframe_software" src="./animasi/animasi_software.html" width="100%" height="600px" style="border:none; margin-top:15px; margin-bottom:15px;">
-                    tidak support
-                  </iframe>
+            </div>
+            <div class="materi-box">
+              <span class="materi-title">⚙️ Penjelasan Animasi: Ragam Software</span>
+              <p>Lihat berbagai jenis ikon perangkat lunak di bawah ini yang mewakili Sistem Operasi, Aplikasi, dan Utility yang bekerja di komputer Anda.</p>
+            </div>
+            <iframe id="iframe_software" src="./animasi/animasi_software.html" width="100%" height="600px" style="border:none; margin-top:15px; margin-bottom:15px;">tidak support</iframe>
+            <div class="tab-nav-footer">
+              <button class="nav-prev" onclick="goToTab(0)">⬅ Kembali</button>
+              <button class="nav-next" onclick="goToTab(2)">Selanjutnya: Brainware ➔</button>
             </div>
           </div>
 
@@ -157,10 +180,15 @@
           <div id="tabBrain" class="content-section">
             <h4>c. Brainware (Pengguna)</h4>
             <p>Brainware adalah orang yang menggunakan, mengoperasikan, atau mengatur sistem komputer. Tanpa manusia, komputer tidak bisa berjalan sendiri. Berikut adalah tingkatan dan jenis brainware:</p>
-             <iframe id="iframe_brainware" src="./animasi/animasi_brainware.html" width="100%" height="600px" style="border:none; margin-top:15px; margin-bottom:15px;">
-                    tidak support
-                  </iframe>
-          
+            <div class="materi-box">
+              <span class="materi-title">👥 Penjelasan Animasi: Peran Manusia</span>
+              <p>Animasi ini menampilkan peran manusia sebagai Brainware yang mengendalikan seluruh sistem, mulai dari Programmer hingga Operator.</p>
+            </div>
+            <iframe id="iframe_brainware" src="./animasi/animasi_brainware.html" width="100%" height="600px" style="border:none; margin-top:15px; margin-bottom:15px;">tidak support</iframe>
+            <div class="tab-nav-footer">
+              <button class="nav-prev" onclick="goToTab(1)">⬅ Kembali</button>
+              <button class="nav-next" onclick="goToTab(3)">Selanjutnya: Penggolongan ➔</button>
+            </div>
           </div>
 
           <!-- 4. PENGGOLONGAN KOMPUTER -->
@@ -207,6 +235,9 @@
                   <li><strong>Generasi 5:</strong> AI & masa depan (sedang dikembangkan).</li>
                </ul>
              </div>
+             <div class="tab-nav-footer">
+                <button class="nav-prev" onclick="goToTab(2)">⬅ Kembali ke Brainware</button>
+              </div>
           </div>
         </div>
 </body>

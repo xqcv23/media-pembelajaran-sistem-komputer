@@ -9,6 +9,8 @@
    <script src="./script.js" defer></script>
 </head>
 <body style="display: block;">
+   <a href="../index.html" class="btn-exit">×</a>
+
    <h1>Interaksi Manusia dan Komputer</h1>
    <div class="intro-section">
             <h4>1. Konsep Dasar & Definisi</h4>
@@ -30,10 +32,12 @@
                     <li>Pesan sukses (sesuai).</li>
                     <li>Pesan <em>Error</em> (kesalahan).</li>
                 </ul>
-                  <iframe id="iframe_instruksi" src="./animasi/instruksi_manusia_dan_komputer.html" style="border:none; margin-top:15px; margin-bottom:15px;">
-                    tidak support
-                  </iframe>
+            <div class="materi-box">
+                <span class="materi-title">🔄 Penjelasan Animasi: Alur Interaksi</span>
+                <p>Animasi ini menggambarkan bagaimana pesan dan instruksi mengalir antara manusia dan sistem komputer melalui antarmuka.</p>
             </div>
+            <iframe id="iframe_instruksi" src="./animasi/instruksi_manusia_dan_komputer.html" style="border:none; margin-top:15px; margin-bottom:15px;">tidak support</iframe>
+        </div>
             
             <div class="materi-box">
                 <span class="materi-title">Ilmu Gabungan</span>
@@ -73,9 +77,14 @@
                         <li><strong>tree</strong>: Menampilkan struktur folder dan subfolder secara visual menyerupai pohon (tree) yang terhubung garis.</li>
                         <li><strong>help</strong>: Meminta bantuan informasi tentang perintah apa saja yang disediakan oleh CMD.</li>
                     </ul>
-                      <iframe id="iframe_cli" src="./animasi/cli.html" width="100%" height="600px" style="border:none; margin-top:15px; margin-bottom:15px;">
-                    tidak support
-                  </iframe>
+                </div>
+                <div class="materi-box">
+                    <span class="materi-title">⌨️ Penjelasan Animasi: Simulasi CLI</span>
+                    <p>Cobalah perhatikan bagaimana perintah teks diketikkan ke dalam terminal hitam ini untuk mengendalikan komputer secara langsung.</p>
+                </div>
+                <iframe id="iframe_cli" src="./animasi/cli.html" width="100%" height="600px" style="border:none; margin-top:15px; margin-bottom:15px;">tidak support</iframe>
+                <div class="tab-nav-footer">
+                  <button class="nav-next" onclick="goToTab(1)">Selanjutnya: GUI ➔</button>
                 </div>
             </div>
 
@@ -99,12 +108,17 @@
 
                 <div class="materi-box">
                     <span class="materi-title">Kelebihan & Kekurangan GUI</span>
-                    <p><strong>Kelebihan:</strong> Lebih sederhana, mudah digunakan (user-friendly), secara visual menarik dan tidak membosankan. Sangat cocok bagi pemula karena mudah dipelajari (hanya klik ikon/dialog).</p>
                     <p><strong>Kekurangan:</strong> Tidak cocok untuk perangkat dengan spesifikasi rendah karena <strong>memakan memori (RAM) yang cukup besar</strong>. Kecepatan proses tampilan GUI sangat bergantung pada kemampuan hardware.</p>
                 </div>
-                      <iframe id="iframe_alur_input" src="./animasi/gui.html" width="100%" height="600px" style="border:none; margin-top:15px; margin-bottom:15px;">
-                    tidak support
-                  </iframe>
+                <div class="materi-box">
+                    <span class="materi-title">🖱️ Penjelasan Animasi: Simulasi GUI</span>
+                    <p>Animasi ini menunjukkan antarmuka grafis modern yang penuh warna, ikon, dan jendela yang mudah dioperasikan dengan klik mouse.</p>
+                </div>
+                <iframe id="iframe_alur_input" src="./animasi/gui.html" width="100%" height="600px" style="border:none; margin-top:15px; margin-bottom:5px;">tidak support</iframe>
+                <div class="tab-nav-footer" style="margin-top: 10px;">
+                  <button class="nav-prev" onclick="goToTab(0)">⬅ Kembali</button>
+                  <button class="nav-next" onclick="goToTab(2)">Selanjutnya: Perbedaan ➔</button>
+                </div>
             </div>
 
             <!-- TAB PERBANDINGAN -->
@@ -127,6 +141,10 @@
                         </li>
                     </ul>
                 </div>
+                <div class="tab-nav-footer">
+                  <button class="nav-prev" onclick="goToTab(1)">⬅ Kembali ke GUI</button>
+                </div>
+            </div>
             </div>
         </div>
 </body>
