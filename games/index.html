@@ -10,7 +10,6 @@
 <body>
 
 <button class="btn-back" onclick="handleBackAction()" title="Kembali">⬅ Keluar</button>
-<button class="btn-bgm btn-rotate" id="btnRotate" onclick="toggleLandscape()" title="Force Landscape">📱 Putar Layar</button>
 <button class="btn-bgm" id="btnBgm" onclick="toggleBgm()" title="Toggle Music">🔊 BGM ON</button>
 
 <!-- ============ MAIN MENU ============ -->
@@ -187,6 +186,8 @@
 
     <!-- Monster side (right) -->
     <div class="combatant monster-side">
+      <div class="sprite-container" id="monsterSprite"></div>
+      <div class="damage-popup" id="monsterDamage"></div>
       <div class="combatant-info">
         <span class="combatant-name" id="monsterName">???</span>
         <span class="combatant-lv" id="monsterLevel">Lv.1</span>
@@ -196,8 +197,6 @@
         <div class="hp-fill hp-enemy" id="monsterHpFill"></div>
         <span class="hp-text" id="monsterHpText">60/60</span>
       </div>
-      <div class="sprite-container" id="monsterSprite"></div>
-      <div class="damage-popup" id="monsterDamage"></div>
     </div>
 
     <!-- Battle HUD -->

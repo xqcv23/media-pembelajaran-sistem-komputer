@@ -682,12 +682,12 @@ h4 {
 
 .game-loader-icon-container {
     position: relative;
-    width: 120px;
-    height: 120px;
+    width: 80px;
+    height: 80px;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
 }
 
 .game-loader-ring {
@@ -726,7 +726,7 @@ h4 {
 }
 
 .game-loader-icon {
-    font-size: 3.5rem;
+    font-size: 2.2rem;
     animation: pulseIcon 1.5s ease-in-out infinite alternate;
     text-shadow: 0 0 20px rgba(236, 72, 153, 0.6);
 }
@@ -747,9 +747,9 @@ h4 {
 .game-loader-text {
     color: #f8fafc;
     font-family: 'Outfit', sans-serif;
-    font-size: 1.4rem;
+    font-size: 1.1rem;
     font-weight: 800;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
     letter-spacing: 2px;
     text-transform: uppercase;
     background: linear-gradient(135deg, #fff, #94a3b8);
@@ -760,11 +760,11 @@ h4 {
 }
 
 .game-loader-bar-container {
-    width: 300px;
+    width: 220px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
 }
 
 .game-loader-bar {
@@ -805,7 +805,7 @@ h4 {
 
 .game-loader-percentage {
     color: #06b6d4;
-    font-size: 0.95rem;
+    font-size: 0.85rem;
     font-weight: 700;
     font-family: 'Consolas', monospace;
     letter-spacing: 2px;

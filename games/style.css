@@ -457,8 +457,32 @@ body { font-family: var(--font-ui); background: var(--bg-dark); color: var(--tex
 .fx-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 20; pointer-events: none; }
 .thick-projectile { position: absolute; width: 120px; height: 120px; pointer-events: none; z-index: 20; margin-left: -60px; margin-top: -60px; display: flex; align-items: center; justify-content: center; }
 .thick-projectile svg { width: 100%; height: 100%; filter: drop-shadow(0 0 10px rgba(255,255,255,0.3)); }
-.dmg-popup { position: absolute; font-family: var(--font-game); font-size: 1.2rem; font-weight: 800; pointer-events: none; opacity: 0; z-index: 15; white-space: nowrap; }
+.damage-popup { 
+    position: absolute; 
+    top: -20px; 
+    left: 50%; 
+    transform: translateX(-50%); 
+    font-family: var(--font-game); 
+    font-size: 1.4rem; 
+    font-weight: 800; 
+    pointer-events: none; 
+    opacity: 0; 
+    z-index: 100; 
+    white-space: nowrap; 
+    text-shadow: 2px 2px 0px #000, -2px -2px 0px #000, 2px -2px 0px #000, -2px 2px 0px #000, 0 0 10px rgba(0,0,0,0.8);
+}
+.damage-popup.show {
+    animation: dmgPop 1s ease-out forwards;
+}
+.damage-popup.dmg-taken { color: var(--accent-red); }
+.damage-popup.dmg-dealt { color: var(--accent-green); }
 
+@keyframes dmgPop {
+    0% { opacity: 0; transform: translateX(-50%) translateY(20px) scale(0.5); }
+    20% { opacity: 1; transform: translateX(-50%) translateY(-20px) scale(1.3); }
+    80% { opacity: 1; transform: translateX(-50%) translateY(-35px) scale(1); }
+    100% { opacity: 0; transform: translateX(-50%) translateY(-50px) scale(1); }
+}
 .battle-hud { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); display: flex; gap: 12px; z-index: 10; }
 .hud-item { font-family: var(--font-game); font-size: 0.5rem; padding: 5px 14px; border-radius: 8px; letter-spacing: 1px; }
 .wave-counter { color: var(--accent-gold); background: rgba(255,215,0,0.06); border: 1px solid rgba(255,215,0,0.12); }
@@ -591,7 +615,7 @@ body { font-family: var(--font-ui); background: var(--bg-dark); color: var(--tex
 
 /* Combo Counter */
 .combo-counter { 
-    position: absolute; top: 20%; left: 50%; transform: translateX(-50%);
+    position: absolute; top: 15%; left: 50%; transform: translateX(-50%);
     font-family: var(--font-game); color: var(--accent-gold); font-size: 1.5rem;
     pointer-events: none; z-index: 100; text-shadow: 0 0 15px #000;
     opacity: 0; transition: opacity 0.3s ease;
@@ -687,23 +711,87 @@ body { font-family: var(--font-ui); background: var(--bg-dark); color: var(--tex
    ========================================= */
 @media (max-width: 650px) {
     /* Header Buttons Fix */
-    .btn-back { top: 10px; left: 10px; font-size: 0.45rem; padding: 6px 12px; z-index: 9999; bottom: auto; background: rgba(0,0,0,0.7); }
-    .btn-bgm { top: 10px; right: 10px; font-size: 0.45rem; padding: 6px 12px; z-index: 9999; bottom: auto; background: rgba(0,0,0,0.7); }
-    .btn-rotate { right: 105px; animation: btnGlow 2s infinite; }
-@keyframes btnGlow { 0%,100%{box-shadow: 0 0 5px var(--accent-cyan);} 50%{box-shadow: 0 0 20px var(--accent-cyan);} }
-
-    /* Main Menu Hero Select Fix */
-    .hero-options { grid-template-columns: repeat(2, 1fr); gap: 8px; }
-    .hero-option .sprite-container { width: 70px; height: 70px; margin-bottom: 8px; }
-    .hero-option .sprite-container img.pixel-sprite { transform: scaleX(-1) scale(1.1); }
-    .game-logo { font-size: 2.2rem; margin-top: 25px; }
-    .game-title { font-size: 1.3rem; }
+    .btn-back { top: 8px; left: 8px; font-size: 0.6rem; padding: 8px 12px; z-index: 9999; bottom: auto; background: rgba(0,0,0,0.7); }
+    .btn-bgm { top: 8px; right: 8px; font-size: 0.6rem; padding: 8px 12px; z-index: 9999; bottom: auto; background: rgba(0,0,0,0.7); }
     
-    /* Absolute Layout Lock - GUARANTEED no bottom clipping */
+    /* Intro Countdown */
+    .intro-countdown.fight { font-size: 1.8rem; }
+
+    /* === MAIN MENU PORTRAIT — FULL SCREEN, NO SCROLL === */
+    body { overflow: hidden; height: 100dvh; }
+    html { overflow: hidden; height: 100dvh; }
+
+    #mainMenu {
+        padding: 55px 10px 12px;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 8px;
+        overflow: hidden;
+        height: 100dvh;
+        max-height: 100dvh;
+    }
+
+    /* Header block */
+    .menu-header { margin-bottom: 0; gap: 4px; display: flex; flex-direction: column; align-items: center; width: 100%; flex-shrink: 0; }
+    .profile-section { margin-bottom: 0; }
+    #playerName { width: 250px; font-size: 0.7rem; padding: 10px 14px; }
+    .game-logo { font-size: 2.4rem; margin-top: 0; margin-bottom: 0; animation: none; line-height: 1.1; }
+    .leaderboard-mini { font-size: 0.65rem; padding: 6px 16px; margin-top: 0; }
+
+    /* Tagline */
+    .game-tagline { font-size: 0.75rem; margin-bottom: 0; flex-shrink: 0; }
+
+    /* Hero select doesn't force stretch, it takes natural height */
+    .hero-select { margin-bottom: 0; width: 100%; display: flex; flex-direction: column; }
+    .select-label { font-size: 0.65rem; margin-bottom: 5px; text-align: center; flex-shrink: 0; }
+
+    /* 2 COLUMNS (Baris ke bawah) */
+    .hero-options {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        margin-bottom: 0;
+        width: 100%;
+    }
+    .hero-option { padding: 10px 8px; display: flex; flex-direction: column; align-items: center; overflow: hidden; }
+    .hero-option .sprite-container { width: 75px; height: 75px; margin: 0 auto 6px; }
+    .hero-option .sprite-container img.pixel-sprite { transform: scaleX(-1) scale(1.1); }
+    .hero-name { font-size: 0.42rem; margin-bottom: 2px; }
+    .hero-desc { display: none; }
+    .hero-stats { gap: 3px; margin-top: 3px; }
+    .hero-stat { font-size: 0.32rem; }
+    .hero-stat-label { width: 18px; }
+    .stat-bar { height: 4px; }
+
+    /* Dungeon select */
+    .dungeon-select { margin-bottom: 0; width: 100%; flex-shrink: 0; }
+    .dungeon-options { gap: 5px; margin-bottom: 0; flex-wrap: wrap; justify-content: center; }
+    .dungeon-option { padding: 6px 11px; font-size: 0.65rem; }
+
+    /* Start button */
+    .btn-start-quest { padding: 12px 40px; font-size: 0.6rem; animation: none; flex-shrink: 0; }
+
+    /* === BRIEFING SCREEN PORTRAIT === */
+    #briefingScreen { padding: 20px 10px; justify-content: center; height: 100dvh; overflow-y: auto; background: #0f1322 !important; z-index: 50; }
+    #briefingScreen.active { display: flex !important; opacity: 1 !important; visibility: visible !important; }
+    #briefingScreen .briefing-container { padding: 30px 20px; margin-top: 0; display: block !important; opacity: 1 !important; }
+    .mascot-box { flex-direction: column; align-items: center; gap: 15px; margin-bottom: 25px; text-align: center; }
+    .mascot-sprite { width: 100px; height: 100px; }
+    .mascot-bubble { padding: 15px 18px; font-size: 0.85rem; width: 100%; text-align: center; line-height: 1.5; border-radius: 16px; }
+    .mascot-bubble::after { display: none; }
+    .mission-details { padding-top: 20px; margin-bottom: 30px; }
+    .mission-details h2 { font-size: 1.25rem; margin-bottom: 10px; line-height: 1.3; }
+    .mission-details p { font-size: 0.85rem; line-height: 1.5; }
+    #briefingScreen .btn-primary { padding: 16px; font-size: 0.8rem; }
+
+
+    /* === BATTLE SCREEN PORTRAIT === */
     #battleScreen { display: block; position: relative; height: 100dvh; width: 100vw; overflow: hidden; }
     .battle-arena { position: absolute; top: 0; left: 0; right: 0; height: 45vh; flex-direction: row; flex-wrap: nowrap; align-items: center; justify-content: space-between; padding: 40px 10px 0; }
     
-    .combatant { margin: 0; gap: 4px; transform: scale(0.8); transform-origin: bottom; flex: 1; align-self: center !important; }
+    .combatant { margin: 110px 0 0 0; gap: 4px; transform: scale(0.8); transform-origin: bottom; flex: 1; align-self: center !important; }
+    .damage-popup { font-size: 0.9rem; top: -10px; }
     .sprite-container { width: 90px; height: 90px; margin-bottom: 2px; }
     .hp-bar { width: 90px; height: 10px; }
     .xp-bar { width: 90px; height: 6px; }
@@ -711,12 +799,12 @@ body { font-family: var(--font-ui); background: var(--bg-dark); color: var(--tex
     .combatant-name { font-size: 0.45rem; }
     
     /* Fix overlap on Hud */
-    .battle-hud { top: 40px; }
+    .battle-hud { top: 65px; }
     .hud-item { font-size: 0.45rem; padding: 4px 10px; margin: 0 4px; }
     
     /* Fix clipped question box by anchoring to bottom explicitly */
     .question-panel { 
-        position: absolute; bottom: 20px; left: 10px; right: 10px; z-index: 50; 
+        position: absolute; bottom: 60px; left: 10px; right: 10px; z-index: 50; 
         padding: 15px; border-radius: 16px; max-height: 48vh; overflow-y: auto; 
         background: rgba(8, 10, 20, 0.92);
         border: 1px solid rgba(255,255,255,0.1); 
@@ -728,25 +816,88 @@ body { font-family: var(--font-ui); background: var(--bg-dark); color: var(--tex
     .answer-btn { padding: 8px 10px; border-radius: 8px; font-size: 0.65rem; }
     .ans-label { font-size: 0.6rem; width: 18px; height: 18px; min-width: 18px; }
 }
+
 /* =========================================
    LANDSCAPE OPTIMIZATION
    (When user rotates phone)
    ========================================= */
 @media (orientation: landscape) and (max-height: 500px) {
-    .battle-arena { height: 60vh; padding: 20px 60px 0; }
-    .combatant { transform: scale(1.1); }
-    .sprite-container { width: 100px; height: 100px; }
+    /* MAIN MENU COMPACT FOR LANDSCAPE */
+    #mainMenu { padding: 10px 15px; justify-content: center; }
+    .menu-header { margin-bottom: 5px; flex-direction: row; justify-content: center; align-items: center; gap: 8px; flex-wrap: nowrap; }
+    .profile-section { margin-bottom: 0; width: auto; }
+    #playerName { width: 130px; font-size: 0.5rem; padding: 6px; }
+    .game-logo { font-size: 1.2rem; margin-bottom: 0; margin-top: 0; animation: none; }
+    .leaderboard-mini { margin-top: 0; margin-bottom: 0; padding: 4px 8px; font-size: 0.45rem; }
+    .game-tagline { margin-bottom: 5px; font-size: 0.6rem; }
+    
+    .hero-select { margin-bottom: 5px; width: 100%; max-width: 700px; }
+    .select-label { margin-bottom: 5px; }
+    .hero-options { grid-template-columns: repeat(6, 1fr); gap: 5px; margin-bottom: 5px; }
+    .hero-option { padding: 4px; }
+    .hero-option .sprite-container { width: 45px; height: 45px; margin-bottom: 2px; }
+    .hero-option .sprite-container img.pixel-sprite { transform: scaleX(-1) scale(1) !important; }
+    .hero-option[data-hero="engineer"] .sprite-container img.pixel-sprite { transform: scaleX(-1) scale(1.3) !important; }
+    .hero-option h3 { display: none; }
+    .hero-name { font-size: 0.4rem; margin-bottom: 0; }
+    .hero-desc { display: none; }
+    
+    .dungeon-select { margin-bottom: 5px; }
+    .dungeon-options { margin-bottom: 10px; gap: 5px; }
+    .dungeon-option { padding: 4px 8px; font-size: 0.65rem; }
+    
+    .btn-start-quest { padding: 8px 25px; font-size: 0.6rem; }
+
+    /* BRIEFING SCREEN LANDSCAPE */
+    #briefingScreen { padding: 10px; }
+    #briefingScreen .briefing-container { padding: 15px 20px; max-width: 500px; }
+    .mascot-box { gap: 10px; margin-bottom: 10px; align-items: center; }
+    .mascot-sprite { width: 50px; height: 50px; }
+    .mascot-bubble { padding: 8px 12px; font-size: 0.6rem; }
+    .mascot-bubble::after { display: none; }
+    .mission-details { padding-top: 10px; margin-bottom: 15px; }
+    .mission-details h2 { font-size: 1rem; margin-bottom: 5px; }
+    .mission-details p { font-size: 0.6rem; }
+    #briefingScreen .btn-primary { padding: 8px; font-size: 0.6rem; max-width: 200px; }
+
+    /* BATTLE ARENA */
+    .battle-arena { height: auto; flex: 1; padding: 10px 40px 0; align-items: center; justify-content: center; gap: 30vw; }
+    .combatant { transform: scale(0.65) !important; transform-origin: center !important; margin: 0; align-self: center !important; margin-top: 40px !important; }
+    .sprite-container { width: 80px; height: 80px; }
     
     .question-panel { 
-        bottom: 10px; left: 10%; right: 10%; 
-        max-height: 35vh; padding: 10px 20px;
+        position: relative; bottom: auto; left: auto; right: auto; 
+        margin: 5px 15px; 
+        max-height: 45vh; padding: 5px 15px;
+        overflow-y: auto; flex-shrink: 0;
     }
-    .question-text { font-size: 0.6rem; margin-bottom: 5px; }
-    .answer-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
-    .answer-btn { padding: 6px 10px; font-size: 0.6rem; }
+    .question-text { font-size: 0.6rem; margin-bottom: 4px; min-height: unset; line-height: 1.2; }
+    .answer-grid { grid-template-columns: 1fr 1fr; gap: 4px; padding-bottom: 4px; }
+    .answer-btn { padding: 4px 8px; font-size: 0.55rem; }
     
-    .battle-hud { top: 10px; flex-direction: row; gap: 20px; }
+    .battle-hud { top: 5px; flex-direction: row; gap: 20px; }
     .btn-rotate { display: none; } /* Hide rotate button if already in landscape */
+
+    /* BATTLE INTRO CUTSCENE */
+    .intro-hero-label, .intro-monster-label { font-size: 0.6rem; margin-bottom: 2px; }
+    .intro-vs-text { font-size: 2.5rem; margin: 2px 0; }
+    .intro-countdown { font-size: 3.5rem; min-height: 60px; }
+    .intro-countdown.fight { font-size: 1.8rem; }
+
+    /* RESULT SCREEN LANDSCAPE COMPACT */
+    #resultScreen { padding: 5px; overflow-y: auto; }
+    #resultScreen .result-container { margin: 0 auto; display: flex; flex-direction: column; align-items: center; justify-content: center; height: auto; max-width: 500px; padding: 10px; }
+    .result-big-emoji { font-size: 2rem; margin-bottom: 0; line-height: 1; }
+    .result-headline { font-size: 1.1rem; margin-bottom: 2px; padding-bottom: 2px; }
+    .medals-container { margin-bottom: 2px; gap: 5px; transform: scale(0.7); transform-origin: top center; height: 35px; }
+    .result-stats-grid { gap: 5px; margin-bottom: 5px; }
+    .result-stat-card { padding: 4px 2px; }
+    .result-stat-value { font-size: 0.8rem; margin-bottom: 2px; }
+    .result-stat-label { font-size: 0.5rem; }
+    .result-message { font-size: 0.55rem; margin-bottom: 5px; line-height: 1.2; }
+    .btn-cheat-code { padding: 4px 10px; font-size: 0.5rem; margin-bottom: 5px; }
+    .result-buttons { gap: 10px; }
+    .result-buttons .btn-result { padding: 6px 15px; font-size: 0.6rem; }
 }
 
 /* =========================================
@@ -785,7 +936,7 @@ body { font-family: var(--font-ui); background: var(--bg-dark); color: var(--tex
 }
 .intro-countdown.pop { animation: countdownPop 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
 .intro-countdown.fight {
-    font-size: 5rem; color: var(--accent-green);
+    font-size: 3.5rem; color: var(--accent-green);
     text-shadow: 0 0 40px var(--accent-green);
     animation: fightPop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
@@ -812,12 +963,12 @@ body { font-family: var(--font-ui); background: var(--bg-dark); color: var(--tex
 }
 #answerFlashOverlay.flash-correct {
     visibility: visible;
-    animation: ansCorrect 0.8s ease-out forwards;
+    animation: ansCorrect 1.4s ease-out forwards;
     background: rgba(0, 230, 118, 0.12);
 }
 #answerFlashOverlay.flash-wrong {
     visibility: visible;
-    animation: ansWrong 0.7s ease-out forwards;
+    animation: ansWrong 1.3s ease-out forwards;
     background: rgba(255, 68, 68, 0.15);
 }
 #answerFlashText {
@@ -826,15 +977,25 @@ body { font-family: var(--font-ui); background: var(--bg-dark); color: var(--tex
 }
 #answerFlashOverlay.flash-correct #answerFlashText {
     color: var(--accent-green);
-    animation: flashTextPop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    animation: flashTextPop 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
 #answerFlashOverlay.flash-wrong #answerFlashText {
     color: var(--accent-red);
-    animation: flashTextPop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    animation: flashTextPop 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
 @keyframes ansCorrect { 0%{opacity:1} 100%{opacity:0;background:transparent} }
 @keyframes ansWrong { 0%{opacity:1} 100%{opacity:0;background:transparent} }
-@keyframes flashTextPop { 0%{transform:scale(0);opacity:0} 40%{transform:scale(1.25);opacity:1} 70%{transform:scale(1);opacity:1} 100%{transform:scale(0.8);opacity:0} }
+@keyframes flashTextPop { 0%{transform:scale(0);opacity:0} 30%{transform:scale(1.25);opacity:1} 65%{transform:scale(1);opacity:1} 100%{transform:scale(0.8);opacity:0} }
+
+/* Responsive answer flash text - always centered */
+@media (max-width: 650px) {
+    #answerFlashText { font-size: 1.2rem; }
+    .combo-counter { font-size: 1rem; top: 12%; }
+}
+@media (orientation: landscape) and (max-height: 500px) {
+    #answerFlashText { font-size: 1.6rem; }
+    .combo-counter { font-size: 0.8rem; top: 35px; }
+}
 
 /* =========================================
    MONSTER RAGE (HP < 30%)
@@ -863,10 +1024,10 @@ body { font-family: var(--font-ui); background: var(--bg-dark); color: var(--tex
     animation: monsterDeathBlow 0.9s ease-out forwards !important;
 }
 @keyframes monsterDeathBlow {
-    0%   { transform: scaleX(-1) scale(1)   rotate(0deg);  opacity: 1; }
-    20%  { transform: scaleX(-1) scale(1.3) rotate(-8deg); opacity: 1; }
-    60%  { transform: scaleX(-1) scale(0.6) rotate(20deg) translateY(-50px); opacity: 0.5; }
-    100% { transform: scaleX(-1) scale(0)   rotate(45deg) translateY(-90px); opacity: 0; }
+    0%   { transform: scale(1)   rotate(0deg);  opacity: 1; }
+    20%  { transform: scale(1.3) rotate(-8deg); opacity: 1; }
+    60%  { transform: scale(0.6) rotate(20deg) translateY(-50px); opacity: 0.5; }
+    100% { transform: scale(0)   rotate(45deg) translateY(-90px); opacity: 0; }
 }
 
 /* =========================================
@@ -910,9 +1071,9 @@ body { font-family: var(--font-ui); background: var(--bg-dark); color: var(--tex
     animation: monsterEntrance 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
 }
 @keyframes monsterEntrance {
-    0%   { transform: scaleX(-1) scale(0) translateY(60px); opacity: 0; filter: brightness(5); }
-    50%  { transform: scaleX(-1) scale(1.2) translateY(-10px); opacity: 1; filter: brightness(2); }
-    100% { transform: scaleX(-1) scale(1) translateY(0); opacity: 1; filter: brightness(1); }
+    0%   { transform: scale(0) translateY(60px); opacity: 0; filter: brightness(5); }
+    50%  { transform: scale(1.2) translateY(-10px); opacity: 1; filter: brightness(2); }
+    100% { transform: scale(1) translateY(0); opacity: 1; filter: brightness(1); }
 }
 
 /* =========================================
@@ -952,15 +1113,19 @@ body { font-family: var(--font-ui); background: var(--bg-dark); color: var(--tex
    BATTLE MASCOT POPUP
    ========================================= */
 .battle-mascot {
-    position: fixed; top: 120px; right: -500px;
-    z-index: 9000; display: flex; flex-direction: row-reverse; align-items: flex-start; gap: 15px;
-    transition: right 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    pointer-events: none;
+    position: fixed;
+    /* Appears in center of the arena, above characters, below HUD */
+    top: 30%; left: 50%; transform: translate(-50%, -200px);
+    z-index: 9000;
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.5s ease;
+    pointer-events: none; max-width: 320px;
+    opacity: 0;
 }
-.battle-mascot.show { right: 20px; }
+.battle-mascot.show { transform: translate(-50%, 0); opacity: 1; }
 
 .battle-mascot-img {
-    width: 100px; height: 100px;
+    width: 80px; height: 80px;
     background: url('assets/sprites/porygon-z.gif') center no-repeat;
     background-size: contain; transform: scaleX(-1);
     filter: drop-shadow(0 0 15px rgba(0,229,255,0.6));
@@ -969,19 +1134,19 @@ body { font-family: var(--font-ui); background: var(--bg-dark); color: var(--tex
 
 .battle-mascot-bubble {
     background: rgba(8, 12, 28, 0.95); color: #fff;
-    padding: 12px 18px; border-radius: 20px 0 20px 20px;
-    font-size: 0.8rem; font-weight: 700; line-height: 1.4; font-family: var(--font-ui);
+    padding: 10px 16px; border-radius: 16px;
+    font-size: 0.75rem; font-weight: 700; line-height: 1.4; font-family: var(--font-ui);
     box-shadow: 0 10px 30px rgba(0,0,0,0.8), inset 0 0 15px rgba(0,229,255,0.15);
     border: 1px solid var(--accent-cyan);
-    margin-top: 15px; max-width: 250px;
+    max-width: 260px; text-align: center;
 }
 @media (max-width: 650px) {
-    .battle-mascot { top: 90px; }
-    .battle-mascot.show { right: 10px; }
-    .battle-mascot-img { width: 70px; height: 70px; }
-    .battle-mascot-bubble { font-size: 0.65rem; max-width: 160px; padding: 10px 14px; margin-top: 10px; }
+    .battle-mascot { top: 28%; max-width: 240px; }
+    .battle-mascot-img { width: 60px; height: 60px; }
+    .battle-mascot-bubble { font-size: 0.6rem; padding: 8px 12px; }
 }
 @media (orientation: landscape) and (max-height: 500px) {
-    .battle-mascot { top: 60px; }
-    .battle-mascot-img { width: 70px; height: 70px; }
+    .battle-mascot { top: 20%; flex-direction: row; max-width: 350px; }
+    .battle-mascot-img { width: 45px; height: 45px; }
+    .battle-mascot-bubble { font-size: 0.5rem; padding: 6px 10px; max-width: 200px; }
 }

@@ -86,19 +86,16 @@ const heroAttackVariants = {
     ],
 };
 
-let heroAttackBag = [];
+let lastHeroStyle = null;
 function getAttackVariant(heroClass) {
     const variants = heroAttackVariants[heroClass];
     if (!variants) return projFX[heroClass] || projFX.knight;
     
-    if (heroAttackBag.length === 0) {
-        heroAttackBag = variants.map((_, i) => i);
-        for (let i = heroAttackBag.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [heroAttackBag[i], heroAttackBag[j]] = [heroAttackBag[j], heroAttackBag[i]];
-        }
-    }
-    const v = variants[heroAttackBag.pop()];
+    let available = variants.filter(v => v.style !== lastHeroStyle);
+    if (available.length === 0) available = variants;
+    
+    const v = available[Math.floor(Math.random() * available.length)];
+    lastHeroStyle = v.style;
     return { ...projFX[heroClass], style: v.style, color: v.color, hitVfx: v.hitVfx };
 }
 
@@ -588,7 +585,7 @@ function nextWave() {
     
     // Scale boss naturally bigger
     if (m.imgKey === 'boss') {
-        ms.querySelector('img').style.transform = 'scale(1.5) scaleX(-1)';
+        ms.querySelector('img').style.transform = 'scale(1.5)';
     }
 
     // Trigger entrance animation
@@ -775,12 +772,22 @@ function playMovementAnim(style, aEl, dEl, fxInfo, onHit) {
     const aRect = aEl.getBoundingClientRect(), dRect = dEl.getBoundingClientRect();
     let isAttackerLeft = aRect.left < dRect.left;
     const ax = aRect.left; const ay = aRect.top;
-    const dx = dRect.left + (isAttackerLeft ? -80 : 80);
+    
+    // On mobile landscape, combatants are CSS-scaled to 0.65.
+    // We detect this by checking orientation + height, matching the CSS media query.
+    // We cannot use getComputedStyle because JS .animate() overwrites the transform,
+    // making the computed value unreliable during animation.
+    const isMobileLandscape = window.innerWidth > window.innerHeight && window.innerHeight <= 500;
+    const scale = isMobileLandscape ? 0.65 : 1;
+    
+    const dx = dRect.left + (isAttackerLeft ? -20 : 20);
     const dy = dRect.top;
 
     const executeMove = (aura) => {
         if (style === 'melee') {
-            playSound('jump'); const moveX = dx - ax; const moveY = dy - ay;
+            playSound('jump');
+            // Divide by scale so the element travels the full screen distance
+            const moveX = (dx - ax) / scale; const moveY = (dy - ay) / scale;
             const anim = aEl.animate([
                 { transform: 'translate(0,0) skewX(0)', offset: 0 },
                 { transform: `translate(${moveX*0.2}px, ${moveY*0.2}px) skewX(${isAttackerLeft ? -20 : 20}deg)`, offset: 0.2 },
@@ -796,7 +803,7 @@ function playMovementAnim(style, aEl, dEl, fxInfo, onHit) {
                 });
             };
         } else if (style === 'jump') {
-            const moveX = dx - ax; const moveY = (dy - ay) * 0.3; playSound('jump');
+            const moveX = (dx - ax)/scale; const moveY = ((dy - ay) * 0.3)/scale; playSound('jump');
             const duckRot = isAttackerLeft ? '-10deg' : '10deg'; const arcRot = isAttackerLeft ? '25deg' : '-25deg'; const slamRot = isAttackerLeft ? '10deg' : '-10deg';
             const anim = aEl.animate([ 
                 { transform: 'translate(0,0) scale(1) rotate(0deg)' }, 
@@ -816,7 +823,7 @@ function playMovementAnim(style, aEl, dEl, fxInfo, onHit) {
             };
         } else if (style === 'dash') {
             playSound('jump');
-            const moveX = dx - ax; const moveY = dy - ay;
+            const moveX = (dx - ax)/scale; const moveY = (dy - ay)/scale;
             const anim = aEl.animate([
                 { transform: 'translate(0,0) skewX(0)', opacity: 1 },
                 { transform: `translate(${moveX*0.5}px, ${moveY*0.5}px) skewX(${isAttackerLeft ? -30 : 30}deg)`, opacity: 0.5, offset: 0.5 },
@@ -978,14 +985,11 @@ function monsterAttack() {
     // Monster-specific projectile
     const fxInfo = monsterProjFX[monsterKey] || monsterProjFX.boss;
     
-    if (!window.monsterAttackBag || window.monsterAttackBag.length === 0) {
-        window.monsterAttackBag = fxInfo.styles.map((_, i) => i);
-        for (let i = window.monsterAttackBag.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [window.monsterAttackBag[i], window.monsterAttackBag[j]] = [window.monsterAttackBag[j], window.monsterAttackBag[i]];
-        }
-    }
-    const style = fxInfo.styles[window.monsterAttackBag.pop()];
+    if (typeof window.lastMonsterStyle === 'undefined') window.lastMonsterStyle = null;
+    let availableStyles = fxInfo.styles.filter(s => s !== window.lastMonsterStyle);
+    if (availableStyles.length === 0) availableStyles = fxInfo.styles;
+    const style = availableStyles[Math.floor(Math.random() * availableStyles.length)];
+    window.lastMonsterStyle = style;
 
     // Boss has 35% double strike chance (100% when berserking)
     const doDoubleStrike = isBoss && (isBerserking || Math.random() < 0.35);
