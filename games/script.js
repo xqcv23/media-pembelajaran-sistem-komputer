@@ -1,128 +1,128 @@
 /* ================= EFEK ANIMASI PENGETIKAN ================= */
-  const textToType = "Pilih misi dan kumpulkan semua gelar kehormatan!";
-  let typeIndex = 0;
-  function typeWriterEffect() {
+const textToType = "Pilih misi dan kumpulkan semua gelar kehormatan!";
+let typeIndex = 0;
+function typeWriterEffect() {
     if (typeIndex < textToType.length) {
-      document.getElementById("typing-text").innerHTML += textToType.charAt(typeIndex);
-      typeIndex++;
-      setTimeout(typeWriterEffect, 60); 
+        document.getElementById("typing-text").innerHTML += textToType.charAt(typeIndex);
+        typeIndex++;
+        setTimeout(typeWriterEffect, 60);
     }
-  }
-  setTimeout(typeWriterEffect, 600);
+}
+setTimeout(typeWriterEffect, 600);
 
-  /* ================= LOGIKA UI DRAGGABLE ================= */
-  const balloon = document.getElementById('drag-balloon');
-  let isDraggingBalloon = false, didMoveBalloon = false, startX, startY, initialLeft, initialTop;
-  balloon.addEventListener('mousedown', dragStart); window.addEventListener('mousemove', dragMove); window.addEventListener('mouseup', dragEnd);
-  balloon.addEventListener('touchstart', dragStart, {passive: false}); window.addEventListener('touchmove', dragMove, {passive: false}); window.addEventListener('touchend', dragEnd);
-  function dragStart(e) { if(e.type === 'touchstart') { startX = e.touches[0].clientX; startY = e.touches[0].clientY; } else { startX = e.clientX; startY = e.clientY; } let rect = balloon.getBoundingClientRect(); initialLeft = rect.left; initialTop = rect.top; isDraggingBalloon = true; didMoveBalloon = false; }
-  function dragMove(e) { if (!isDraggingBalloon) return; e.preventDefault(); let currentX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX; let currentY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY; let diffX = currentX - startX; let diffY = currentY - startY; if(Math.abs(diffX) > 5 || Math.abs(diffY) > 5) didMoveBalloon = true; let newLeft = initialLeft + diffX; let newTop = initialTop + diffY; let maxX = window.innerWidth - balloon.offsetWidth; let windowHeight = window.innerHeight - balloon.offsetHeight; if(newLeft < 0) newLeft = 0; if(newLeft > maxX) newLeft = maxX; if(newTop < 0) newTop = 0; if(newTop > windowHeight) newTop = windowHeight; balloon.style.left = newLeft + 'px'; balloon.style.top = newTop + 'px'; }
-  function dragEnd(e) { isDraggingBalloon = false; }
-  
-  balloon.addEventListener('click', (e) => { 
-    if(!didMoveBalloon) { openInventory(); } 
-  });
+/* ================= LOGIKA UI DRAGGABLE ================= */
+const balloon = document.getElementById('drag-balloon');
+let isDraggingBalloon = false, didMoveBalloon = false, startX, startY, initialLeft, initialTop;
+balloon.addEventListener('mousedown', dragStart); window.addEventListener('mousemove', dragMove); window.addEventListener('mouseup', dragEnd);
+balloon.addEventListener('touchstart', dragStart, { passive: false }); window.addEventListener('touchmove', dragMove, { passive: false }); window.addEventListener('touchend', dragEnd);
+function dragStart(e) { if (e.type === 'touchstart') { startX = e.touches[0].clientX; startY = e.touches[0].clientY; } else { startX = e.clientX; startY = e.clientY; } let rect = balloon.getBoundingClientRect(); initialLeft = rect.left; initialTop = rect.top; isDraggingBalloon = true; didMoveBalloon = false; }
+function dragMove(e) { if (!isDraggingBalloon) return; e.preventDefault(); let currentX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX; let currentY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY; let diffX = currentX - startX; let diffY = currentY - startY; if (Math.abs(diffX) > 5 || Math.abs(diffY) > 5) didMoveBalloon = true; let newLeft = initialLeft + diffX; let newTop = initialTop + diffY; let maxX = window.innerWidth - balloon.offsetWidth; let windowHeight = window.innerHeight - balloon.offsetHeight; if (newLeft < 0) newLeft = 0; if (newLeft > maxX) newLeft = maxX; if (newTop < 0) newTop = 0; if (newTop > windowHeight) newTop = windowHeight; balloon.style.left = newLeft + 'px'; balloon.style.top = newTop + 'px'; }
+function dragEnd(e) { isDraggingBalloon = false; }
 
-  /* ==============================================================
-     LOGIKA SPA (TUKAR LAYAR - AUTO RATA ATAS)
-     ============================================================== */
-  let currentGameId = 0;
-  let playerData = JSON.parse(localStorage.getItem('sman8_gamedata')) || { name: "", badges:[] };
-  let currentView = 'menu-view';
-  let previousView = 'menu-view';
+balloon.addEventListener('click', (e) => {
+    if (!didMoveBalloon) { openInventory(); }
+});
 
-  function switchView(targetView) {
-      previousView = currentView;
-      
-      document.getElementById('menu-view').style.display = 'none';
-      document.getElementById('game-view').style.display = 'none';
-      document.getElementById('pledge-view').style.display = 'none';
-      document.getElementById('inventory-view').style.display = 'none';
+/* ==============================================================
+   LOGIKA SPA (TUKAR LAYAR - AUTO RATA ATAS)
+   ============================================================== */
+let currentGameId = 0;
+let playerData = JSON.parse(localStorage.getItem('sman8_gamedata')) || { name: "", badges: [] };
+let currentView = 'menu-view';
+let previousView = 'menu-view';
 
-      let target = document.getElementById(targetView);
-      if(targetView === 'menu-view') {
-          target.style.display = 'block';
-          document.getElementById('drag-balloon').style.display = 'flex';
-      } else if (targetView === 'game-view') {
-          target.style.display = 'flex';
-          document.getElementById('drag-balloon').style.display = 'none';
-      } else {
-          target.style.display = 'flex'; 
-          document.getElementById('drag-balloon').style.display = 'none';
-      }
+function switchView(targetView) {
+    previousView = currentView;
 
-      currentView = targetView;
-      
-      // Auto-scroll ke paling atas setiap ganti layar, agar pop-up di atas langsung kelihatan
-      setTimeout(() => {
-          window.scrollTo(0, 0);
-      }, 10);
-  }
+    document.getElementById('menu-view').style.display = 'none';
+    document.getElementById('game-view').style.display = 'none';
+    document.getElementById('pledge-view').style.display = 'none';
+    document.getElementById('inventory-view').style.display = 'none';
 
-  function openGame(gameId, linkEmbed) {
-      currentGameId = gameId; 
-      document.getElementById("game-iframe").src = linkEmbed;
-      switchView('game-view');
-  }
+    let target = document.getElementById(targetView);
+    if (targetView === 'menu-view') {
+        target.style.display = 'block';
+        document.getElementById('drag-balloon').style.display = 'flex';
+    } else if (targetView === 'game-view') {
+        target.style.display = 'flex';
+        document.getElementById('drag-balloon').style.display = 'none';
+    } else {
+        target.style.display = 'flex';
+        document.getElementById('drag-balloon').style.display = 'none';
+    }
 
-  function closeGame() {
-      document.getElementById("game-iframe").src = ""; 
-      currentGameId = 0;
-      switchView('menu-view');
-  }
+    currentView = targetView;
 
-  function openPledgeModal() { 
-      if(playerData.badges.includes(currentGameId)) { 
-          alert("Gelar Misi ini sudah diamankan di Koleksi Gelar!"); return; 
-      } 
-      switchView('pledge-view');
-  }
+    // Auto-scroll ke paling atas setiap ganti layar, agar pop-up di atas langsung kelihatan
+    setTimeout(() => {
+        window.scrollTo(0, 0);
+    }, 10);
+}
 
-  function closePledgeModal() { 
-      switchView('game-view'); 
-  }
+function openGame(gameId, linkEmbed) {
+    currentGameId = gameId;
+    document.getElementById("game-iframe").src = linkEmbed;
+    switchView('game-view');
+}
 
-  function claimReward() { 
-      fireConfetti(); 
-      setTimeout(() => { 
-          if (!playerData.name) { 
-              let inputName = prompt("Misi Selesai! Masukkan Nickname untuk dicetak di Koleksi Gelar:"); 
-              playerData.name = inputName ? inputName : "Hacker Anonim"; 
-          } 
-          if (!playerData.badges.includes(currentGameId)) {
-              playerData.badges.push(currentGameId); 
-              localStorage.setItem('sman8_gamedata', JSON.stringify(playerData)); 
-          }
-          openInventory(); 
-      }, 800); 
-  }
+function closeGame() {
+    document.getElementById("game-iframe").src = "";
+    currentGameId = 0;
+    switchView('menu-view');
+}
 
-  function openInventory() { 
-      document.getElementById('player-name-display').innerText = playerData.name ? `AKSES: ${playerData.name}` : "AKSES: DATA KOSONG"; 
-      for (let i = 1; i <= 3; i++) { 
-          let badgeCard = document.getElementById('badge-' + i); 
-          let statusText = document.getElementById('status-' + i); 
-          if (playerData.badges.includes(i)) { 
-              badgeCard.classList.add('unlocked'); statusText.innerText = "SYSTEM UNLOCKED"; 
-          } else { 
-              badgeCard.classList.remove('unlocked'); statusText.innerText = "TERKUNCI"; 
-          } 
-      } 
-      switchView('inventory-view');
-  }
+function openPledgeModal() {
+    if (playerData.badges.includes(currentGameId)) {
+        alert("Gelar Misi ini sudah diamankan di Koleksi Gelar!"); return;
+    }
+    switchView('pledge-view');
+}
 
-  function closeInventory() {
-      if (previousView === 'pledge-view') {
-          closeGame(); 
-      } else {
-          switchView('menu-view');
-      }
-  }
+function closePledgeModal() {
+    switchView('game-view');
+}
 
-  function fireConfetti() { const container = document.getElementById('confetti-container'); const colors =['#3b82f6', '#06b6d4', '#ec4899', '#f59e0b', '#ffffff']; for (let i = 0; i < 80; i++) { let conf = document.createElement('div'); conf.classList.add('confetti-piece'); conf.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)]; conf.style.left = Math.random() * 100 + '%'; conf.style.top = '-20px'; conf.style.animationDuration = (Math.random() * 2 + 1) + 's'; conf.style.animationDelay = (Math.random() * 0.5) + 's'; container.appendChild(conf); setTimeout(() => conf.remove(), 3000); } }
+function claimReward() {
+    fireConfetti();
+    setTimeout(() => {
+        if (!playerData.name) {
+            let inputName = prompt("Misi Selesai! Masukkan Nickname untuk dicetak di Koleksi Gelar:");
+            playerData.name = inputName ? inputName : "Hacker Anonim";
+        }
+        if (!playerData.badges.includes(currentGameId)) {
+            playerData.badges.push(currentGameId);
+            localStorage.setItem('sman8_gamedata', JSON.stringify(playerData));
+        }
+        openInventory();
+    }, 800);
+}
 
-  /* LOGIKA NATIVE FULLSCREEN */
-  function openFullscreenSafe() {
+function openInventory() {
+    document.getElementById('player-name-display').innerText = playerData.name ? `AKSES: ${playerData.name}` : "AKSES: DATA KOSONG";
+    for (let i = 1; i <= 3; i++) {
+        let badgeCard = document.getElementById('badge-' + i);
+        let statusText = document.getElementById('status-' + i);
+        if (playerData.badges.includes(i)) {
+            badgeCard.classList.add('unlocked'); statusText.innerText = "SYSTEM UNLOCKED";
+        } else {
+            badgeCard.classList.remove('unlocked'); statusText.innerText = "TERKUNCI";
+        }
+    }
+    switchView('inventory-view');
+}
+
+function closeInventory() {
+    if (previousView === 'pledge-view') {
+        closeGame();
+    } else {
+        switchView('menu-view');
+    }
+}
+
+function fireConfetti() { const container = document.getElementById('confetti-container'); const colors = ['#3b82f6', '#06b6d4', '#ec4899', '#f59e0b', '#ffffff']; for (let i = 0; i < 80; i++) { let conf = document.createElement('div'); conf.classList.add('confetti-piece'); conf.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)]; conf.style.left = Math.random() * 100 + '%'; conf.style.top = '-20px'; conf.style.animationDuration = (Math.random() * 2 + 1) + 's'; conf.style.animationDelay = (Math.random() * 0.5) + 's'; container.appendChild(conf); setTimeout(() => conf.remove(), 3000); } }
+
+/* LOGIKA NATIVE FULLSCREEN */
+function openFullscreenSafe() {
     const iframe = document.getElementById('game-iframe');
     const link = iframe.src;
     if (!link) return;
@@ -135,11 +135,11 @@
     const winHtml = part1 + part2 + part3 + part4;
     let newWin = window.open("", "_blank");
     if (newWin) { newWin.document.open(); newWin.document.write(winHtml); newWin.document.close(); } else { alert("Pop-up diblokir!"); }
-  }
+}
 
-  function transitionToGame(e) {
-    if(e) e.preventDefault();
-    
+function transitionToGame(e) {
+    if (e) e.preventDefault();
+
     // Create overlay
     const overlay = document.createElement('div');
     overlay.className = 'game-loader-overlay';
@@ -148,7 +148,7 @@
     overlay.style.left = '0';
     overlay.style.width = '100%';
     overlay.style.height = '100%';
-    
+
     overlay.innerHTML = `
         <div class="game-loader-content">
             <div class="game-loader-icon-container">
@@ -164,25 +164,25 @@
             </div>
         </div>
     `;
-    
+
     document.body.appendChild(overlay);
-    
+
     // Trigger animations safely
     requestAnimationFrame(() => {
         overlay.classList.add('active');
-        
+
         // Simulate progress percentage
         let progress = 0;
         const percentText = document.getElementById('gameLoadPercent');
         const bar = document.getElementById('gameLoadProgress');
-        
+
         const interval = setInterval(() => {
             progress += Math.floor(Math.random() * 5) + 2;
             if (progress > 100) progress = 100;
-            
+
             if (percentText) percentText.innerText = progress + '%';
             if (bar) bar.style.width = progress + '%';
-            
+
             if (progress >= 100) {
                 clearInterval(interval);
             }
@@ -191,6 +191,6 @@
 
     // Wait for the bar to fill, then redirect
     setTimeout(() => {
-        window.location.href = 'games/games.html';
+        window.location.href = 'games.html';
     }, 4500);
 }
