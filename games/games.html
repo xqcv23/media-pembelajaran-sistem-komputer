@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>⚔️ Tech Quest - RPG Battle Quiz</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Press+Start+2P&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style2.css">
+</head>
+<body>
+
+<button class="btn-back" onclick="handleBackAction()" title="Kembali">⬅ Keluar</button>
+<button class="btn-bgm" id="btnBgm" onclick="toggleBgm()" title="Toggle Music">🔊 BGM ON</button>
+
+<!-- ============ MAIN MENU ============ -->
+<div id="mainMenu" class="screen active">
+  <div class="menu-glow"></div>
+  <div class="menu-header">
+    <div class="profile-section">
+      <input type="text" id="playerName" placeholder="Input Nama Kamu..." maxlength="12" onchange="saveName()">
+    </div>
+    <div class="game-logo">TECH QUEST</div>
+    <div class="leaderboard-mini" id="miniLeaderboard">🏆 Best: 0</div>
+  </div>
+    <p class="game-tagline">Taklukkan Monster Pengetahuan!</p>
+    
+    <div class="hero-select">
+      <p class="select-label">Pilih Heromu:</p>
+      <div class="hero-options">
+        <div class="hero-option selected" data-hero="knight" onclick="selectHero(this)">
+          <div class="sprite-container" id="previewKnight"></div>
+          <div class="hero-name">Cyber Knight</div>
+          <div class="hero-desc">DEF +2 · Tahan serangan</div>
+        </div>
+        <div class="hero-option" data-hero="mage" onclick="selectHero(this)">
+          <div class="sprite-container" id="previewMage"></div>
+          <div class="hero-name">Data Mage</div>
+          <div class="hero-desc">ATK +5 · Serangan dahsyat</div>
+        </div>
+        <div class="hero-option" data-hero="rogue" onclick="selectHero(this)">
+          <div class="sprite-container" id="previewRogue"></div>
+          <div class="hero-name">Speed Hacker</div>
+          <div class="hero-desc">SPD +5s · Waktu ekstra</div>
+        </div>
+        <div class="hero-option" data-hero="admin" onclick="selectHero(this)">
+          <div class="sprite-container" id="previewAdmin"></div>
+          <div class="hero-name">System Admin</div>
+          <div class="hero-desc">HP +40 · Tank Baja</div>
+        </div>
+        <div class="hero-option" data-hero="designer" onclick="selectHero(this)">
+          <div class="sprite-container" id="previewDesigner"></div>
+          <div class="hero-name">UX Designer</div>
+          <div class="hero-desc">ATK +10 · Tembak Jitu</div>
+        </div>
+        <div class="hero-option" data-hero="engineer" onclick="selectHero(this)">
+          <div class="sprite-container" id="previewEngineer"></div>
+          <div class="hero-name">Net Engineer</div>
+          <div class="hero-desc">TIME +10s · Pakar Waktu</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="dungeon-select">
+      <p class="select-label">Pilih Dungeon:</p>
+      <div class="dungeon-options">
+        <div class="dungeon-option selected" data-dungeon="all" onclick="selectDungeon(this)">
+          <span class="dungeon-icon">🏰</span><span class="dungeon-name">Semua Materi</span>
+        </div>
+        <div class="dungeon-option" data-dungeon="hardware" onclick="selectDungeon(this)">
+          <span class="dungeon-icon">🖥️</span><span class="dungeon-name">Hardware</span>
+        </div>
+        <div class="dungeon-option" data-dungeon="software" onclick="selectDungeon(this)">
+          <span class="dungeon-icon">💿</span><span class="dungeon-name">Software</span>
+        </div>
+        <div class="dungeon-option" data-dungeon="os" onclick="selectDungeon(this)">
+          <span class="dungeon-icon">⚙️</span><span class="dungeon-name">Sistem Operasi</span>
+        </div>
+        <div class="dungeon-option" data-dungeon="hci" onclick="selectDungeon(this)">
+          <span class="dungeon-icon">🖱️</span><span class="dungeon-name">HCI</span>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn-start-quest" onclick="showBriefing()">⚔️ MULAI QUEST</button>
+  </div>
+</div>
+
+<!-- ============ BRIEFING / STORY SCREEN ============ -->
+<div id="briefingScreen" class="screen">
+  <div class="briefing-container">
+    <div class="mascot-box">
+      <div id="mascotSprite" class="mascot-sprite"></div>
+      <div class="mascot-bubble">
+        <div id="mascotText">"Sistem sedang dalam bahaya! Kami butuh keahlianmu mendeteksi bug dan membersihkan kernel!"</div>
+      </div>
+    </div>
+    <div class="mission-details">
+      <h2 id="missionTitle">MISI: CLEANUP SYSTEM</h2>
+      <p id="missionDesc">Kalahkan monster virus dengan menjawab soal secara akurat untuk memulihkan database.</p>
+    </div>
+    <button class="btn-primary" onclick="startQuest()">SIAP, LAKSANAKAN!</button>
+  </div>
+</div>
+
+<!-- ============ BATTLE SCREEN ============ -->
+<div id="battleScreen" class="screen">
+  <!-- Full Screen Background: LIVING DUNGEON -->
+  <div class="arena-bg">
+    <!-- Stone wall base -->
+    <div class="dungeon-wall back-wall"></div>
+    
+    <!-- Left pillar with torch -->
+    <div class="dungeon-pillar left-pillar">
+      <div class="torch t-pillar">
+        <div class="torch-wood"></div>
+        <div class="torch-fire"></div>
+        <div class="torch-glow"></div>
+      </div>
+    </div>
+    <!-- Right pillar with torch -->
+    <div class="dungeon-pillar right-pillar">
+      <div class="torch t-pillar" style="animation-delay:.3s">
+        <div class="torch-wood"></div>
+        <div class="torch-fire" style="animation-delay:.15s"></div>
+        <div class="torch-glow" style="animation-delay:.2s"></div>
+      </div>
+    </div>
+
+    <!-- Extra wall torches for more light -->
+    <div class="wall-torch wt-left">
+      <div class="torch-fire wf-small"></div>
+      <div class="torch-glow wg-small"></div>
+    </div>
+    <div class="wall-torch wt-right">
+      <div class="torch-fire wf-small" style="animation-delay:.4s"></div>
+      <div class="torch-glow wg-small" style="animation-delay:.3s"></div>
+    </div>
+
+    <!-- Hanging chains -->
+    <div class="chain chain-1"></div>
+    <div class="chain chain-2"></div>
+    <div class="chain chain-3"></div>
+
+    <!-- Water drips -->
+    <div class="drip drip-1"></div>
+    <div class="drip drip-2"></div>
+
+    <!-- Dungeon floor -->
+    <div class="grid-floor dungeon-floor"></div>
+
+    <!-- Fog / mist -->
+    <div class="mist-container">
+      <div class="mist-layer mist-1"></div>
+      <div class="mist-layer mist-2"></div>
+    </div>
+
+    <!-- Floating embers & dust (JS populated) -->
+    <div class="dust-particles" id="atmosLayer"></div>
+    <div class="arena-glow"></div>
+  </div>
+
+  <div class="battle-arena">
+    <div id="comboCounter" class="combo-counter"></div>
+    <div id="projectileLayer" class="projectile-layer" style="position: absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:20;"></div>
+
+    <!-- Hero side (left) -->
+    <div class="combatant hero-side">
+      <div class="sprite-container" id="heroSprite"></div>
+      <div class="damage-popup" id="heroDamage"></div>
+      <div class="combatant-info hero-info-bottom">
+        <span class="combatant-name hero-color" id="heroNameBattle">Cyber Knight</span>
+      </div>
+      <div class="hp-bar">
+        <div class="hp-ghost" id="heroHpGhost"></div>
+        <div class="hp-fill hp-hero" id="heroHpFill"></div>
+        <span class="hp-text" id="heroHpText">120/120</span>
+      </div>
+      <div class="xp-bar">
+        <div class="xp-fill" id="xpFill"></div>
+        <span class="xp-text" id="xpText">XP: 0</span>
+      </div>
+    </div>
+
+    <!-- FX Layer -->
+    <div class="fx-layer" id="fxLayer"></div>
+
+    <!-- Monster side (right) -->
+    <div class="combatant monster-side">
+      <div class="sprite-container" id="monsterSprite"></div>
+      <div class="damage-popup" id="monsterDamage"></div>
+      <div class="combatant-info">
+        <span class="combatant-name" id="monsterName">???</span>
+        <span class="combatant-lv" id="monsterLevel">Lv.1</span>
+      </div>
+      <div class="hp-bar">
+        <div class="hp-ghost" id="monsterHpGhost"></div>
+        <div class="hp-fill hp-enemy" id="monsterHpFill"></div>
+        <span class="hp-text" id="monsterHpText">60/60</span>
+      </div>
+    </div>
+
+    <!-- Battle HUD -->
+    <div class="battle-hud">
+      <div class="hud-item wave-counter" id="waveCounter">Wave 1/5</div>
+      <div class="hud-item battle-timer" id="battleTimerContainer">
+        <svg class="timer-ring" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+          <circle class="timer-ring-bg" cx="18" cy="18" r="14"/>
+          <circle class="timer-ring-fill" id="timerRingFill" cx="18" cy="18" r="14"
+                  stroke-dasharray="87.96" stroke-dashoffset="0"/>
+        </svg>
+        <span id="battleTimer">25</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- BATTLE MASCOT POPUP -->
+  <div id="battleMascot" class="battle-mascot">
+    <div class="battle-mascot-img"></div>
+    <div class="battle-mascot-bubble" id="battleMascotText">Fokus! Coba baca lagi pelan-pelan!</div>
+  </div>
+
+  <!-- QUESTION PANEL (bottom) -->
+  <div class="question-panel" id="questionPanel">
+    <div class="question-text" id="questionText"></div>
+    <div class="answer-grid" id="answerGrid"></div>
+    <div class="battle-feedback" id="battleFeedback"></div>
+  </div>
+</div>
+
+<!-- ============ RESULT SCREEN ============ -->
+<div id="resultScreen" class="screen">
+  <div class="result-container" id="resultContainer"></div>
+</div>
+
+
+<!-- ============ BATTLE INTRO CUTSCENE ============ -->
+<div id="battleIntroOverlay">
+  <div class="intro-content">
+    <div class="intro-hero-label" id="introHeroLabel"></div>
+    <div class="intro-vs-text">VS</div>
+    <div class="intro-monster-label" id="introMonsterLabel"></div>
+    <div class="intro-countdown" id="introCountdown">3</div>
+  </div>
+</div>
+
+<!-- Answer Flash Overlay -->
+<div id="answerFlashOverlay">
+  <span id="answerFlashText"></span>
+</div>
+
+<!-- Wave Cleared Overlay -->
+<div id="waveClearedOverlay">
+  <div class="wave-cleared-content">
+    <div class="wave-cleared-icon">⚔️</div>
+    <div class="wave-cleared-text" id="waveClearedText">WAVE CLEARED!</div>
+    <div class="wave-next-text" id="waveNextText">Gelombang berikutnya...</div>
+  </div>
+</div>
+
+<!-- Confetti Container -->
+<div id="confettiContainer"></div>
+
+<script src="script2.js"></script>
+</body>
+</html>
