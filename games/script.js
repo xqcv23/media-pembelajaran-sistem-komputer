@@ -190,8 +190,9 @@ function transitionToGame(e) {
     });
 
     // Wait for the bar to fill, then redirect
-    // setTimeout(() => {
-    //     window.location.href = 'games.html';
-    // }, 4500);
-    openGame(4, 'https://xqcv23.github.io/media-pembelajaran-sistem-komputer/games/games.html')
+    setTimeout(() => {
+        document.body.removeChild(overlay);
+        openGame(4, 'https://xqcv23.github.io/media-pembelajaran-sistem-komputer/games/games.html')
+    }, 4500);
+
 }
