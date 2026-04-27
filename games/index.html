@@ -1,136 +1,174 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Games Sistem Komputer - SMAN 8 Samarinda</title>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Games Sistem Komputer - SMAN 8 Samarinda</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-<div id="confetti-container"></div>
+  <div id="confetti-container"></div>
 
-<!-- ICON FLOATING KOLEKSI GELAR -->
-<div id="drag-balloon">
-  <div style="display: flex; flex-direction: column; align-items: center;">
-    <div class="cyber-fab">
-      <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M12 2l8 4.5v7c0 5.25-3.27 10-8 11.5-4.73-1.5-8-6.25-8-11.5v-7L12 2z"></path>
-        <polygon points="12 6.5 13.5 10.5 18 10.5 14.5 13 15.5 17 12 14.5 8.5 17 9.5 13 6 10.5 10.5 10.5"></polygon>
-      </svg>
+  <!-- ICON FLOATING KOLEKSI GELAR -->
+  <div id="drag-balloon">
+    <div style="display: flex; flex-direction: column; align-items: center;">
+      <div class="cyber-fab">
+        <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2l8 4.5v7c0 5.25-3.27 10-8 11.5-4.73-1.5-8-6.25-8-11.5v-7L12 2z"></path>
+          <polygon points="12 6.5 13.5 10.5 18 10.5 14.5 13 15.5 17 12 14.5 8.5 17 9.5 13 6 10.5 10.5 10.5"></polygon>
+        </svg>
+      </div>
+      <div class="drone-label">Koleksi Gelar</div>
     </div>
-    <div class="drone-label">Koleksi Gelar</div>
   </div>
-</div>
 
-<div class="container" id="main-container">
-  
-  <!-- 1. TAMPILAN MENU UTAMA -->
-  <div id="menu-view">
-    <div class="header-section">
-      <div class="badge-float">🎮 Ruang Games SMAN 8</div>
-      <h2>Games <span>Sistem Komputer</span></h2>
-      <div class="sub-desc"><span id="typing-text"></span><span class="cursor">|</span></div>
-    </div>
+  <div class="container" id="main-container">
 
-    <div class="material-grid">
-      <div class="mat-card">
-        <div class="level-badge">Misi 1</div>
-        <div class="card-icon">🖥️</div>
-        <div class="card-info">
-          <h3>Sistem Komputer</h3>
-          <p>Buktikan kehebatanmu mengenali rahasia anatomi Hardware, Software, dan Brainware!</p>
-          <div class="stats-row"><div class="reward-text">🗝️ Reward: Gelar Teknisi</div></div>
-        </div>
-        <button class="btn-access" onclick="openGame(1, 'https://wordwall.net/id/embed/42d6fbc225d841e18b17816f228bbadd?themeId=27&templateId=82&fontStackId=0')">Mainkan Misi 1 <span>➔</span></button>
+    <!-- 1. TAMPILAN MENU UTAMA -->
+    <div id="menu-view">
+      <div class="header-section">
+        <div class="badge-float">🎮 Ruang Games SMAN 8</div>
+        <h2>Games <span>Sistem Komputer</span></h2>
+        <div class="sub-desc"><span id="typing-text"></span><span class="cursor">|</span></div>
       </div>
-      <div class="mat-card">
-        <div class="level-badge">Misi 2</div>
-        <div class="card-icon">🖱️</div>
-        <div class="card-info">
-          <h3>Interaksi Manusia</h3>
-          <p>Uji ketangkasanmu dan pecahkan misteri cara kita mengendalikan antarmuka komputer.</p>
-          <div class="stats-row"><div class="reward-text">⚡ Reward: Master Kendali</div></div>
+
+      <div class="material-grid">
+        <div class="mat-card">
+          <div class="level-badge">Misi 1</div>
+          <div class="card-icon">🖥️</div>
+          <div class="card-info">
+            <h3>Sistem Komputer</h3>
+            <p>Buktikan kehebatanmu mengenali rahasia anatomi Hardware, Software, dan Brainware!</p>
+            <div class="stats-row">
+              <div class="reward-text">🗝️ Reward: Gelar Teknisi</div>
+            </div>
+          </div>
+          <button class="btn-access"
+            onclick="openGame(1, 'https://wordwall.net/id/embed/42d6fbc225d841e18b17816f228bbadd?themeId=27&templateId=82&fontStackId=0')">Mainkan
+            Misi 1 <span>➔</span></button>
         </div>
-        <button class="btn-access" onclick="openGame(2, 'https://wordwall.net/id/embed/9383a021403248728292e1d3809485ce?themeId=46&templateId=48&fontStackId=0')">Mainkan Misi 2 <span>➔</span></button>
-      </div>
-      <div class="mat-card">
-        <div class="level-badge">Misi 3</div>
-        <div class="card-icon">⚙️</div>
-        <div class="card-info">
-          <h3>Sistem Operasi</h3>
-          <p>Jadilah 'Otak Utama' pengatur lalu lintas data. Mampukah kamu mencegah komputer ini crash?</p>
-          <div class="stats-row"><div class="reward-text">👑 Reward: Komandan OS</div></div>
+        <div class="mat-card">
+          <div class="level-badge">Misi 2</div>
+          <div class="card-icon">🖱️</div>
+          <div class="card-info">
+            <h3>Interaksi Manusia</h3>
+            <p>Uji ketangkasanmu dan pecahkan misteri cara kita mengendalikan antarmuka komputer.</p>
+            <div class="stats-row">
+              <div class="reward-text">⚡ Reward: Master Kendali</div>
+            </div>
+          </div>
+          <button class="btn-access"
+            onclick="openGame(2, 'https://wordwall.net/id/embed/9383a021403248728292e1d3809485ce?themeId=46&templateId=48&fontStackId=0')">Mainkan
+            Misi 2 <span>➔</span></button>
         </div>
-        <button class="btn-access" onclick="openGame(3, 'https://wordwall.net/id/embed/f805d192be80432389dd6bbd6c5a934d?themeId=26&templateId=49&fontStackId=15')">Mainkan Misi 3 <span>➔</span></button>
-      </div>
-      <div class="mat-card">
-        <div class="level-badge">Misi 4</div>
-        <div class="card-icon">⚔️</div>
-        <div class="card-info">
+        <div class="mat-card">
+          <div class="level-badge">Misi 3</div>
+          <div class="card-icon">⚙️</div>
+          <div class="card-info">
+            <h3>Sistem Operasi</h3>
+            <p>Jadilah 'Otak Utama' pengatur lalu lintas data. Mampukah kamu mencegah komputer ini crash?</p>
+            <div class="stats-row">
+              <div class="reward-text">👑 Reward: Komandan OS</div>
+            </div>
+          </div>
+          <button class="btn-access"
+            onclick="openGame(3, 'https://wordwall.net/id/embed/f805d192be80432389dd6bbd6c5a934d?themeId=26&templateId=49&fontStackId=15')">Mainkan
+            Misi 3 <span>➔</span></button>
+        </div>
+        <div class="mat-card">
+          <div class="level-badge">Misi 4</div>
+          <div class="card-icon">⚔️</div>
+          <div class="card-info">
             <h3>Tech Quest RPG</h3>
             <p>Bertarung melawan monster dengan kekuatan pengetahuan! Jawab soal = Serang musuh.</p>
-            <div class="stats-row"><div class="reward-text">🏆 Quest Spesial</div></div>
-        </div>
-        <button class="btn-access" style="background: linear-gradient(135deg, #7c3aed, #ec4899); background-size: 200% 200%;" onclick="transitionToGame(event)">Mulai Quest <span>➔</span></button>
-      </div>
-    </div>
-  </div>
-
-  <!-- 2. TAMPILAN AREA GAME -->
-  <div id="game-view">
-    <div class="game-controls">
-      <button class="btn-ctrl btn-back" onclick="closeGame()"><span>⬅</span> Menu Utama</button>
-      <div class="game-controls-group">
-        <button class="btn-ctrl btn-full" onclick="openFullscreenSafe()"><span>⛶</span> Layar Penuh (Landscape)</button>
-        <button class="btn-ctrl btn-claim" onclick="openPledgeModal()">🎁 Klaim Gelar!</button>
-      </div>
-    </div>
-    <div class="iframe-container" id="game-container">
-      <iframe id="game-iframe" src="" allow="fullscreen; autoplay; orientation-lock" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true" scrolling="no"></iframe>
-    </div>
-  </div>
-
-  <!-- 3. TAMPILAN SUMPAH (PLEDGE) -->
-  <div id="pledge-view" class="modal-view">
-    <div class="modal-box pledge-content">
-      <button class="close-modal" onclick="closePledgeModal()">✖</button>
-      <div class="alert-icon-wrapper">
-        <svg class="alert-icon" viewBox="0 0 24 24" fill="none" stroke="var(--pink)" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
-      </div>
-      <h3>SYSTEM OVERRIDE!</h3>
-      <p>Apakah kamu bersumpah atas nama kode biner bahwa kamu benar-benar sudah menyelesaikan misi ini hingga tamat?</p>
-      <button class="btn-sumpah" onclick="claimReward()">Sumpah, Bang! Aku Menang!</button>
-      <button class="btn-batal" onclick="closePledgeModal()">Aduh ketahuan, balik main deh..</button>
-    </div>
-  </div>
-
-  <!-- 4. TAMPILAN INVENTORY (KOLEKSI) -->
-  <div id="inventory-view" class="modal-view">
-    <div class="modal-box">
-      <button class="close-modal" onclick="closeInventory()">✖</button>
-      <h3 class="title-inventory">Koleksi Gelar</h3>
-      <span id="player-name-display">Akses: Unknown Player</span>
-      <div class="badge-grid">
-        <div class="badge-item" id="badge-1">
-          <svg class="svg-icon" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3" ry="3"></rect><rect x="8" y="8" width="8" height="8" rx="1"></rect></svg>
-          <div class="badge-title">Gelar Teknisi</div><div class="badge-status" id="status-1">TERKUNCI</div>
-        </div>
-        <div class="badge-item" id="badge-2">
-          <svg class="svg-icon" viewBox="0 0 24 24"><path d="M2 12C2 7 5 4 10 4h4c5 0 8 3 8 8v3c0 2.5-2 4.5-4.5 4.5h-1.5l-1-2h-6l-1 2H6.5C4 19.5 2 17.5 2 15v-3z"></path></svg>
-          <div class="badge-title">Master Kendali</div><div class="badge-status" id="status-2">TERKUNCI</div>
-        </div>
-        <div class="badge-item" id="badge-3">
-          <svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 2L3 6v6c0 6 4 11 9 12 5-1 9-6 9-12V6l-9-4z"></path></svg>
-          <div class="badge-title">Komandan OS</div><div class="badge-status" id="status-3">TERKUNCI</div>
+            <div class="stats-row">
+              <div class="reward-text">🏆 Quest Spesial</div>
+            </div>
+          </div>
+          <button class="btn-access"
+            style="background: linear-gradient(135deg, #7c3aed, #ec4899); background-size: 200% 200%;"
+            onclick="transitionToGame(event)">Mulai Quest <span>➔</span></button>
         </div>
       </div>
     </div>
+
+    <!-- 2. TAMPILAN AREA GAME -->
+    <div id="game-view">
+      <div class="game-controls">
+        <button class="btn-ctrl btn-back" onclick="closeGame()"><span>⬅</span> Menu Utama</button>
+        <div class="game-controls-group">
+          <button class="btn-ctrl btn-full" onclick="openFullscreenSafe()"><span>⛶</span> Layar Penuh
+            (Landscape)</button>
+          <button class="btn-ctrl btn-claim" onclick="openPledgeModal()">🎁 Klaim Gelar!</button>
+        </div>
+      </div>
+      <div class="iframe-container" id="game-container">
+        <iframe id="game-iframe" src="" allow="fullscreen; autoplay; orientation-lock" allowfullscreen="true"
+          webkitallowfullscreen="true" mozallowfullscreen="true" scrolling="no"></iframe>
+      </div>
+    </div>
+
+    <!-- 3. TAMPILAN SUMPAH (PLEDGE) -->
+    <div id="pledge-view" class="modal-view">
+      <div class="modal-box pledge-content">
+        <button class="close-modal" onclick="closePledgeModal()">✖</button>
+        <div class="alert-icon-wrapper">
+          <svg class="alert-icon" viewBox="0 0 24 24" fill="none" stroke="var(--pink)" stroke-width="2">
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+            <line x1="12" y1="9" x2="12" y2="13"></line>
+            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+          </svg>
+        </div>
+        <h3>SYSTEM OVERRIDE!</h3>
+        <p>Apakah kamu bersumpah atas nama kode biner bahwa kamu benar-benar sudah menyelesaikan misi ini hingga tamat?
+        </p>
+        <button class="btn-sumpah" onclick="claimReward()">Sumpah, Bang! Aku Menang!</button>
+        <button class="btn-batal" onclick="closePledgeModal()">Aduh ketahuan, balik main deh..</button>
+      </div>
+    </div>
+
+    <!-- 4. TAMPILAN INVENTORY (KOLEKSI) -->
+    <div id="inventory-view" class="modal-view">
+      <div class="modal-box">
+        <button class="close-modal" onclick="closeInventory()">✖</button>
+        <h3 class="title-inventory">Koleksi Gelar</h3>
+        <span id="player-name-display">Akses: Unknown Player</span>
+        <div class="badge-grid">
+          <div class="badge-item" id="badge-1">
+            <svg class="svg-icon" viewBox="0 0 24 24">
+              <rect x="3" y="3" width="18" height="18" rx="3" ry="3"></rect>
+              <rect x="8" y="8" width="8" height="8" rx="1"></rect>
+            </svg>
+            <div class="badge-title">Gelar Teknisi</div>
+            <div class="badge-status" id="status-1">TERKUNCI</div>
+          </div>
+          <div class="badge-item" id="badge-2">
+            <svg class="svg-icon" viewBox="0 0 24 24">
+              <path
+                d="M2 12C2 7 5 4 10 4h4c5 0 8 3 8 8v3c0 2.5-2 4.5-4.5 4.5h-1.5l-1-2h-6l-1 2H6.5C4 19.5 2 17.5 2 15v-3z">
+              </path>
+            </svg>
+            <div class="badge-title">Master Kendali</div>
+            <div class="badge-status" id="status-2">TERKUNCI</div>
+          </div>
+          <div class="badge-item" id="badge-3">
+            <svg class="svg-icon" viewBox="0 0 24 24">
+              <path d="M12 2L3 6v6c0 6 4 11 9 12 5-1 9-6 9-12V6l-9-4z"></path>
+            </svg>
+            <div class="badge-title">Komandan OS</div>
+            <div class="badge-status" id="status-3">TERKUNCI</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 
-</div>
-
-<script src="games/script.js"></script>
+  <script src="script.js"></script>
 </body>
+
 </html>
