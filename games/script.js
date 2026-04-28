@@ -140,6 +140,105 @@ function openFullscreenSafe() {
 function transitionToGame(e) {
     if (e) e.preventDefault();
 
+    // Tampilkan overlay PERSIAPAN BERMAIN untuk menangkap user gesture
+    const prepOverlay = document.createElement('div');
+    prepOverlay.id = 'prepOverlayTechQuest';
+    prepOverlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(4,9,20,0.92);backdrop-filter:blur(8px);z-index:999999;display:flex;justify-content:center;align-items:center;padding:20px;animation:prepFadeIn 0.3s ease forwards;';
+    
+    prepOverlay.innerHTML = `
+        <style>
+            @keyframes prepFadeIn { from { opacity:0; } to { opacity:1; } }
+            @keyframes hologramOnMisi { 0%{transform:scaleY(0.01) scaleX(0);opacity:0;} 50%{transform:scaleY(0.01) scaleX(1);opacity:1;} 100%{transform:scaleY(1) scaleX(1);opacity:1;} }
+            @keyframes rotatePhoneMisi { 0%,15%{transform:rotate(0deg);} 35%,65%{transform:rotate(-90deg);} 85%,100%{transform:rotate(0deg);} }
+            @keyframes floatBtnMisi { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-5px);} }
+            @keyframes glowPulse { 0%,100%{box-shadow:0 5px 20px rgba(6,182,212,0.4),0 0 40px rgba(6,182,212,0.2);} 50%{box-shadow:0 5px 30px rgba(6,182,212,0.7),0 0 60px rgba(6,182,212,0.4);} }
+        </style>
+        <div id="prepBoxTech" style="
+            background: linear-gradient(135deg, rgba(15,23,42,0.98), rgba(30,41,59,0.99));
+            width: 90%; max-width: 440px;
+            border-radius: 30px 5px 30px 5px;
+            border: 2px solid #06b6d4;
+            border-left: 5px solid #ec4899;
+            padding: 45px 35px;
+            text-align: center; color: white;
+            box-shadow: -10px 10px 0px rgba(6,182,212,0.15), 0 0 50px rgba(6,182,212,0.3);
+            animation: hologramOnMisi 0.6s cubic-bezier(0.68,-0.55,0.27,1.55) forwards;
+            display: flex; flex-direction: column; align-items: center;
+            position: relative; overflow: hidden;
+        ">
+            <div style="position:absolute;top:0;left:0;width:100%;height:3px;background:linear-gradient(90deg,transparent,#06b6d4,#ec4899,transparent);animation:glowLine 3s linear infinite;"></div>
+            <svg viewBox="0 0 24 24" style="width:75px;height:75px;fill:none;stroke:#06b6d4;stroke-width:1.8;margin-bottom:22px;filter:drop-shadow(0 0 12px rgba(6,182,212,0.6));animation:rotatePhoneMisi 3s ease-in-out infinite;">
+                <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                <line x1="12" y1="18" x2="12.01" y2="18"></line>
+            </svg>
+            <h2 style="margin-bottom:14px;font-size:20px;font-weight:900;letter-spacing:2px;text-transform:uppercase;font-family:'Outfit',sans-serif;background:linear-gradient(135deg,#fff,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Persiapan Bermain</h2>
+            <p style="color:#94a3b8;font-size:14px;line-height:1.7;margin-bottom:28px;font-family:'Outfit',sans-serif;">Silakan klik tombol di bawah untuk membuka permainan dalam mode <strong style="color:#06b6d4;">Layar Penuh</strong>. Tampilan otomatis akan menyesuaikan menjadi mendatar <strong style="color:#ec4899;">(Landscape)</strong>.</p>
+            <button id="btnEnterFS" style="
+                background: linear-gradient(90deg, #3b82f6, #06b6d4);
+                border: none; padding: 16px 30px; border-radius: 50px;
+                color: #fff; font-weight: 800; font-size: 15px;
+                cursor: pointer; width: 100%; margin-bottom: 16px;
+                font-family: 'Outfit', sans-serif;
+                animation: floatBtnMisi 3s infinite ease-in-out, glowPulse 2s infinite;
+                transition: filter 0.2s, transform 0.2s;
+                letter-spacing: 0.5px;
+            ">⛶ Masuk Layar Penuh</button>
+            <button id="btnCancelFS" style="
+                background: transparent; border: none;
+                color: #64748b; font-weight: 600;
+                text-decoration: none; font-size: 13px;
+                cursor: pointer; padding: 8px 20px;
+                font-family: 'Outfit', sans-serif;
+                transition: color 0.2s;
+                display: flex; align-items: center; gap: 6px;
+            ">✕ Batal</button>
+        </div>
+    `;
+    document.body.appendChild(prepOverlay);
+
+    const btnEnter = document.getElementById('btnEnterFS');
+    const btnCancel = document.getElementById('btnCancelFS');
+
+    btnEnter.addEventListener('mouseenter', () => { btnEnter.style.filter = 'brightness(1.2)'; btnEnter.style.transform = 'scale(1.03)'; });
+    btnEnter.addEventListener('mouseleave', () => { btnEnter.style.filter = ''; btnEnter.style.transform = ''; });
+    btnCancel.addEventListener('mouseenter', () => { btnCancel.style.color = '#ef4444'; });
+    btnCancel.addEventListener('mouseleave', () => { btnCancel.style.color = '#64748b'; });
+
+    btnCancel.onclick = () => {
+        prepOverlay.style.opacity = '0';
+        prepOverlay.style.transition = 'opacity 0.3s';
+        setTimeout(() => prepOverlay.remove(), 300);
+    };
+
+    btnEnter.onclick = async () => {
+        btnEnter.innerHTML = '⏳ Memuat...';
+        btnEnter.disabled = true;
+
+        // Coba request fullscreen & lock landscape
+        try {
+            let docEl = document.documentElement;
+            let requestFS = docEl.requestFullscreen || docEl.webkitRequestFullscreen || docEl.mozRequestFullScreen || docEl.msRequestFullscreen;
+            if (requestFS) {
+                await requestFS.call(docEl);
+            }
+            if (screen.orientation && screen.orientation.lock) {
+                await screen.orientation.lock('landscape');
+            }
+        } catch (err) {
+            console.log("Auto-rotate/fullscreen failed:", err);
+        }
+        
+        prepOverlay.style.opacity = '0';
+        prepOverlay.style.transition = 'opacity 0.4s';
+        setTimeout(() => {
+            prepOverlay.remove();
+            // 2. Mulai Loading Screen
+            startRpgLoadingScreen();
+        }, 400);
+    };
+}
+
+function startRpgLoadingScreen() {
     // Buat overlay loading screen
     const overlay = document.createElement('div');
     overlay.id = 'rpgLoadOverlay';
@@ -203,7 +302,7 @@ function transitionToGame(e) {
             clearInterval(interval);
             setTimeout(() => {
                 overlay.classList.add('fade-out');
-                // Langsung navigasi ke games.html (halaman penuh, tanpa iframe)
+                // Langsung navigasi ke games.html (halaman penuh)
                 setTimeout(() => {
                     window.location.href = 'games.html';
                 }, 500);
