@@ -178,6 +178,45 @@ body, html { width:100%; height:100%; background: #04091a; font-family: 'Outfit'
 }
 .btn-close-game:hover { color: #ef4444; }
 
+/* ===== EXIT CONFIRMATION POPUP ===== */
+#exitConfirm {
+    position: fixed; inset: 0; z-index: 999999;
+    background: rgba(4,9,20,0.92);
+    backdrop-filter: blur(8px);
+    display: none; justify-content: center; align-items: center;
+    padding: 20px;
+}
+#exitConfirm.active { display: flex; }
+.exit-box {
+    background: linear-gradient(135deg, rgba(15,23,42,0.98), rgba(30,41,59,0.99));
+    width: 90%; max-width: 400px;
+    border-radius: 20px; border: 2px solid #ef4444;
+    border-left: 5px solid #f59e0b;
+    padding: 35px 30px; text-align: center; color: white;
+    box-shadow: 0 0 40px rgba(239,68,68,0.3);
+    animation: hologramOn 0.4s cubic-bezier(0.68,-0.55,0.27,1.55) forwards;
+}
+.exit-box .exit-icon { font-size: 48px; margin-bottom: 16px; }
+.exit-box h2 { font-size: 18px; margin-bottom: 10px; color: #f59e0b; font-weight: 900; letter-spacing: 1px; }
+.exit-box p { font-size: 14px; color: #94a3b8; margin-bottom: 24px; line-height: 1.6; }
+.exit-btns { display: flex; gap: 12px; }
+.btn-exit-yes {
+    flex: 1; background: linear-gradient(90deg, #ef4444, #dc2626);
+    border: none; padding: 14px; border-radius: 50px;
+    color: #fff; font-weight: 800; font-size: 14px;
+    cursor: pointer; font-family: 'Outfit', sans-serif;
+    transition: filter 0.2s, transform 0.2s;
+}
+.btn-exit-yes:hover { filter: brightness(1.2); transform: scale(1.03); }
+.btn-exit-no {
+    flex: 1; background: linear-gradient(90deg, #3b82f6, #06b6d4);
+    border: none; padding: 14px; border-radius: 50px;
+    color: #fff; font-weight: 800; font-size: 14px;
+    cursor: pointer; font-family: 'Outfit', sans-serif;
+    transition: filter 0.2s, transform 0.2s;
+}
+.btn-exit-no:hover { filter: brightness(1.2); transform: scale(1.03); }
+
 /* ===== KEYFRAMES ===== */
 @keyframes prepFadeIn { from{opacity:0;} to{opacity:1;} }
 @keyframes hologramOn { 0%{transform:scaleY(0.01) scaleX(0);opacity:0;} 50%{transform:scaleY(0.01) scaleX(1);opacity:1;} 100%{transform:scaleY(1) scaleX(1);opacity:1;} }
@@ -252,6 +291,19 @@ body, html { width:100%; height:100%; background: #04091a; font-family: 'Outfit'
         <p>Layar Penuh Tertutup!<br><span class="warning-blink">⚠️ WAKTU GAME TETAP BERJALAN!</span></p>
         <button class="btn-resume" onclick="resumeFullscreen()">⛶ Lanjutkan Bermain</button>
         <button class="btn-close-game" onclick="window.close()">✕ Keluar Game</button>
+    </div>
+</div>
+
+<!-- EXIT CONFIRMATION POPUP -->
+<div id="exitConfirm">
+    <div class="exit-box">
+        <div class="exit-icon">⚠️</div>
+        <h2>Keluar dari Permainan?</h2>
+        <p>Apakah kamu yakin ingin meninggalkan permainan? Progress yang belum disimpan akan hilang.</p>
+        <div class="exit-btns">
+            <button class="btn-exit-yes" onclick="confirmExit()">Ya, Keluar</button>
+            <button class="btn-exit-no" onclick="cancelExit()">Tidak, Lanjut</button>
+        </div>
     </div>
 </div>
 
@@ -370,6 +422,27 @@ async function resumeFullscreen() {
     } catch(e) { console.log('Orientation lock failed:', e); }
 
     document.getElementById('resumeOverlay').classList.remove('active');
+}
+
+// Dengarkan pesan dari iframe (games.html) saat tombol Keluar diklik
+window.addEventListener('message', function(event) {
+    if (event.data === 'requestExitGame') {
+        document.getElementById('exitConfirm').classList.add('active');
+    }
+});
+
+function confirmExit() {
+    // Keluar fullscreen
+    try {
+        if (document.exitFullscreen) document.exitFullscreen();
+        else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+    } catch(e) {}
+    // Kembali ke halaman menu games
+    window.location.href = 'index.html';
+}
+
+function cancelExit() {
+    document.getElementById('exitConfirm').classList.remove('active');
 }
 </script>
 </body>

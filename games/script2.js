@@ -444,11 +444,11 @@ function handleBackAction() {
         switchScreen('resultScreen', 'mainMenu');
         playLoopingTrack('menu');
     } else {
-        // Jika game berjalan di dalam iframe (dari games/index.html),
-        // panggil closeGame() di halaman parent untuk kembali ke menu utama games
+        // Jika game berjalan di dalam iframe (prep-quest.html),
+        // kirim pesan ke parent untuk tampilkan konfirmasi keluar
         try {
-            if (window.parent !== window && typeof window.parent.closeGame === 'function') {
-                window.parent.closeGame();
+            if (window.parent !== window) {
+                window.parent.postMessage('requestExitGame', '*');
             } else {
                 window.location.href = 'index.html';
             }
