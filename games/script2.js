@@ -419,6 +419,8 @@ function showBriefing() {
     document.getElementById('missionTitle').textContent = titles[state.dungeon] || "MISI: SYSTEM BOOT";
     
     switchScreen('mainMenu', 'briefingScreen');
+    var btnBack = document.getElementById('btnBackGame');
+    if (btnBack) btnBack.style.display = 'block';
 }
 
 function showToast(msg) {
@@ -435,28 +437,34 @@ function handleBackAction() {
     if (typeof typeInterval !== 'undefined') clearInterval(typeInterval);
     if (state.atmosInt) clearInterval(state.atmosInt);
     
+    var btnBack = document.getElementById('btnBackGame');
+    
     if (document.getElementById('battleScreen').classList.contains('active')) {
         switchScreen('battleScreen', 'mainMenu');
         playLoopingTrack('menu');
+        if (btnBack) btnBack.style.display = 'none';
     } else if (document.getElementById('briefingScreen').classList.contains('active')) {
         switchScreen('briefingScreen', 'mainMenu');
+        if (btnBack) btnBack.style.display = 'none';
     } else if (document.getElementById('resultScreen').classList.contains('active')) {
         switchScreen('resultScreen', 'mainMenu');
         playLoopingTrack('menu');
-    } else {
-        // Jika game berjalan di dalam iframe (prep-quest.html),
-        // panggil fungsi parent untuk tampilkan konfirmasi keluar
-        try {
-            if (window.parent !== window && typeof window.parent.showExitConfirm === 'function') {
-                window.parent.showExitConfirm();
-                return;
-            }
-        } catch(e) { }
-        
-        // Fallback: konfirmasi sederhana + navigate top window ke menu games
-        if (confirm('Apakah kamu yakin ingin meninggalkan permainan?')) {
-            window.top.location.href = 'index.html';
+        if (btnBack) btnBack.style.display = 'none';
+    }
+}
+
+// Fungsi keluar dari menu RPG ke halaman pilihan games (index.html)
+function exitToGamesList() {
+    try {
+        if (window.parent !== window && typeof window.parent.showExitConfirm === 'function') {
+            window.parent.showExitConfirm();
+            return;
         }
+    } catch(e) { }
+    
+    // Fallback
+    if (confirm('Apakah kamu yakin ingin meninggalkan permainan?')) {
+        window.top.location.href = 'index.html';
     }
 }
 

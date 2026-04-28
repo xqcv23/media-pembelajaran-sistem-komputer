@@ -9,12 +9,15 @@
 </head>
 <body>
 
-<button class="btn-back" onclick="handleBackAction()" title="Kembali">⬅ Keluar</button>
+<!-- Tombol kembali dari battle/briefing/result ke menu RPG -->
+<button class="btn-back" id="btnBackGame" onclick="handleBackAction()" title="Kembali" style="display:none;">⬅ Kembali</button>
 <button class="btn-bgm" id="btnBgm" onclick="toggleBgm()" title="Toggle Music">🔊 BGM ON</button>
 
 <!-- ============ MAIN MENU ============ -->
 <div id="mainMenu" class="screen active">
   <div class="menu-glow"></div>
+  <!-- Tombol keluar dari menu RPG ke menu pilihan games -->
+  <button class="btn-back" onclick="exitToGamesList()" title="Keluar" style="display:block;">⬅ Keluar</button>
   <div class="menu-header">
     <div class="profile-section">
       <input type="text" id="playerName" placeholder="Input Nama Kamu..." maxlength="12" onchange="saveName()">

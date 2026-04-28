@@ -359,7 +359,7 @@ function startLoadingBar() {
     var status = document.getElementById('loadStatus');
 
     var interval = setInterval(function() {
-        var step = Math.floor(Math.random() * 3) + 1;
+        var step = Math.floor(Math.random() * 3) + 2;
         progress = Math.min(progress + step, 100);
 
         if (bar) bar.style.width = progress + '%';
@@ -391,7 +391,7 @@ function startLoadingBar() {
                 }, 500);
             }, 400);
         }
-    }, 280);
+    }, 200);
 }
 
 // Deteksi saat fullscreen keluar → tampilkan resume overlay
