@@ -397,3 +397,171 @@
         background-position: 0% 50%;
     }
 }
+
+/* =========================================
+   RPG LOADING SCREEN
+   ========================================= */
+#rpgLoadOverlay {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    background: radial-gradient(ellipse at center, #0d0d2b 0%, #050510 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    pointer-events: all;
+}
+#rpgLoadOverlay.active {
+    opacity: 1;
+}
+#rpgLoadOverlay.fade-out {
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.rpg-load-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+    padding: 40px 30px;
+    text-align: center;
+    max-width: 380px;
+    width: 90%;
+}
+
+/* Icon animasi */
+.rpg-load-icon-wrap {
+    position: relative;
+    width: 110px;
+    height: 110px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 8px;
+}
+.rpg-load-ring {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 3px solid transparent;
+    border-top-color: #00e5ff;
+    border-right-color: #b74dff;
+    animation: rpgSpin 1.2s linear infinite;
+}
+.rpg-load-ring-2 {
+    inset: 12px;
+    border-top-color: #b74dff;
+    border-right-color: #00e5ff;
+    animation: rpgSpin 0.8s linear infinite reverse;
+}
+@keyframes rpgSpin {
+    to { transform: rotate(360deg); }
+}
+
+.rpg-load-sword {
+    font-size: 2.8rem;
+    animation: rpgSwordPulse 1.5s ease-in-out infinite;
+    filter: drop-shadow(0 0 12px #00e5ff);
+    z-index: 1;
+}
+@keyframes rpgSwordPulse {
+    0%, 100% { transform: scale(1) rotate(-10deg); filter: drop-shadow(0 0 10px #00e5ff); }
+    50%       { transform: scale(1.15) rotate(10deg); filter: drop-shadow(0 0 25px #b74dff); }
+}
+
+/* Judul */
+.rpg-load-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 1.4rem;
+    background: linear-gradient(135deg, #00e5ff, #b74dff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: 3px;
+    filter: drop-shadow(0 0 10px rgba(0,229,255,0.4));
+    animation: rpgTitleGlow 2s ease-in-out infinite alternate;
+}
+@keyframes rpgTitleGlow {
+    from { filter: drop-shadow(0 0 8px rgba(0,229,255,0.3)); }
+    to   { filter: drop-shadow(0 0 20px rgba(183,77,255,0.6)); }
+}
+
+/* Status text */
+.rpg-load-status {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.45rem;
+    color: #8892b0;
+    letter-spacing: 1px;
+    min-height: 20px;
+    transition: opacity 0.2s ease;
+}
+
+/* Progress bar */
+.rpg-load-bar-wrap {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.rpg-load-bar-track {
+    flex: 1;
+    height: 12px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.08);
+    overflow: hidden;
+    position: relative;
+}
+.rpg-load-bar-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #00e5ff, #b74dff, #ff4da6);
+    background-size: 200% 100%;
+    border-radius: 10px;
+    transition: width 0.15s ease;
+    animation: rpgBarFlow 1.5s linear infinite;
+    position: relative;
+    z-index: 1;
+}
+@keyframes rpgBarFlow {
+    0%   { background-position: 0% 50%; }
+    100% { background-position: 200% 50%; }
+}
+.rpg-load-bar-shine {
+    position: absolute;
+    top: 0; left: -60%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+    animation: rpgBarShine 2s ease-in-out infinite;
+}
+@keyframes rpgBarShine {
+    0%   { left: -60%; }
+    100% { left: 120%; }
+}
+.rpg-load-pct {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.55rem;
+    color: #00e5ff;
+    min-width: 40px;
+    text-align: right;
+}
+
+/* Tip text */
+.rpg-load-tip {
+    font-size: 0.72rem;
+    color: rgba(255,255,255,0.3);
+    font-style: italic;
+    line-height: 1.5;
+    padding: 0 10px;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    .rpg-load-title { font-size: 1rem; }
+    .rpg-load-icon-wrap { width: 85px; height: 85px; }
+    .rpg-load-sword { font-size: 2.2rem; }
+}

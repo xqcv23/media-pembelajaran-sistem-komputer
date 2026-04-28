@@ -444,7 +444,18 @@ function handleBackAction() {
         switchScreen('resultScreen', 'mainMenu');
         playLoopingTrack('menu');
     } else {
-        window.location.href = 'index.html';
+        // Jika game berjalan di dalam iframe (dari games/index.html),
+        // panggil closeGame() di halaman parent untuk kembali ke menu utama games
+        try {
+            if (window.parent !== window && typeof window.parent.closeGame === 'function') {
+                window.parent.closeGame();
+            } else {
+                window.location.href = 'index.html';
+            }
+        } catch(e) {
+            // Fallback jika cross-origin
+            window.location.href = 'index.html';
+        }
     }
 }
 

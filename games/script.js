@@ -140,60 +140,74 @@ function openFullscreenSafe() {
 function transitionToGame(e) {
     if (e) e.preventDefault();
 
-    // Create overlay
-    // const overlay = document.createElement('div');
-    // overlay.className = 'game-loader-overlay';
-    // overlay.style.position = 'fixed';
-    // overlay.style.top = '0';
-    // overlay.style.left = '0';
-    // overlay.style.width = '100%';
-    // overlay.style.height = '100%';
+    // Buat overlay loading screen
+    const overlay = document.createElement('div');
+    overlay.id = 'rpgLoadOverlay';
+    overlay.innerHTML = `
+        <div class="rpg-load-content">
+            <div class="rpg-load-icon-wrap">
+                <div class="rpg-load-ring"></div>
+                <div class="rpg-load-ring rpg-load-ring-2"></div>
+                <div class="rpg-load-sword">⚔️</div>
+            </div>
+            <div class="rpg-load-title">TECH QUEST</div>
+            <div class="rpg-load-status" id="rpgLoadStatus">Memuat arena pertempuran...</div>
+            <div class="rpg-load-bar-wrap">
+                <div class="rpg-load-bar-track">
+                    <div class="rpg-load-bar-fill" id="rpgLoadBar"></div>
+                    <div class="rpg-load-bar-shine"></div>
+                </div>
+                <div class="rpg-load-pct" id="rpgLoadPct">0%</div>
+            </div>
+            <div class="rpg-load-tip">💡 Tip: Jawab soal lebih cepat untuk mendapat CRITICAL HIT!</div>
+        </div>
+    `;
+    document.body.appendChild(overlay);
+    requestAnimationFrame(() => overlay.classList.add('active'));
 
-    // overlay.innerHTML = `
-    //     <div class="game-loader-content">
-    //         <div class="game-loader-icon-container">
-    //             <div class="game-loader-ring"></div>
-    //             <div class="game-loader-icon">⚔️</div>
-    //         </div>
-    //         <div class="game-loader-text">Menyiapkan Arena...</div>
-    //         <div class="game-loader-bar-container">
-    //             <div class="game-loader-bar">
-    //                 <div class="game-loader-progress" id="gameLoadProgress"></div>
-    //             </div>
-    //             <div class="game-loader-percentage" id="gameLoadPercent">0%</div>
-    //         </div>
-    //     </div>
-    // `;
+    const statusMessages = [
+        "Memuat arena pertempuran...",
+        "Memanggil monster dari kernel...",
+        "Mempersiapkan senjata hero...",
+        "Mengkalibrasi sistem pertanyaan...",
+        "Sinkronisasi database dungeon...",
+        "Arena siap! Bersiaplah bertarung..."
+    ];
 
-    // document.body.appendChild(overlay);
+    let progress = 0;
+    let msgIndex = 0;
+    const bar = document.getElementById('rpgLoadBar');
+    const pct = document.getElementById('rpgLoadPct');
+    const status = document.getElementById('rpgLoadStatus');
 
-    // Trigger animations safely
-    // requestAnimationFrame(() => {
-    //     overlay.classList.add('active');
+    const interval = setInterval(() => {
+        const step = Math.floor(Math.random() * 6) + 3;
+        progress = Math.min(progress + step, 100);
 
-    //     // Simulate progress percentage
-    //     let progress = 0;
-    //     const percentText = document.getElementById('gameLoadPercent');
-    //     const bar = document.getElementById('gameLoadProgress');
+        if (bar) bar.style.width = progress + '%';
+        if (pct) pct.textContent = progress + '%';
 
-    //     const interval = setInterval(() => {
-    //         progress += Math.floor(Math.random() * 5) + 2;
-    //         if (progress > 100) progress = 100;
+        const newMsgIndex = Math.floor((progress / 100) * statusMessages.length);
+        if (newMsgIndex !== msgIndex && newMsgIndex < statusMessages.length) {
+            msgIndex = newMsgIndex;
+            if (status) {
+                status.style.opacity = '0';
+                setTimeout(() => {
+                    status.textContent = statusMessages[msgIndex];
+                    status.style.opacity = '1';
+                }, 200);
+            }
+        }
 
-    //         if (percentText) percentText.innerText = progress + '%';
-    //         if (bar) bar.style.width = progress + '%';
-
-    //         if (progress >= 100) {
-    //             clearInterval(interval);
-    //         }
-    //     }, 150);
-    // });
-
-    // Wait for the bar to fill, then redirect
-    // setTimeout(() => {
-    // document.body.removeChild(overlay);
-    // openGame(4, 'https://xqcv23.github.io/media-pembelajaran-sistem-komputer/games/games.html')
-    // }, 4500);
-    openGame(4, 'https://xqcv23.github.io/media-pembelajaran-sistem-komputer/games/games.html')
-
+        if (progress >= 100) {
+            clearInterval(interval);
+            setTimeout(() => {
+                overlay.classList.add('fade-out');
+                // Langsung navigasi ke games.html (halaman penuh, tanpa iframe)
+                setTimeout(() => {
+                    window.location.href = 'games.html';
+                }, 500);
+            }, 400);
+        }
+    }, 120);
 }
