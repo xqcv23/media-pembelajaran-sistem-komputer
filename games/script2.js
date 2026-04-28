@@ -449,17 +449,13 @@ function handleBackAction() {
         try {
             if (window.parent !== window && typeof window.parent.showExitConfirm === 'function') {
                 window.parent.showExitConfirm();
-            } else {
-                // Fallback: konfirmasi sederhana
-                if (confirm('Apakah kamu yakin ingin meninggalkan permainan?')) {
-                    window.location.href = 'index.html';
-                }
+                return;
             }
-        } catch(e) {
-            // Fallback jika cross-origin
-            if (confirm('Apakah kamu yakin ingin meninggalkan permainan?')) {
-                window.location.href = 'index.html';
-            }
+        } catch(e) { }
+        
+        // Fallback: konfirmasi sederhana + navigate top window ke menu games
+        if (confirm('Apakah kamu yakin ingin meninggalkan permainan?')) {
+            window.top.location.href = 'index.html';
         }
     }
 }
