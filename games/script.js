@@ -387,7 +387,7 @@ function startLoadingBar() {
     const status = document.getElementById('loadStatus');
 
     const interval = setInterval(() => {
-        const step = Math.floor(Math.random() * 6) + 3;
+        const step = Math.floor(Math.random() * 3) + 1;
         progress = Math.min(progress + step, 100);
 
         if (bar) bar.style.width = progress + '%';
@@ -414,7 +414,7 @@ function startLoadingBar() {
                 }, 500);
             }, 400);
         }
-    }, 120);
+    }, 280);
 }
 <\/script>
 </body>
