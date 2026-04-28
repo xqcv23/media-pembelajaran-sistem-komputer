@@ -141,7 +141,8 @@ function transitionToGame(e) {
     if (e) e.preventDefault();
 
     // Buka jendela baru seperti Misi 1-3, berisi Persiapan Bermain + Loading + game
-    const gameUrl = 'games.html';
+    // Hitung URL absolut agar navigasi dari about:blank bisa benar
+    const gameUrl = new URL('games.html', window.location.href).href;
 
     const htmlPrep = `<!DOCTYPE html>
 <html lang="id">
@@ -410,7 +411,7 @@ function startLoadingBar() {
             setTimeout(() => {
                 loadScreen.classList.add('fade-out');
                 setTimeout(() => {
-                    window.location.href = 'games.html';
+                    window.location.href = '${gameUrl}';
                 }, 500);
             }, 400);
         }
