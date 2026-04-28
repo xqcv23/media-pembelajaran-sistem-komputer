@@ -445,16 +445,21 @@ function handleBackAction() {
         playLoopingTrack('menu');
     } else {
         // Jika game berjalan di dalam iframe (prep-quest.html),
-        // kirim pesan ke parent untuk tampilkan konfirmasi keluar
+        // panggil fungsi parent untuk tampilkan konfirmasi keluar
         try {
-            if (window.parent !== window) {
-                window.parent.postMessage('requestExitGame', '*');
+            if (window.parent !== window && typeof window.parent.showExitConfirm === 'function') {
+                window.parent.showExitConfirm();
             } else {
-                window.location.href = 'index.html';
+                // Fallback: konfirmasi sederhana
+                if (confirm('Apakah kamu yakin ingin meninggalkan permainan?')) {
+                    window.location.href = 'index.html';
+                }
             }
         } catch(e) {
             // Fallback jika cross-origin
-            window.location.href = 'index.html';
+            if (confirm('Apakah kamu yakin ingin meninggalkan permainan?')) {
+                window.location.href = 'index.html';
+            }
         }
     }
 }

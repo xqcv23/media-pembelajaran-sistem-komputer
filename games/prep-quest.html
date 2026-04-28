@@ -424,12 +424,10 @@ async function resumeFullscreen() {
     document.getElementById('resumeOverlay').classList.remove('active');
 }
 
-// Dengarkan pesan dari iframe (games.html) saat tombol Keluar diklik
-window.addEventListener('message', function(event) {
-    if (event.data === 'requestExitGame') {
-        document.getElementById('exitConfirm').classList.add('active');
-    }
-});
+// Fungsi yang dipanggil dari iframe (games.html) saat tombol Keluar diklik
+function showExitConfirm() {
+    document.getElementById('exitConfirm').classList.add('active');
+}
 
 function confirmExit() {
     // Keluar fullscreen
