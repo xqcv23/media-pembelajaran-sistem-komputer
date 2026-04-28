@@ -6,6 +6,18 @@
 <title>⚔️ Tech Quest - RPG Battle Quiz</title>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Press+Start+2P&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style2.css">
+<script>
+    // Lock landscape saat games.html dimuat (orientasi lock hilang saat navigasi antar halaman)
+    (async function() {
+        try {
+            if (screen.orientation && screen.orientation.lock) {
+                await screen.orientation.lock('landscape');
+            }
+        } catch(e) {
+            console.log('Landscape lock on load failed:', e);
+        }
+    })();
+</script>
 </head>
 <body>
 
