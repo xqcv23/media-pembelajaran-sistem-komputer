@@ -113,9 +113,10 @@
 
   /* === LAYER TAMPILAN === */
   .screen-layer {
-    position: absolute; inset: 0;
+    position: absolute; top: 0; left: 0;
     display: flex; flex-direction: column;
     opacity: 0; pointer-events: none; z-index: 10;
+    transform-origin: top left;
   }
   .screen-layer.active { opacity: 1; pointer-events: auto; }
 
@@ -450,6 +451,19 @@ var sText = document.getElementById('sText');
 var biosContent = document.getElementById('biosContent');
 var cursor = document.getElementById('cursor');
 var startMenu = document.getElementById('startMenu');
+
+// Fix scaling for mobile
+var glass = document.querySelector('.screen-glass');
+var layers = document.querySelectorAll('.screen-layer');
+new ResizeObserver(function() {
+  var baseW = 474;
+  var scale = glass.clientWidth / baseW;
+  layers.forEach(function(l) {
+    l.style.width = baseW + 'px';
+    l.style.height = (baseW * 9 / 16) + 'px';
+    l.style.transform = 'scale(' + scale + ')';
+  });
+}).observe(glass);
 
 function updateStatus(text, isActive) {
   sText.innerHTML = '<strong>Status:</strong> ' + text;
