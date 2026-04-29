@@ -261,7 +261,7 @@ body, html { width:100%; height:100%; background: #04091a; font-family: 'Outfit'
             <strong style="color:#ec4899;">(Landscape)</strong>.
         </p>
         <button class="btn-enter" id="btnEnter" onclick="startFullscreen()">⛶ Masuk Layar Penuh</button>
-        <button class="btn-cancel" onclick="window.close()">✕ Batal</button>
+        <button class="btn-cancel" onclick="window.close()">✕ Keluar</button>
     </div>
 </div>
 
@@ -359,7 +359,7 @@ function startLoadingBar() {
     var status = document.getElementById('loadStatus');
 
     var interval = setInterval(function() {
-        var step = Math.floor(Math.random() * 3) + 2;
+        var step = Math.floor(Math.random() * 5) + 2;
         progress = Math.min(progress + step, 100);
 
         if (bar) bar.style.width = progress + '%';
@@ -391,7 +391,7 @@ function startLoadingBar() {
                 }, 500);
             }, 400);
         }
-    }, 200);
+    }, 100);
 }
 
 // Deteksi saat fullscreen keluar → tampilkan resume overlay
@@ -430,13 +430,44 @@ function showExitConfirm() {
 }
 
 function confirmExit() {
+    // Tutup popup exit
+    document.getElementById('exitConfirm').classList.remove('active');
+    // Tutup resume overlay jika ada
+    document.getElementById('resumeOverlay').classList.remove('active');
+
     // Keluar fullscreen
     try {
         if (document.exitFullscreen) document.exitFullscreen();
         else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
     } catch(e) {}
-    // Kembali ke halaman menu games
-    window.location.href = 'index.html';
+
+    // Reset game iframe (hentikan game)
+    var gameFrame = document.getElementById('gameFrame');
+    gameFrame.src = '';
+    isGameLoaded = false;
+
+    // Tampilkan kembali layar Persiapan Bermain
+    var prepScreen = document.getElementById('prepScreen');
+    prepScreen.style.display = 'flex';
+    prepScreen.style.opacity = '0';
+    prepScreen.style.transition = 'opacity 0.4s ease';
+    setTimeout(function() {
+        prepScreen.style.opacity = '1';
+    }, 50);
+
+    // Reset tombol Enter
+    var btn = document.getElementById('btnEnter');
+    btn.innerHTML = '⛶ Masuk Layar Penuh';
+    btn.disabled = false;
+
+    // Reset loading screen
+    var loadScreen = document.getElementById('loadScreen');
+    loadScreen.classList.remove('active', 'fade-out');
+    loadScreen.style.display = '';
+    var loadBar = document.getElementById('loadBar');
+    if (loadBar) loadBar.style.width = '0%';
+    var loadPct = document.getElementById('loadPct');
+    if (loadPct) loadPct.textContent = '0%';
 }
 
 function cancelExit() {
