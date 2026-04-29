@@ -825,3 +825,115 @@ h4 {
         background-position: 0% 50%;
     }
 }
+
+/* =========================================
+   SCROLL PROGRESS BAR (Halaman Materi)
+   ========================================= */
+.scroll-progress-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 0%;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary), var(--secondary), var(--tertiary));
+    background-size: 200% 100%;
+    animation: gradientShift 3s ease infinite;
+    z-index: 9999;
+    transition: width 0.15s ease-out;
+    box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+    border-radius: 0 2px 2px 0;
+}
+
+.scroll-progress-bar.complete {
+    background: linear-gradient(90deg, #10b981, #06b6d4);
+    box-shadow: 0 0 15px rgba(16, 185, 129, 0.6);
+}
+
+/* =========================================
+   READING STATUS BADGE (Menu Utama)
+   ========================================= */
+.reading-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 14px;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+    transition: all 0.3s ease;
+}
+
+.reading-badge.unread {
+    background: #f1f5f9;
+    color: #94a3b8;
+    border: 1px solid #e2e8f0;
+}
+
+.reading-badge.reading {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
+    color: var(--primary);
+    border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.reading-badge.done {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(6, 182, 212, 0.1));
+    color: #10b981;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    animation: badgePop 0.4s ease;
+}
+
+@keyframes badgePop {
+    0% { transform: scale(0.8); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+/* Mini progress bar inside card */
+.card-progress-wrap {
+    width: 100%;
+    height: 5px;
+    background: #f1f5f9;
+    border-radius: 50px;
+    margin-bottom: 15px;
+    overflow: hidden;
+    position: relative;
+}
+
+.card-progress-fill {
+    height: 100%;
+    border-radius: 50px;
+    background: linear-gradient(90deg, var(--primary), var(--accent));
+    transition: width 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+}
+
+.card-progress-fill.complete {
+    background: linear-gradient(90deg, #10b981, #06b6d4);
+}
+
+.card-progress-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 20px;
+    background: rgba(255, 255, 255, 0.5);
+    filter: blur(3px);
+    border-radius: 50%;
+}
+
+/* Progress detail text */
+.card-progress-detail {
+    font-size: 0.78rem;
+    color: #94a3b8;
+    margin-bottom: 12px;
+    min-height: 1.2em;
+    line-height: 1.4;
+}
+
+.card-progress-detail strong {
+    color: var(--primary);
+    font-weight: 700;
+}

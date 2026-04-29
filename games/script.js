@@ -30,9 +30,15 @@ let currentGameId = 0;
 let playerData = JSON.parse(localStorage.getItem('sman8_gamedata')) || { name: "", badges: [] };
 let currentView = 'menu-view';
 let previousView = 'menu-view';
+let savedScrollY = 0;
 
 function switchView(targetView) {
     previousView = currentView;
+
+    // Simpan posisi scroll saat meninggalkan menu
+    if (currentView === 'menu-view') {
+        savedScrollY = window.scrollY || window.pageYOffset;
+    }
 
     document.getElementById('menu-view').style.display = 'none';
     document.getElementById('game-view').style.display = 'none';
@@ -53,9 +59,13 @@ function switchView(targetView) {
 
     currentView = targetView;
 
-    // Auto-scroll ke paling atas setiap ganti layar, agar pop-up di atas langsung kelihatan
+    // Kembalikan posisi scroll saat balik ke menu, scroll ke atas untuk layar lain
     setTimeout(() => {
-        window.scrollTo(0, 0);
+        if (targetView === 'menu-view') {
+            window.scrollTo(0, savedScrollY);
+        } else {
+            window.scrollTo(0, 0);
+        }
     }, 10);
 }
 

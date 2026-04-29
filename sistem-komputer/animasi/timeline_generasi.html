@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #0f172a;
+    font-family: 'Segoe UI', Roboto, sans-serif;
+    overflow: hidden;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #e2e8f0;
+    padding: 12px;
+  }
+
+  .wrap { width: 100%; max-width: 440px; }
+
+  /* Title */
+  .ttl { text-align: center; font-size: 0.7rem; font-weight: 800; letter-spacing: 3px; text-transform: uppercase; color: #64748b; margin-bottom: 14px; }
+
+  /* ===== HORIZONTAL TIMELINE BAR ===== */
+  .timeline-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    margin-bottom: 18px;
+    padding: 0 6px;
+  }
+  /* Line behind dots */
+  .tl-line {
+    position: absolute;
+    top: 50%;
+    left: 20px;
+    right: 20px;
+    height: 3px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 10px;
+    transform: translateY(-50%);
+    z-index: 0;
+  }
+  .tl-line-fill {
+    height: 100%;
+    border-radius: 10px;
+    width: 0%;
+    transition: width 0.5s ease, background 0.5s ease;
+  }
+
+  /* Dot */
+  .tl-dot {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: #1e293b;
+    border: 2px solid rgba(255,255,255,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    cursor: pointer;
+    position: relative;
+    z-index: 1;
+    transition: all 0.35s ease;
+  }
+  .tl-dot:hover { transform: scale(1.15); }
+
+  .tl-dot.active {
+    border-width: 3px;
+    transform: scale(1.2);
+  }
+  .tl-dot.visited {
+    opacity: 1;
+  }
+  .tl-dot.future {
+    opacity: 0.4;
+  }
+
+  /* Dot colors */
+  .tl-dot[data-i="0"].active { border-color: #3b82f6; box-shadow: 0 0 15px rgba(59,130,246,0.4); background: rgba(59,130,246,0.15); }
+  .tl-dot[data-i="1"].active { border-color: #8b5cf6; box-shadow: 0 0 15px rgba(139,92,246,0.4); background: rgba(139,92,246,0.15); }
+  .tl-dot[data-i="2"].active { border-color: #ec4899; box-shadow: 0 0 15px rgba(236,72,153,0.4); background: rgba(236,72,153,0.15); }
+  .tl-dot[data-i="3"].active { border-color: #f59e0b; box-shadow: 0 0 15px rgba(245,158,11,0.4); background: rgba(245,158,11,0.15); }
+  .tl-dot[data-i="4"].active { border-color: #06b6d4; box-shadow: 0 0 15px rgba(6,182,212,0.4); background: rgba(6,182,212,0.15); }
+
+  .tl-dot[data-i="0"].visited { border-color: #3b82f6; background: rgba(59,130,246,0.1); }
+  .tl-dot[data-i="1"].visited { border-color: #8b5cf6; background: rgba(139,92,246,0.1); }
+  .tl-dot[data-i="2"].visited { border-color: #ec4899; background: rgba(236,72,153,0.1); }
+  .tl-dot[data-i="3"].visited { border-color: #f59e0b; background: rgba(245,158,11,0.1); }
+  .tl-dot[data-i="4"].visited { border-color: #06b6d4; background: rgba(6,182,212,0.1); }
+
+  /* Year label under dot */
+  .tl-year {
+    position: absolute;
+    bottom: -18px;
+    font-size: 0.5rem;
+    font-weight: 700;
+    white-space: nowrap;
+    color: #475569;
+    transition: color 0.3s;
+  }
+  .tl-dot.active .tl-year { color: #94a3b8; }
+
+  /* ===== INFO PANEL ===== */
+  .info-panel {
+    background: #1e293b;
+    border-radius: 20px;
+    padding: 22px;
+    border: 1px solid rgba(255,255,255,0.06);
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    transition: border-color 0.4s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Accent line top */
+  .info-panel::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    transition: background 0.4s;
+  }
+
+  .info-panel[data-active="0"] { border-color: rgba(59,130,246,0.2); }
+  .info-panel[data-active="0"]::before { background: linear-gradient(90deg, #3b82f6, transparent); }
+  .info-panel[data-active="1"] { border-color: rgba(139,92,246,0.2); }
+  .info-panel[data-active="1"]::before { background: linear-gradient(90deg, #8b5cf6, transparent); }
+  .info-panel[data-active="2"] { border-color: rgba(236,72,153,0.2); }
+  .info-panel[data-active="2"]::before { background: linear-gradient(90deg, #ec4899, transparent); }
+  .info-panel[data-active="3"] { border-color: rgba(245,158,11,0.2); }
+  .info-panel[data-active="3"]::before { background: linear-gradient(90deg, #f59e0b, transparent); }
+  .info-panel[data-active="4"] { border-color: rgba(6,182,212,0.2); }
+  .info-panel[data-active="4"]::before { background: linear-gradient(90deg, #06b6d4, transparent); }
+
+  .info-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  .info-icon {
+    font-size: 2rem;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 14px;
+    flex-shrink: 0;
+    transition: background 0.4s;
+  }
+  .info-panel[data-active="0"] .info-icon { background: rgba(59,130,246,0.12); }
+  .info-panel[data-active="1"] .info-icon { background: rgba(139,92,246,0.12); }
+  .info-panel[data-active="2"] .info-icon { background: rgba(236,72,153,0.12); }
+  .info-panel[data-active="3"] .info-icon { background: rgba(245,158,11,0.12); }
+  .info-panel[data-active="4"] .info-icon { background: rgba(6,182,212,0.12); }
+
+  .info-meta { flex: 1; }
+  .info-gen {
+    font-size: 1.15rem;
+    font-weight: 900;
+    line-height: 1.2;
+  }
+  .info-era {
+    font-size: 0.68rem;
+    color: #64748b;
+    font-weight: 600;
+  }
+
+  .info-tech {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 50px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    transition: background 0.4s, color 0.4s;
+  }
+  .info-panel[data-active="0"] .info-tech { background: rgba(59,130,246,0.15); color: #60a5fa; }
+  .info-panel[data-active="1"] .info-tech { background: rgba(139,92,246,0.15); color: #a78bfa; }
+  .info-panel[data-active="2"] .info-tech { background: rgba(236,72,153,0.15); color: #f472b6; }
+  .info-panel[data-active="3"] .info-tech { background: rgba(245,158,11,0.15); color: #fbbf24; }
+  .info-panel[data-active="4"] .info-tech { background: rgba(6,182,212,0.15); color: #22d3ee; }
+
+  .info-desc {
+    font-size: 0.8rem;
+    color: #94a3b8;
+    line-height: 1.65;
+    margin-bottom: 10px;
+  }
+
+  .info-facts {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .fact {
+    background: rgba(15,23,42,0.6);
+    padding: 8px 10px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.04);
+  }
+  .fact-label {
+    font-size: 0.55rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #475569;
+    margin-bottom: 2px;
+  }
+  .fact-value {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #cbd5e1;
+    line-height: 1.3;
+  }
+
+  /* Fade animation for content swap */
+  .fade-content {
+    animation: fadeUp 0.35s ease;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Nav arrows */
+  .nav-row {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 14px;
+  }
+  .nav-btn {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    color: #64748b;
+    padding: 8px 20px;
+    border-radius: 12px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.25s;
+  }
+  .nav-btn:hover { background: rgba(255,255,255,0.1); color: #e2e8f0; }
+  .nav-btn:active { transform: scale(0.96); }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="ttl">⏳ Evolusi Generasi Komputer</div>
+
+  <!-- Timeline dots -->
+  <div class="timeline-bar">
+    <div class="tl-line"><div class="tl-line-fill" id="lineFill"></div></div>
+    <div class="tl-dot active visited" data-i="0" onclick="go(0)">🏗️<span class="tl-year">1940</span></div>
+    <div class="tl-dot future" data-i="1" onclick="go(1)">🔌<span class="tl-year">1957</span></div>
+    <div class="tl-dot future" data-i="2" onclick="go(2)">🧩<span class="tl-year">1964</span></div>
+    <div class="tl-dot future" data-i="3" onclick="go(3)">💻<span class="tl-year">1972</span></div>
+    <div class="tl-dot future" data-i="4" onclick="go(4)">🤖<span class="tl-year">Now</span></div>
+  </div>
+
+  <!-- Info panel -->
+  <div class="info-panel" id="panel" data-active="0"></div>
+
+  <!-- Nav buttons -->
+  <div class="nav-row">
+    <button class="nav-btn" onclick="prev()">◀ Sebelumnya</button>
+    <button class="nav-btn" onclick="next()">Selanjutnya ▶</button>
+  </div>
+</div>
+
+<script>
+var data = [
+  {
+    icon: '🏗️', gen: 'Generasi 1', era: '1940 — 1956', tech: 'Tabung Vakum',
+    desc: 'Komputer pertama berukuran sangat besar, berat puluhan ton, dan menggunakan tabung vakum sebagai komponen utama.',
+    facts: [
+      { label: 'Contoh', value: 'ENIAC, EDVAC' },
+      { label: 'Ukuran', value: 'Sebesar ruangan' },
+      { label: 'Kelemahan', value: 'Boros listrik & panas' },
+      { label: 'Bahasa', value: 'Bahasa mesin (biner)' }
+    ]
+  },
+  {
+    icon: '🔌', gen: 'Generasi 2', era: '1957 — 1963', tech: 'Transistor',
+    desc: 'Tabung vakum diganti transistor — ukuran lebih kecil, lebih cepat, dan lebih hemat energi.',
+    facts: [
+      { label: 'Contoh', value: 'IBM 1401' },
+      { label: 'Ukuran', value: 'Sebesar lemari' },
+      { label: 'Kemajuan', value: 'Lebih stabil & awet' },
+      { label: 'Bahasa', value: 'Assembly, COBOL' }
+    ]
+  },
+  {
+    icon: '🧩', gen: 'Generasi 3', era: '1964 — 1971', tech: 'Integrated Circuit (IC)',
+    desc: 'Ribuan transistor dikemas dalam satu chip IC — komputer makin kecil, cepat, dan terjangkau.',
+    facts: [
+      { label: 'Contoh', value: 'CDC 1700' },
+      { label: 'Ukuran', value: 'Sebesar meja' },
+      { label: 'Kemajuan', value: 'Monitor & keyboard' },
+      { label: 'Fitur', value: 'Multitasking' }
+    ]
+  },
+  {
+    icon: '💻', gen: 'Generasi 4', era: '1972 — Sekarang', tech: 'Mikroprosesor',
+    desc: 'Jutaan transistor dalam satu chip mikroprosesor — lahirnya PC dan laptop yang kita pakai sehari-hari.',
+    facts: [
+      { label: 'Contoh', value: 'IBM PC, Apple' },
+      { label: 'Ukuran', value: 'Desktop & laptop' },
+      { label: 'Kemajuan', value: 'GUI & Internet' },
+      { label: 'Fitur', value: 'Portable computing' }
+    ]
+  },
+  {
+    icon: '🤖', gen: 'Generasi 5', era: 'Masa Depan', tech: 'AI & Quantum Computing',
+    desc: 'Komputer dengan kecerdasan buatan yang bisa berpikir, belajar, dan memahami bahasa manusia.',
+    facts: [
+      { label: 'Teknologi', value: 'AI & Machine Learning' },
+      { label: 'Contoh', value: 'ChatGPT, Quantum' },
+      { label: 'Fitur', value: 'Belajar sendiri' },
+      { label: 'Status', value: 'Sedang dikembangkan 🚀' }
+    ]
+  }
+];
+
+var current = 0;
+var dots = document.querySelectorAll('.tl-dot');
+var panel = document.getElementById('panel');
+var lineFill = document.getElementById('lineFill');
+var colors = ['#3b82f6','#8b5cf6','#ec4899','#f59e0b','#06b6d4'];
+
+function renderPanel(idx) {
+  var d = data[idx];
+  var factsHTML = '';
+  for (var i = 0; i < d.facts.length; i++) {
+    factsHTML += '<div class="fact"><div class="fact-label">' + d.facts[i].label + '</div><div class="fact-value">' + d.facts[i].value + '</div></div>';
+  }
+  panel.innerHTML =
+    '<div class="fade-content">' +
+    '<div class="info-header">' +
+    '<div class="info-icon">' + d.icon + '</div>' +
+    '<div class="info-meta"><div class="info-gen">' + d.gen + '</div><div class="info-era">' + d.era + '</div></div>' +
+    '</div>' +
+    '<span class="info-tech">' + d.tech + '</span>' +
+    '<div class="info-desc">' + d.desc + '</div>' +
+    '<div class="info-facts">' + factsHTML + '</div>' +
+    '</div>';
+  panel.setAttribute('data-active', idx);
+}
+
+function go(idx) {
+  dots[current].classList.remove('active');
+  current = idx;
+  // Update dots
+  for (var i = 0; i < dots.length; i++) {
+    dots[i].classList.remove('active', 'visited', 'future');
+    if (i < current) dots[i].classList.add('visited');
+    else if (i === current) dots[i].classList.add('active', 'visited');
+    else dots[i].classList.add('future');
+  }
+  // Fill line
+  lineFill.style.width = (current / (data.length - 1) * 100) + '%';
+  lineFill.style.background = colors[current];
+  // Render panel
+  renderPanel(current);
+}
+
+function next() { if (current < data.length - 1) go(current + 1); }
+function prev() { if (current > 0) go(current - 1); }
+
+// Touch swipe
+var sx = 0;
+panel.addEventListener('touchstart', function(e) { sx = e.touches[0].clientX; }, {passive:true});
+panel.addEventListener('touchend', function(e) {
+  var diff = sx - e.changedTouches[0].clientX;
+  if (Math.abs(diff) > 40) { diff > 0 ? next() : prev(); }
+}, {passive:true});
+
+// Init
+renderPanel(0);
+</script>
+
+</body>
+</html>

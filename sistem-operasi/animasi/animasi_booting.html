@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #111418;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    overflow: hidden;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    padding: 10px;
+  }
+
+  .wrap { width: 100%; max-width: 500px; text-align: center; }
+
+  /* === MONITOR REALISTIS SUPER HD === */
+  .monitor-setup {
+    position: relative;
+    width: 100%;
+    margin-bottom: 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    perspective: 1200px;
+  }
+
+  .monitor-chassis {
+    width: 100%;
+    background: linear-gradient(to bottom, #2c2e33, #151618);
+    border-radius: 12px;
+    padding: 3px;
+    box-shadow: 
+      0 30px 60px rgba(0,0,0,0.9),
+      inset 0 1px 1px rgba(255,255,255,0.2),
+      0 0 0 1px #0a0a0a;
+    position: relative;
+    z-index: 5;
+  }
+
+  .monitor-bezel {
+    background: #050505;
+    border-radius: 9px;
+    padding: 10px 10px 25px 10px;
+    box-shadow: inset 0 2px 10px rgba(0,0,0,1);
+    position: relative;
+  }
+
+  .screen-glass {
+    width: 100%;
+    aspect-ratio: 16/9;
+    background: #020202;
+    border-radius: 4px;
+    position: relative;
+    overflow: hidden;
+  }
+  .screen-glass::after {
+    content: '';
+    position: absolute;
+    top: -50%; left: -50%; width: 200%; height: 200%;
+    background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.01) 35%, transparent 35.5%);
+    pointer-events: none;
+    z-index: 100;
+  }
+
+  .m-logo {
+    position: absolute;
+    bottom: 7px; left: 50%; transform: translateX(-50%);
+    font-size: 0.5rem; font-weight: 700; letter-spacing: 5px;
+    background: linear-gradient(to bottom, #ccc, #666);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .m-power-btn {
+    position: absolute;
+    bottom: 6px; right: 15px;
+    width: 12px; height: 12px;
+    background: #1a1a1a;
+    border-radius: 50%;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,1), 0 1px 1px rgba(255,255,255,0.1);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .m-led {
+    width: 4px; height: 4px; border-radius: 50%;
+    background: #ff3b30; box-shadow: 0 0 4px #ff3b30; transition: all 0.3s;
+  }
+  .monitor-setup.is-on .m-led {
+    background: #0ea5e9; box-shadow: 0 0 8px #0ea5e9, 0 0 12px #0ea5e9;
+  }
+
+  .m-neck {
+    width: 50px; height: 35px;
+    background: linear-gradient(to right, #111, #333 20%, #111 80%, #050505);
+    margin-top: -5px; position: relative; z-index: 2;
+    box-shadow: inset 0 -5px 10px rgba(0,0,0,0.8);
+  }
+  .m-base {
+    width: 160px; height: 12px;
+    background: linear-gradient(to bottom, #4a4d54, #1a1c20);
+    border-radius: 10px 10px 2px 2px;
+    position: relative; z-index: 1;
+    box-shadow: 0 15px 25px rgba(0,0,0,0.8), inset 0 1px 1px rgba(255,255,255,0.3);
+    transform: perspective(400px) rotateX(15deg);
+  }
+
+  /* === LAYER TAMPILAN === */
+  .screen-layer {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    opacity: 0; pointer-events: none; z-index: 10;
+  }
+  .screen-layer.active { opacity: 1; pointer-events: auto; }
+
+  /* 1. Backlight */
+  .sl-backlight { background: #080a0d; transition: opacity 0.5s; }
+
+  /* 2. BIOS */
+  .sl-bios {
+    background: #000; padding: 12px;
+    font-family: 'Courier New', Courier, monospace; font-size: 0.6rem;
+    color: #e0e0e0; text-align: left; line-height: 1.4;
+  }
+  .ami-header { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px; opacity: 0; }
+  .ami-logo { width: 30px; height: 30px; background: red; clip-path: polygon(50% 0%, 0% 100%, 100% 100%); flex-shrink: 0; }
+  .ami-title { font-size: 0.8rem; font-weight: bold; color: #fff; line-height: 1; }
+  .bios-text { opacity: 0; }
+
+  /* 3. Loading */
+  .sl-load { background: #000; align-items: center; justify-content: center; }
+  .win-logo {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 3px;
+    width: 45px; height: 45px; transform: perspective(100px) rotateY(-10deg);
+    margin-bottom: 40px;
+  }
+  .win-sq { background: #0078d7; }
+  .win-spinner { position: relative; width: 30px; height: 30px; }
+  .w-dot { position: absolute; width: 100%; height: 100%; animation: winRotate 2s infinite ease-in-out; }
+  .w-dot::after {
+    content: ''; position: absolute; top: 0; left: 50%; width: 4px; height: 4px;
+    background: #fff; border-radius: 50%; transform: translateX(-50%);
+  }
+  .w-dot:nth-child(1) { animation-delay: 0.1s; }
+  .w-dot:nth-child(2) { animation-delay: 0.2s; }
+  .w-dot:nth-child(3) { animation-delay: 0.3s; }
+  .w-dot:nth-child(4) { animation-delay: 0.4s; }
+  .w-dot:nth-child(5) { animation-delay: 0.5s; }
+  @keyframes winRotate { 0% { transform: rotate(0deg); opacity: 1; } 80%, 100% { transform: rotate(360deg); opacity: 0; } }
+
+  /* CSS App Icons (Anti-Broken) */
+  .app-word { background: linear-gradient(135deg, #2b579a, #1a365d); width: 100%; height: 100%; border-radius: 4px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; font-family: 'Segoe UI', sans-serif; box-shadow: 0 1px 3px rgba(0,0,0,0.3); font-size: 0.6rem; }
+  .app-excel { background: linear-gradient(135deg, #217346, #0f3f24); width: 100%; height: 100%; border-radius: 4px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; font-family: 'Segoe UI', sans-serif; box-shadow: 0 1px 3px rgba(0,0,0,0.3); font-size: 0.6rem; }
+  .app-folder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.3)); }
+  .app-trash { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.3)); }
+  .app-zoom { background: #2d8cff; width: 100%; height: 100%; border-radius: 6px; display: flex; align-items: center; justify-content: center; color: white; font-size: 0.6rem; box-shadow: 0 1px 3px rgba(0,0,0,0.3); }
+  .app-wa { background: #25d366; width: 100%; height: 100%; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 0.6rem; box-shadow: 0 1px 3px rgba(0,0,0,0.3); }
+  .app-mail { background: #0ea5e9; width: 100%; height: 100%; border-radius: 4px; display: flex; align-items: center; justify-content: center; color: white; font-size: 0.6rem; box-shadow: 0 1px 3px rgba(0,0,0,0.3); }
+  .app-win { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; width: 100%; height: 100%; padding: 1px; }
+  .app-win div { background: #0078d7; border-radius: 1px; }
+
+  /* 4. Desktop Realistis */
+  .sl-desktop {
+    background: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1280&q=80') center/cover no-repeat;
+    display: flex; flex-direction: column;
+  }
+  
+  /* Desktop Icons Grid */
+  .desk-icons { 
+    padding: 10px; display: flex; flex-direction: column; gap: 12px; 
+    align-items: flex-start; flex-wrap: wrap; height: 90%; align-content: flex-start;
+  }
+  .d-icon { display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; width: 45px; }
+  .d-icon-img { width: 28px; height: 28px; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.4)); }
+  .d-icon-text { font-size: 0.4rem; color: #fff; text-shadow: 0 1px 3px #000; font-weight: 500; text-align: center; line-height:1.2;}
+  
+  /* Taskbar Win 11 Realistis */
+  .taskbar {
+    position: absolute; bottom: 0; left: 0; right: 0; height: 26px;
+    background: rgba(230, 240, 250, 0.9); /* Light theme taskbar */
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    z-index: 20; box-shadow: 0 -1px 3px rgba(0,0,0,0.1);
+  }
+  .tb-icon { 
+    width: 20px; height: 20px; border-radius: 4px; 
+    display: flex; align-items: center; justify-content: center; 
+    transition: background 0.2s, transform 0.1s; cursor: pointer;
+  }
+  .tb-icon:hover { background: rgba(0,0,0,0.05); }
+  .tb-icon.click-sim { background: rgba(0,0,0,0.15); transform: scale(0.9); }
+  
+  /* Taskbar Search Pill */
+  .tb-search {
+    height: 18px; width: 70px; background: #fff; border-radius: 10px;
+    display: flex; align-items: center; padding: 0 8px; gap: 6px;
+    border: 1px solid rgba(0,0,0,0.1); margin: 0 4px; cursor: pointer;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+  }
+  .tb-search:hover { background: #f8f9fa; }
+  
+  .tb-time { 
+    position: absolute; right: 10px; font-size: 0.45rem; 
+    color: #111; text-align: right; line-height: 1.2; font-weight: 500;
+  }
+
+  /* Start Menu Realistis */
+  .start-menu {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -30%);
+    width: 200px; height: 200px;
+    background: rgba(243, 243, 243, 0.95); backdrop-filter: blur(25px);
+    border: 1px solid rgba(0,0,0,0.1); border-radius: 8px;
+    padding: 10px; opacity: 0; pointer-events: none; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 15; box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    display: flex; flex-direction: column;
+  }
+  .start-menu.open { opacity: 1; transform: translate(-50%, -50%); }
+  
+  .sm-search { 
+    width: 100%; padding: 4px 10px; background: #fff; border-radius: 20px; 
+    margin-bottom: 8px; font-size: 0.5rem; color: #666; border: 1px solid #d1d5db;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.05); display: flex; align-items: center; gap: 6px;
+  }
+  .sm-title { font-size: 0.5rem; font-weight: 600; color: #111; margin-bottom: 8px; text-align: left; }
+  
+  .sm-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px 4px; margin-bottom: auto;}
+  .sm-app-wrap { display: flex; flex-direction: column; align-items: center; gap: 3px; }
+  .sm-app { width: 20px; height: 20px; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.1)); }
+  .sm-app-name { font-size: 0.35rem; color: #333; text-align: center; line-height: 1; }
+
+  .sm-footer {
+    border-top: 1px solid rgba(0,0,0,0.1);
+    margin-top: 10px; padding-top: 10px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .sm-user { display: flex; align-items: center; gap: 6px; font-size: 0.5rem; color: #111; font-weight: 600;}
+  .sm-avatar { width: 18px; height: 18px; background: #0078d7; display: flex; align-items: center; justify-content: center; color: white; font-size: 0.4rem; border-radius: 50%; }
+
+  /* Animated Cursor */
+  .cursor {
+    position: absolute; top: 50%; left: 50%;
+    width: 14px; height: 20px;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="36" viewBox="0 0 24 36"><path fill="%23ffffff" stroke="%23000000" stroke-width="1.5" d="M1 1l16 16h-7l5 10-3 2-5-10-6 6z"/></svg>') no-repeat;
+    background-size: contain;
+    z-index: 100; opacity: 0; pointer-events: none;
+    transition: top 1.2s ease-in-out, left 1.2s ease-in-out, opacity 0.5s, transform 0.1s ease;
+    transform-origin: top left;
+    filter: drop-shadow(0 2px 3px rgba(0,0,0,0.6));
+  }
+  .cursor.click { transform: scale(0.85); }
+
+  /* === KONTROL BAWAH === */
+  .panel-control {
+    background: rgba(20, 22, 26, 0.8);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 12px;
+    padding: 15px; width: 100%; display: flex; flex-direction: column; gap: 12px;
+  }
+  .status-text { font-size: 0.8rem; color: #94a3b8; display: flex; align-items: center; gap: 8px; }
+  .status-dot { width: 8px; height: 8px; border-radius: 50%; background: #64748b; }
+  .status-dot.active { background: #4ade80; box-shadow: 0 0 8px #4ade80; }
+  .btn-power-main {
+    background: linear-gradient(to bottom, #2563eb, #1d4ed8);
+    border: 1px solid #3b82f6; color: #fff; padding: 12px; border-radius: 8px; font-size: 0.85rem; font-weight: bold;
+    cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 15px rgba(37,99,235,0.3);
+  }
+  .btn-power-main:hover { background: linear-gradient(to bottom, #3b82f6, #2563eb); }
+  .btn-power-main:disabled { background: #334155; border-color: #475569; color: #94a3b8; cursor: not-allowed; box-shadow: none; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <!-- MONITOR SYSTEM -->
+  <div class="monitor-setup" id="monitorSetup">
+    <div class="monitor-chassis">
+      <div class="monitor-bezel">
+        <div class="screen-glass">
+          
+          <div class="screen-layer sl-backlight" id="l-backlight"></div>
+
+          <div class="screen-layer sl-bios" id="l-bios">
+            <div class="ami-header" id="amiHeader">
+              <div class="ami-logo"></div>
+              <div class="ami-title">American<br>Megatrends</div>
+            </div>
+            <div class="bios-text" id="biosContent"></div>
+          </div>
+
+          <div class="screen-layer sl-load" id="l-load">
+            <div class="win-logo">
+              <div class="win-sq"></div><div class="win-sq"></div>
+              <div class="win-sq"></div><div class="win-sq"></div>
+            </div>
+            <div class="win-spinner">
+              <div class="w-dot"></div><div class="w-dot"></div>
+              <div class="w-dot"></div><div class="w-dot"></div><div class="w-dot"></div>
+            </div>
+          </div>
+
+          <!-- DESKTOP REALISTIS -->
+          <div class="screen-layer sl-desktop" id="l-desktop">
+            
+            <div class="desk-icons">
+              <!-- Baris Kiri -->
+              <div class="d-icon">
+                <div class="d-icon-img app-trash">🗑️</div>
+                <span class="d-icon-text">Recycle Bin</span>
+              </div>
+              <div class="d-icon">
+                <div class="d-icon-img app-folder">📁</div>
+                <span class="d-icon-text">This PC</span>
+              </div>
+              <div class="d-icon">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/Google_Chrome_icon_%28February_2022%29.svg" class="d-icon-img">
+                <span class="d-icon-text">Google Chrome</span>
+              </div>
+              <div class="d-icon">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/8/84/Spotify_icon.svg" class="d-icon-img">
+                <span class="d-icon-text">Spotify</span>
+              </div>
+              <div class="d-icon">
+                <img src="https://img.icons8.com/color/96/microsoft-word-2019--v2.png" class="d-icon-img">
+                <span class="d-icon-text">Word 2021</span>
+              </div>
+              <div class="d-icon">
+                <img src="https://img.icons8.com/color/96/microsoft-excel-2019--v1.png" class="d-icon-img">
+                <span class="d-icon-text">Excel 2021</span>
+              </div>
+              <div class="d-icon">
+                <div class="d-icon-img app-zoom">📹</div>
+                <span class="d-icon-text">Zoom</span>
+              </div>
+            </div>
+            
+            <div class="start-menu" id="startMenu">
+              <div class="sm-search"><span style="color:#0078d7">🔍</span> Type here to search</div>
+              <div class="sm-title">Pinned</div>
+              <div class="sm-grid">
+                <div class="sm-app-wrap">
+                  <img src="https://upload.wikimedia.org/wikipedia/commons/9/98/Microsoft_Edge_logo_%282019%29.svg" class="sm-app">
+                  <span class="sm-app-name">Edge</span>
+                </div>
+                <div class="sm-app-wrap">
+                  <img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/Google_Chrome_icon_%28February_2022%29.svg" class="sm-app">
+                  <span class="sm-app-name">Chrome</span>
+                </div>
+                <div class="sm-app-wrap">
+                  <img src="https://img.icons8.com/color/48/microsoft-word-2019--v2.png" class="sm-app">
+                  <span class="sm-app-name">Word</span>
+                </div>
+                <div class="sm-app-wrap">
+                  <img src="https://img.icons8.com/color/48/microsoft-excel-2019--v1.png" class="sm-app">
+                  <span class="sm-app-name">Excel</span>
+                </div>
+                <div class="sm-app-wrap">
+                  <img src="https://upload.wikimedia.org/wikipedia/commons/8/84/Spotify_icon.svg" class="sm-app">
+                  <span class="sm-app-name">Spotify</span>
+                </div>
+                <div class="sm-app-wrap">
+                  <div class="sm-app app-wa">💬</div>
+                  <span class="sm-app-name">WhatsApp</span>
+                </div>
+                <div class="sm-app-wrap">
+                  <div class="sm-app app-zoom">📹</div>
+                  <span class="sm-app-name">Zoom</span>
+                </div>
+                <div class="sm-app-wrap">
+                  <div class="sm-app app-folder">📁</div>
+                  <span class="sm-app-name">Files</span>
+                </div>
+                <div class="sm-app-wrap">
+                  <div class="sm-app app-mail">✉️</div>
+                  <span class="sm-app-name">Mail</span>
+                </div>
+                <div class="sm-app-wrap">
+                  <div class="sm-app" style="background:#64748b; border-radius:4px; display:flex; align-items:center; justify-content:center; color:#fff; font-size:0.6rem;">⚙️</div>
+                  <span class="sm-app-name">Settings</span>
+                </div>
+              </div>
+              <div class="sm-footer">
+                <div class="sm-user">
+                  <div class="sm-avatar">👤</div> Admin
+                </div>
+                <div style="font-size:0.6rem; color:#666; font-weight:bold; cursor:pointer;">⏻</div>
+              </div>
+            </div>
+
+            <div class="taskbar">
+              <!-- Start Button -->
+              <div class="tb-icon" id="btnStartMenu" style="padding: 4px;">
+                <div class="app-win"><div></div><div></div><div></div><div></div></div>
+              </div>
+              
+              <!-- Search Pill Windows 11 -->
+              <div class="tb-search">
+                <span style="font-size: 0.5rem; color:#0078d7">🔍</span>
+                <span style="font-size: 0.45rem; color:#888">Search</span>
+              </div>
+
+              <!-- Taskbar Apps -->
+              <div class="tb-icon">
+                <div class="app-folder" style="font-size:0.8rem;">📁</div>
+              </div>
+              <div class="tb-icon">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/9/98/Microsoft_Edge_logo_%282019%29.svg" style="width:100%; height:100%;">
+              </div>
+              <div class="tb-icon">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/Google_Chrome_icon_%28February_2022%29.svg" style="width:100%; height:100%;">
+              </div>
+              <div class="tb-icon">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/8/84/Spotify_icon.svg" style="width:100%; height:100%;">
+              </div>
+
+              <div class="tb-time" id="tbTime">12:00<br>10/10/2026</div>
+            </div>
+            
+            <div class="cursor" id="cursor"></div>
+          </div>
+
+        </div>
+      </div>
+      <div class="m-logo">SYSTEMA</div>
+      <div class="m-power-btn"><div class="m-led"></div></div>
+    </div>
+    <div class="m-neck"></div>
+    <div class="m-base"></div>
+  </div>
+
+  <div class="panel-control">
+    <div class="status-text">
+      <div class="status-dot" id="sDot"></div>
+      <span id="sText">Status: Power Off</span>
+    </div>
+    <button class="btn-power-main" id="btnPower" onclick="bootSequence()">🔌 Tekan Tombol Power PC</button>
+  </div>
+</div>
+
+<script>
+var monitor = document.getElementById('monitorSetup');
+var btn = document.getElementById('btnPower');
+var sDot = document.getElementById('sDot');
+var sText = document.getElementById('sText');
+var biosContent = document.getElementById('biosContent');
+var cursor = document.getElementById('cursor');
+var startMenu = document.getElementById('startMenu');
+
+function updateStatus(text, isActive) {
+  sText.innerHTML = '<strong>Status:</strong> ' + text;
+  if(isActive) sDot.classList.add('active');
+  else sDot.classList.remove('active');
+}
+
+function showLayer(id) {
+  document.querySelectorAll('.screen-layer').forEach(function(l) { l.classList.remove('active'); });
+  if(id) document.getElementById(id).classList.add('active');
+}
+
+function updateClock() {
+  var now = new Date();
+  var h = now.getHours().toString().padStart(2,'0');
+  var m = now.getMinutes().toString().padStart(2,'0');
+  document.getElementById('tbTime').innerHTML = h + ':' + m + '<br>' + now.toLocaleDateString();
+}
+
+function bootSequence() {
+  btn.disabled = true;
+  startMenu.classList.remove('open');
+  cursor.style.opacity = '0';
+  cursor.style.transform = 'translate(0,0)';
+  
+  monitor.classList.add('is-on');
+  showLayer('l-backlight');
+  updateStatus('Power Good. Monitor menyala...', true);
+
+  setTimeout(function() {
+    showLayer('l-bios');
+    updateStatus('Tahap 1: BIOS memeriksa Hardware (POST)...', true);
+    document.getElementById('amiHeader').style.opacity = '1';
+    
+    var text = "BIOS Date 11/24/26 10:22:15 Ver 05.00011<br><br>" +
+               "CPU: Intel(R) Core(TM) i7 CPU @ 3.80GHz<br>" +
+               "Memory Testing: ";
+    biosContent.innerHTML = text;
+    biosContent.style.opacity = '1';
+
+    var mem = 0;
+    var memIntv = setInterval(function() {
+      mem += 2048;
+      biosContent.innerHTML = text + mem + "K OK";
+      if(mem >= 16384) {
+        clearInterval(memIntv);
+        biosContent.innerHTML += "<br><br>Detecting Storage Devices...<br>SATA Port 1: NVMe SSD 1TB - OK<br><br>Found Bootable OS. Loading...";
+        setTimeout(loadOS, 2000);
+      }
+    }, 100);
+  }, 1200);
+}
+
+function loadOS() {
+  showLayer('l-load');
+  updateStatus('Tahap 2: Memuat kernel Sistem Operasi dari SSD ke RAM...', true);
+  setTimeout(showDesktop, 3500);
+}
+
+function showDesktop() {
+  showLayer('l-desktop');
+  updateClock();
+  updateStatus('Tahap 3: GUI Desktop berhasil dimuat. OS siap digunakan.', true);
+
+  setTimeout(function() {
+    cursor.style.opacity = '1';
+    setTimeout(function() {
+      // Move exactly to the Start Button using percentages so it scales properly
+      cursor.style.top = '94%';
+      cursor.style.left = '28%';
+      setTimeout(function() {
+        // Animasi Klik
+        cursor.classList.add('click');
+        var startBtn = document.getElementById('btnStartMenu');
+        startBtn.classList.add('click-sim');
+        
+        setTimeout(function() {
+          // Lepas Klik
+          cursor.classList.remove('click');
+          startBtn.classList.remove('click-sim');
+          
+          // Buka Start Menu
+          startMenu.classList.add('open');
+          updateStatus('Sistem Operasi merespon input pengguna secara real-time.', true);
+          
+          setTimeout(function() {
+            btn.disabled = false;
+            btn.innerHTML = '🔄 Matikan & Ulangi Simulasi';
+            btn.onclick = resetSim;
+          }, 1000);
+        }, 150); // Durasi klik (150ms)
+      }, 1200); 
+    }, 500); 
+  }, 1000); 
+}
+
+function resetSim() {
+  btn.onclick = bootSequence;
+  btn.innerHTML = '🔌 Tekan Tombol Power PC';
+  monitor.classList.remove('is-on');
+  showLayer('');
+  cursor.style.top = '50%';
+  cursor.style.left = '50%';
+  updateStatus('Power Off', false);
+  document.getElementById('amiHeader').style.opacity = '0';
+  biosContent.style.opacity = '0';
+}
+</script>
+
+</body>
+</html>

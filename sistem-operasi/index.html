@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>Sistem Operasi — SMAN 8 Samarinda</title>
   <link rel="stylesheet" href="../style.css">
   <link rel="stylesheet" href="./style.css">
   <script src="./script.js" defer></script>
@@ -50,6 +50,12 @@
             menjaga keamanan sistem dari pengguna yang tidak berhak.</li>
         </ul>
       </div>
+      <div class="materi-box">
+        <span class="materi-title">🖥️ Penjelasan Animasi: Proses Booting & Fungsi OS</span>
+        <p>Bagaimana OS menjalankan operasi dasar <strong>(poin a)</strong> dan menyajikan tampilan <strong>(poin d)</strong>? Animasi ini mensimulasikan proses <strong>booting</strong>. OS adalah perangkat lunak pertama yang dimuat ke RAM. Setelah OS berhasil dimuat, barulah muncul antarmuka Desktop (GUI) sehingga kamu bisa menjalankan aplikasi lain. Klik tombol untuk memulai!</p>
+      </div>
+      <iframe id="iframe_booting" src="./animasi/animasi_booting.html" width="100%" height="480px"
+        style="border:none; margin-top:15px; margin-bottom:15px;">tidak support</iframe>
       <div class="tab-nav-footer">
         <button class="nav-next" onclick="goToTab(1)">Selanjutnya: Driver ➔</button>
       </div>
@@ -89,10 +95,6 @@
         <button class="nav-prev" onclick="goToTab(0)">⬅ Kembali</button>
         <button class="nav-next" onclick="goToTab(2)">Selanjutnya: Instalasi ➔</button>
       </div>
-      <iframe id="iframe_peran" src="./animasi/peran_sistem_komputer.html"
-        style="border:none; margin-top:15px; margin-bottom:15px;">
-        tidak support
-      </iframe>
     </div>
 
     <!-- TAB KATEGORI & INSTALASI -->
@@ -125,6 +127,18 @@
           <li>Lakukan <strong>Restart</strong> komputer agar driver bisa berfungsi sempurna.</li>
         </ul>
       </div>
+      
+      <div class="materi-box">
+        <span class="materi-title">🎮 Penjelasan Animasi: Hubungan Hardware & Instalasi</span>
+        <p>Animasi di bawah ini mensimulasikan materi pada tabel kategori di atas. Ayo buktikan perbedaannya!</p>
+        <ul class="item-list" style="margin-top:10px;">
+          <li><strong>Kasus 1 (Flashdisk):</strong> Mewakili hardware <em>Plug and Play</em>. Saat kamu menekan tombol <strong>Colok Flashdisk</strong>, OS langsung mengenalinya karena OS sudah memiliki <strong>driver bawaan (generik)</strong>. Hardware langsung siap digunakan tanpa perlu instalasi.</li>
+          <li><strong>Kasus 2 (Printer Baru):</strong> Mewakili hardware yang butuh <strong>driver khusus</strong> pabrikan. Saat menekan tombol <strong>Colok Printer</strong>, OS kebingungan (tidak mengenali perangkat). Oleh karena itu, muncul jendela <em>Setup Wizard</em> untuk menginstal driver secara manual. Setelah proses instalasi selesai, barulah Printer bisa beroperasi.</li>
+        </ul>
+        <p style="margin-top:10px;"><strong>Instruksi:</strong> Tekan kedua tombol di panel bawah animasi untuk melihat langsung perbedaan proses kerjanya!</p>
+      </div>
+      <iframe id="iframe_instalasi" src="./animasi/animasi_instalasi.html" width="100%" height="560px" style="border:none; margin-top:10px; margin-bottom:15px; border-radius: 12px; overflow: hidden;"></iframe>
+
       <div class="tab-nav-footer">
         <button class="nav-prev" onclick="goToTab(1)">⬅ Kembali ke Driver</button>
       </div>
