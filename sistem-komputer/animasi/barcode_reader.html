@@ -963,20 +963,24 @@
     }
 
     function checkCollision() {
-      const sRect = scanner.getBoundingClientRect();
-      const bRect = barcode.getBoundingClientRect();
-      const scannerNoseX = sRect.left + (sRect.width * 0.1);
-      const scannerNoseY = sRect.top + (sRect.height * 0.3);
-      const distanceX = scannerNoseX - bRect.right;
+      const laser = document.querySelector('.laser-cone');
+      const lRect = laser.getBoundingClientRect();
+      const pRect = product.getBoundingClientRect();
 
-      const isMobile = window.innerWidth <= 650;
-      const triggerDist = isMobile ? 110 : 150;
-      const resetDist = isMobile ? 130 : 160;
+      // Deteksi tabrakan (overlap) antara kotak sinar merah dan kotak kaleng
+      const isOverlapping = !(lRect.right < pRect.left ||
+        lRect.left > pRect.right ||
+        lRect.bottom < pRect.top ||
+        lRect.top > pRect.bottom);
 
-      if (distanceX > -50 && distanceX < triggerDist && scannerNoseY < bRect.bottom + 60 && scannerNoseY > bRect.top - 60) {
-        triggerScan();
+      if (isOverlapping) {
+        // Jika bertabrakan, picu scan (hanya jika belum discan di sesi ini)
+        if (!hasScannedThisPass && !scanCooldown) {
+          triggerScan();
+        }
       } else {
-        if (distanceX > resetDist) hasScannedThisPass = false;
+        // Jika sudah tidak bersentuhan, reset flag agar bisa scan produk berikutnya
+        hasScannedThisPass = false;
       }
     }
 
