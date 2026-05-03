@@ -1,670 +1,1117 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Simulasi Kasir Realistis</title>
-<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-<style>
-/* Reset & Body */
-body {
-  margin: 0; padding: 0; display: flex; justify-content: center; align-items: center;
-  background: transparent; font-family: 'Inter', sans-serif;
-  overflow: hidden; touch-action: none; height: 100vh;
-}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Simulasi Kasir Realistis</title>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Inter:wght@400;600;800&display=swap"
+    rel="stylesheet">
+  <style>
+    ;
+    h
 
-.wrap {
-  width: 800px; height: 500px; border-radius: 16px;
-  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-  position: relative; transform-origin: top center; overflow: hidden;
-  background: #f1f5f9; border: 1px solid #cbd5e1;
-}
+    /* Reset & Body */
+    body {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: transparent;
+      font-family: 'Inter', sans-serif;
+      overflow: hidden;
+      touch-action: none;
+      height: 100vh;
+    }
 
-/* Background (Bersih, tanpa gambar supermarket agar lebih fokus) */
-.bg-blur {
-  position: absolute; inset: -20px;
-  background: radial-gradient(circle, #f8fafc, #cbd5e1);
-  z-index: 0;
-}
+    .wrap {
+      width: 800px;
+      height: 500px;
+      border-radius: 16px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+      position: relative;
+      transform-origin: top center;
+      overflow: hidden;
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+    }
 
-/* Meja Kasir (Terang) */
-.counter-desk {
-  position: absolute; bottom: 0; left: 0; width: 100%; height: 140px;
-  background: linear-gradient(to bottom, #e2e8f0, #94a3b8);
-  border-top: 4px solid #64748b; z-index: 5;
-  box-shadow: 0 -10px 20px rgba(0,0,0,0.2);
-}
+    /* Background (Bersih, tanpa gambar supermarket agar lebih fokus) */
+    .bg-blur {
+      position: absolute;
+      inset: -20px;
+      background: radial-gradient(circle, #f8fafc, #cbd5e1);
+      z-index: 0;
+    }
 
-/* Header */
-.header {
-  position: absolute; top: 0; left: 0; right: 0;
-  padding: 15px 25px; background: rgba(255,255,255,0.9); color: #0f172a;
-  display: flex; justify-content: space-between; align-items: center; z-index: 100;
-  border-bottom: 1px solid rgba(0,0,0,0.1);
-}
-.header h2 { margin: 0; font-size: 1.1rem; display: flex; align-items: center; gap: 10px; font-weight: 800; }
-.btn-auto {
-  background: #3b82f6; color: white; border: none;
-  padding: 8px 18px; border-radius: 50px; font-weight: 600; cursor: pointer; 
-  transition: all 0.3s; font-size: 0.85rem; box-shadow: 0 4px 10px rgba(59,130,246,0.3);
-}
-.btn-auto:hover { background: #2563eb; transform: translateY(-1px); }
-.btn-auto.active { background: #ef4444; box-shadow: 0 4px 10px rgba(239,68,68,0.4); }
+    /* Meja Kasir (Terang) */
+    .counter-desk {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 140px;
+      background: linear-gradient(to bottom, #e2e8f0, #94a3b8);
+      border-top: 4px solid #64748b;
+      z-index: 5;
+      box-shadow: 0 -10px 20px rgba(0, 0, 0, 0.2);
+    }
 
-/* Drag Instruction */
-.drag-hint {
-  position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
-  font-weight: 800; color: #fff; font-size: 0.9rem; animation: pulse 1.5s infinite; 
-  pointer-events: none; z-index: 100; text-shadow: 0 2px 4px rgba(0,0,0,0.8);
-  background: #3b82f6; padding: 8px 20px; border-radius: 30px; border: 2px solid #fff;
-}
-@keyframes pulse { 0%, 100% { transform: translateX(-50%) scale(1); } 50% { transform: translateX(-50%) scale(1.05); } }
+    /* Header */
+    .header {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: 15px 25px;
+      background: rgba(255, 255, 255, 0.9);
+      color: #0f172a;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 100;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    }
 
-/* --- MONITOR PC REALISTIS (CSS Art Terbaik) --- */
-.monitor-group {
-  position: absolute; left: 30px; bottom: 120px; z-index: 10;
-  display: flex; flex-direction: column; align-items: center;
-}
-.monitor-screen {
-  width: 300px; height: 210px;
-  background: #000; border-radius: 8px;
-  border: 12px solid #111; 
-  border-bottom: 30px solid #111; /* Dagu bawah tebal ala monitor PC */
-  box-shadow: 0 20px 40px rgba(0,0,0,0.9), inset 0 0 2px rgba(255,255,255,0.1);
-  position: relative; display: flex; flex-direction: column;
-}
-.monitor-screen::after {
-  content: 'SAMSUNG'; position: absolute; bottom: -20px; left: 50%; transform: translateX(-50%);
-  color: #555; font-size: 10px; font-weight: bold; letter-spacing: 2px;
-}
-.monitor-stand {
-  width: 45px; height: 45px;
-  background: linear-gradient(to right, #111, #333, #111);
-  box-shadow: inset 0 5px 10px rgba(0,0,0,0.8);
-  border-left: 1px solid #444; border-right: 1px solid #444;
-}
-.monitor-base {
-  width: 150px; height: 12px;
-  background: linear-gradient(to bottom, #333, #111);
-  border-radius: 15px 15px 0 0;
-  border-top: 1px solid #555;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.9);
-}
+    .header h2 {
+      margin: 0;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+    }
 
-/* UI Layar Monitor */
-.pos-ui { width: 100%; height: 100%; background: #020617; display: flex; flex-direction: column; position: relative; overflow: hidden; }
-.pos-ui::before {
-  content: ''; position: absolute; inset: -50%; pointer-events: none;
-  background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, transparent 40%);
-}
-.pos-header {
-  background: #1e293b; color: #38bdf8; font-size: 0.75rem; font-family: 'Share Tech Mono', monospace;
-  padding: 6px 8px; display: flex; justify-content: space-between; border-bottom: 2px solid #0f172a; align-items: center;
-}
-.btn-clear {
-  background: #ef4444; color: white; border: none; border-radius: 4px;
-  padding: 2px 6px; font-size: 0.6rem; cursor: pointer; font-weight: bold; font-family: 'Inter', sans-serif;
-  transition: all 0.2s;
-}
-.btn-clear:hover { background: #dc2626; }
-.btn-clear:active { transform: scale(0.95); }
-.pos-list { flex: 1; padding: 5px; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; }
-.pos-item {
-  background: rgba(255,255,255,0.05); padding: 5px 8px; border-radius: 4px;
-  display: flex; justify-content: space-between; align-items: center; color: #e2e8f0; font-size: 0.7rem;
-  animation: slideIn 0.2s ease-out forwards;
-}
-@keyframes slideIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
-.item-meta { display: flex; flex-direction: column; }
-.item-code { font-family: 'Share Tech Mono', monospace; color: #64748b; font-size: 0.6rem; margin-top: 2px;}
-.item-price { font-family: 'Share Tech Mono', monospace; font-weight: bold; color: #fff; }
-.pos-total-area {
-  background: #000; padding: 8px 10px; border-top: 2px solid #1e293b;
-  display: flex; justify-content: space-between; align-items: center;
-}
-.pos-total-lbl { color: #64748b; font-size: 0.7rem; font-weight: bold; }
-.pos-total-val { color: #22c55e; font-family: 'Share Tech Mono', monospace; font-size: 1.2rem; font-weight: bold; }
+    .btn-auto {
+      background: #3b82f6;
+      color: white;
+      border: none;
+      padding: 8px 18px;
+      border-radius: 50px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-size: 0.85rem;
+      box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
+    }
 
-/* --- PRODUK (Tengah) --- */
-.product {
-  position: absolute; left: 360px; bottom: 120px; width: 120px; height: 180px;
-  display: flex; justify-content: center; align-items: center;
-  transition: margin 0.2s; /* Menggunakan margin agar tidak bentrok dengan mix-blend-mode */
-}
-.product-img {
-  position: absolute; width: 100%; height: 100%; object-fit: contain;
-  mix-blend-mode: darken; /* Menghilangkan background putih foto kaleng dengan sempurna */
-}
-.barcode {
-  position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
-  width: 25px; height: 45px; background: #fff; border-radius: 2px; padding: 2px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-  display: flex; flex-direction: column; align-items: center; border: 1px solid #ccc;
-  z-index: 2;
-}
-.b-line { background: #000; height: 100%; }
-.barcode-lines { display: flex; justify-content: space-between; width: 100%; flex: 1; }
-.barcode-lines .b-line:nth-child(1) { width: 4px; } .barcode-lines .b-line:nth-child(2) { width: 1px; }
-.barcode-lines .b-line:nth-child(3) { width: 5px; } .barcode-lines .b-line:nth-child(4) { width: 2px; }
-.barcode-lines .b-line:nth-child(5) { width: 1px; } .barcode-lines .b-line:nth-child(6) { width: 4px; }
-.barcode-lines .b-line:nth-child(7) { width: 2px; } .barcode-lines .b-line:nth-child(8) { width: 5px; }
-.barcode-num { font-size: 4px; font-weight: bold; font-family: 'Share Tech Mono', monospace; margin-top: 1px;}
+    .btn-auto:hover {
+      background: #2563eb;
+      transform: translateY(-1px);
+    }
 
-/* Pantulan Sinar Merah di Kaleng */
-.product.glow-red::after {
-  content: ''; position: absolute; inset: -5px; border-radius: 10px;
-  background: radial-gradient(ellipse at right center, rgba(239, 68, 68, 0.7) 0%, transparent 60%);
-  z-index: 4; pointer-events: none; mix-blend-mode: screen;
-}
+    .btn-auto.active {
+      background: #ef4444;
+      box-shadow: 0 4px 10px rgba(239, 68, 68, 0.4);
+    }
 
-/* --- BAYANGAN MEJA (Dinasmis) --- */
-.shadow-product {
-  position: absolute; left: 360px; bottom: 105px; width: 120px; height: 15px;
-  background: rgba(0,0,0,0.6); filter: blur(6px); border-radius: 50%;
-  z-index: 10; transition: margin 0.2s; pointer-events: none;
-}
-.shadow-scanner {
-  position: absolute; left: 680px; bottom: 105px; width: 140px; height: 20px;
-  background: rgba(0,0,0,0.5); filter: blur(10px); border-radius: 50%;
-  z-index: 10; transition: transform 0.1s; pointer-events: none;
-}
+    /* Drag Instruction */
+    .drag-hint {
+      position: absolute;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-weight: 800;
+      color: #fff;
+      font-size: 0.9rem;
+      animation: pulse 1.5s infinite;
+      pointer-events: none;
+      z-index: 100;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+      background: #3b82f6;
+      padding: 8px 20px;
+      border-radius: 30px;
+      border: 2px solid #fff;
+    }
 
-/* --- SCANNER FOTO NYATA (Dengan Fix Kotak Putih / Mix-Blend-Mode) --- */
-/* Elemen utama diberi mix-blend-mode agar menyatu langsung dengan latar belakang meja */
-.scanner-gun {
-  position: absolute; left: 640px; top: 130px; width: 220px; height: 260px;
-  cursor: grab; z-index: 50; transition: transform 0.1s;
-  mix-blend-mode: darken; /* Menghilangkan background putih foto dengan lebih baik */
-}
-.scanner-img {
-  width: 100%; height: 100%; object-fit: contain; pointer-events: none;
-  /* Kontras dinaikkan sedikit agar warna hitam pekat */
-  filter: contrast(1.1);
-  transform: rotate(50deg) scale(1.2); /* Memutar gambar agar berdiri tegak */
-}
-.scanner-gun.dragging { cursor: grabbing; }
+    @keyframes pulse {
 
-/* Wadah terpisah untuk laser agar tidak ikut transparan (tidak kena blend-mode multiply) */
-.laser-container {
-  position: absolute; left: 640px; top: 130px; width: 220px; height: 260px;
-  z-index: 60; transition: transform 0.1s; pointer-events: none;
-}
-.laser-ray {
-  position: absolute; left: -210px; top: 76px; width: 220px; height: 3px;
-  background: #fff; 
-  box-shadow: 0 0 15px 5px rgba(239, 68, 68, 1), 0 0 30px 10px rgba(239, 68, 68, 0.8);
-  opacity: 0; pointer-events: none; transition: opacity 0.1s;
-  mask-image: linear-gradient(to right, transparent 0%, black 100%);
-  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 100%);
-  z-index: 2;
-}
-.laser-cone {
-  position: absolute; left: -160px; top: -24px; width: 170px; height: 200px;
-  background: conic-gradient(from 255deg at right center, transparent 0deg, rgba(255,0,0,0.8) 10deg, rgba(255,0,0,0.8) 20deg, transparent 30deg);
-  mask-image: linear-gradient(to left, black 0%, transparent 100%);
-  -webkit-mask-image: linear-gradient(to left, black 0%, transparent 100%);
-  filter: blur(2px);
-  pointer-events: none;
-  mix-blend-mode: screen;
-  z-index: 1;
-  animation: pulseCone 1.5s infinite alternate;
-}
-@keyframes pulseCone { 0% { opacity: 0.5; } 100% { opacity: 1; } }
+      0%,
+      100% {
+        transform: translateX(-50%) scale(1);
+      }
 
-.laser-container.scanning .laser-ray { opacity: 1; box-shadow: 0 0 20px 10px rgba(255,0,0,1); }
-.laser-container.scanning .laser-cone { opacity: 1; background: conic-gradient(from 255deg at right center, transparent 0deg, rgba(255,0,0,1) 10deg, rgba(255,0,0,1) 20deg, transparent 30deg); }
-
-/* Cahaya siaga (Standby Glow) di dalam kaca scanner */
-.scanner-glow {
-  position: absolute; left: 10px; top: 60px; width: 25px; height: 35px;
-  background: radial-gradient(circle, rgba(255,255,255,0.9) 0%, rgba(255,0,0,0.8) 40%, transparent 80%);
-  border-radius: 50%;
-  box-shadow: 0 0 25px 10px rgba(255, 0, 0, 0.6);
-  opacity: 1; pointer-events: none;
-  mix-blend-mode: screen;
-  animation: pulseGlow 1.5s infinite alternate;
-}
-@keyframes pulseGlow { 0% { opacity: 0.7; transform: scale(0.9); } 100% { opacity: 1; transform: scale(1.1); } }
-
-/* Lampu Indikator LED kecil di bagian atas alat */
-.led-indicator {
-  position: absolute; left: 90px; top: 60px; width: 6px; height: 6px;
-  background: #22c55e; border-radius: 50%;
-  box-shadow: 0 0 10px 3px rgba(34, 197, 94, 0.6);
-  animation: blinkLed 1.5s infinite;
-}
-@keyframes blinkLed { 0%, 45%, 55%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
-
-/* Efek Data Melayang */
-.floating-data {
-  position: absolute; color: #10b981; font-family: 'Share Tech Mono', monospace;
-  font-weight: bold; font-size: 1.2rem; pointer-events: none; z-index: 100;
-  text-shadow: 0 0 8px rgba(16,185,129,0.8);
-  animation: dataFly 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-}
-@keyframes dataFly { 
-  0% { transform: scale(0.5); opacity: 0; } 
-  20% { transform: translateY(-20px) scale(1.1); opacity: 1; } 
-  100% { transform: translate(-100px, -80px) scale(0.5); opacity: 0; } 
-}
-
-/* Scrollbar POS */
-.pos-list::-webkit-scrollbar { width: 3px; }
-.pos-list::-webkit-scrollbar-track { background: transparent; }
-.pos-list::-webkit-scrollbar-thumb { background: #334155; }
-
-/* --- RESPONSIVE MOBILE (Portrait Mode) --- */
-@media (max-width: 650px) {
-  .wrap { width: 100% !important; height: 100% !important; border-radius: 0 !important; border: none !important; transform: none !important; }
-  .counter-desk { height: 180px !important; z-index: auto !important; }
-  .header { padding: 10px 15px !important; }
-  .header h2 { font-size: 0.85rem !important; }
-  .btn-auto { padding: 6px 12px !important; font-size: 0.75rem !important; }
-  
-  .monitor-group {
-    left: 50% !important; bottom: auto !important; top: 80px !important;
-    transform: translateX(-50%) scale(0.65) !important;
-    transform-origin: top center !important;
-  }
-  
-  .product { 
-    left: 20px !important; bottom: 50px !important; 
-    width: 80px !important; height: 120px !important;
-  }
-  .barcode { width: 15px !important; height: 25px !important; right: 4px !important; padding: 2px !important;}
-  .barcode-num { display: none !important; }
-  .shadow-product { 
-    left: 20px !important; bottom: 40px !important; 
-    width: 80px !important; height: 10px !important; 
-  }
-  
-  .scanner-gun, .laser-container { 
-    left: 200px !important; top: auto !important; bottom: 40px !important; 
-    transform: scale(0.65);
-    transform-origin: bottom center !important;
-  }
-  .shadow-scanner { left: 220px !important; bottom: 30px !important; width: 100px !important; height: 15px !important; }
-  
-  .drag-hint { bottom: 15px !important; font-size: 0.75rem !important; padding: 6px 15px !important; white-space: nowrap !important; }
-}
-</style>
-</head>
-<body>
-
-<div class="wrap" id="wrap">
-  <!-- Latar Belakang & Meja -->
-  <div class="bg-blur"></div>
-  <div class="counter-desk"></div>
-
-  <!-- Header -->
-  <div class="header">
-    <h2><span style="font-size: 1.4rem;">🔫</span> Simulasi Scanner Asli (Motorola LS2208)</h2>
-    <button class="btn-auto" id="btnAuto" onclick="toggleAuto()">▶ Auto Play</button>
-  </div>
-  
-  <div class="drag-hint" id="dragHint">Geser Scanner ke arah Barcode!</div>
-
-  <!-- Monitor Komputer (CSS Realistis) -->
-  <div class="monitor-group">
-    <div class="monitor-screen">
-      <div class="pos-ui">
-        <div class="pos-header">
-          <span>SMART-POS V.8</span>
-          <div style="display: flex; align-items: center; gap: 10px;">
-            <button id="btnClear" class="btn-clear">Reset</button>
-            <span id="pos-time">10:00</span>
-          </div>
-        </div>
-        <div class="pos-list" id="posList"></div>
-        <div class="pos-total-area">
-          <span class="pos-total-lbl">TOTAL HARGA</span>
-          <span class="pos-total-val" id="totalPrice">Rp 0</span>
-        </div>
-      </div>
-    </div>
-    <div class="monitor-stand"></div>
-    <div class="monitor-base"></div>
-  </div>
-
-  <!-- Bayangan -->
-  <div class="shadow-product" id="shadowProduct"></div>
-  <div class="shadow-scanner" id="shadowScanner"></div>
-
-  <!-- Produk Kaleng Realistis -->
-  <div class="product" id="product">
-    <img src="" class="product-img" id="productImg" alt="Produk">
-    <div class="barcode" id="barcode">
-      <div class="barcode-lines">
-        <div class="b-line"></div><div class="b-line"></div><div class="b-line"></div><div class="b-line"></div>
-        <div class="b-line"></div><div class="b-line"></div><div class="b-line"></div><div class="b-line"></div>
-      </div>
-      <div class="barcode-num">89912345</div>
-    </div>
-  </div>
-
-  <!-- Alat Scanner Foto Asli -->
-  <!-- Layer 1: Gambar Scanner dipisah agar blend-mode multiply sempurna menghapus background putih -->
-  <div class="scanner-gun" id="scanner">
-    <img src="scanner_nyata.png" class="scanner-img" alt="Motorola Scanner">
-  </div>
-  
-  <!-- Layer 2: Sinar Laser dipisah agar warna merah tidak ikut transparan -->
-  <div class="laser-container" id="laserContainer">
-    <div class="scanner-glow"></div>
-    <div class="led-indicator"></div>
-    <div class="laser-cone"></div>
-    <div class="laser-ray" id="laserRay"></div>
-  </div>
-
-</div>
-
-<script>
-  const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  function playBeep() {
-    if(audioCtx.state === 'suspended') audioCtx.resume();
-    const o = audioCtx.createOscillator();
-    const g = audioCtx.createGain();
-    o.type = 'sine'; o.frequency.setValueAtTime(2500, audioCtx.currentTime); 
-    g.gain.setValueAtTime(0.1, audioCtx.currentTime);
-    g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.1);
-    o.connect(g); g.connect(audioCtx.destination);
-    o.start(); o.stop(audioCtx.currentTime + 0.1);
-  }
-  
-  function playRegister() {
-    if(audioCtx.state === 'suspended') audioCtx.resume();
-    const osc1 = audioCtx.createOscillator();
-    const osc2 = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    
-    osc1.type = 'square'; osc2.type = 'triangle';
-    osc1.frequency.setValueAtTime(3000, audioCtx.currentTime);
-    osc1.frequency.exponentialRampToValueAtTime(1000, audioCtx.currentTime + 0.15);
-    osc2.frequency.setValueAtTime(4000, audioCtx.currentTime);
-    osc2.frequency.exponentialRampToValueAtTime(2000, audioCtx.currentTime + 0.2);
-    
-    gain.gain.setValueAtTime(0, audioCtx.currentTime);
-    gain.gain.linearRampToValueAtTime(0.05, audioCtx.currentTime + 0.02);
-    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
-    
-    osc1.connect(gain); osc2.connect(gain); gain.connect(audioCtx.destination);
-    osc1.start(); osc2.start();
-    osc1.stop(audioCtx.currentTime + 0.3); osc2.stop(audioCtx.currentTime + 0.3);
-  }
-
-  const scanner = document.getElementById('scanner');
-  const laserCont = document.getElementById('laserContainer');
-  const product = document.getElementById('product');
-  const shadowProduct = document.getElementById('shadowProduct');
-  const shadowScanner = document.getElementById('shadowScanner');
-  const barcode = document.getElementById('barcode');
-  const posList = document.getElementById('posList');
-  const totalPriceEl = document.getElementById('totalPrice');
-  const dragHint = document.getElementById('dragHint');
-  const wrap = document.getElementById('wrap');
-  
-  let isDragging = false;
-  let startX = 0, startY = 0, currentX = 0, currentY = 0;
-  let hasScannedThisPass = false, total = 0, scanCooldown = false;
-  let isAuto = false, autoTimer = null, autoInterval = null;
-
-  const productsDB = [
-    { name: "Coca Cola Kaleng", price: 8500, code: "89910001", img: "can_cola_1777576462082.png" },
-    { name: "Sprite Refresh", price: 8000, code: "89910002", img: "can_sprite_1777576494938.png" },
-    { name: "Fanta Orange", price: 8000, code: "89910003", img: "can_fanta_1777576512176.png" },
-    { name: "Pepsi Blue", price: 9000, code: "89910004", img: "can_pepsi_1777576801098.png" },
-    { name: "Monster Energy", price: 25500, code: "89910005", img: "can_monster_1777576822738.png" }
-  ];
-  let currentProductIndex = 0;
-
-  function loadProduct(idx) {
-    const p = productsDB[idx];
-    document.getElementById('productImg').src = p.img;
-    document.querySelector('.barcode-num').innerText = p.code;
-  }
-  loadProduct(0);
-
-  setInterval(() => {
-    const d = new Date();
-    document.getElementById('pos-time').innerText = d.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-  }, 1000);
-
-  function updateScale() {
-    const w = window.innerWidth;
-    const padding = 20;
-    const targetW = 800;
-    if (w <= 650) {
-      wrap.style.transform = 'none';
-      wrap.style.width = '100%';
-      wrap.style.height = '100%';
-    } else {
-      wrap.style.width = '800px';
-      wrap.style.height = '500px';
-      if (w < targetW + padding) {
-        wrap.style.transform = `scale(${(w - padding) / targetW})`;
-      } else {
-        wrap.style.transform = 'scale(1)';
+      50% {
+        transform: translateX(-50%) scale(1.05);
       }
     }
-  }
-  window.addEventListener('resize', updateScale);
-  updateScale();
 
-  function formatRp(num) {
-    return 'Rp ' + num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-  }
+    /* --- MONITOR PC REALISTIS (CSS Art Terbaik) --- */
+    .monitor-group {
+      position: absolute;
+      left: 30px;
+      bottom: 120px;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
 
-  function triggerScan() {
-    if (hasScannedThisPass || scanCooldown) return;
-    hasScannedThisPass = true; scanCooldown = true;
-    dragHint.style.display = 'none';
+    .monitor-screen {
+      width: 300px;
+      height: 210px;
+      background: #000;
+      border-radius: 8px;
+      border: 12px solid #111;
+      border-bottom: 30px solid #111;
+      /* Dagu bawah tebal ala monitor PC */
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.9), inset 0 0 2px rgba(255, 255, 255, 0.1);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
 
-    laserCont.classList.add('scanning');
-    product.classList.add('glow-red');
-    playBeep();
-    
-    const p = productsDB[currentProductIndex];
-    const floatCode = document.createElement('div');
-    floatCode.className = 'floating-data';
-    floatCode.innerText = p.code; 
-    
-    const bRect = barcode.getBoundingClientRect();
-    const wRect = wrap.getBoundingClientRect();
-    const scale = wRect.width / wrap.offsetWidth;
-    floatCode.style.left = ((bRect.left - wRect.left)/scale) + 'px';
-    floatCode.style.top = ((bRect.top - wRect.top)/scale) + 'px';
-    wrap.appendChild(floatCode);
-    setTimeout(() => floatCode.remove(), 600);
+    .monitor-screen::after {
+      content: 'SAMSUNG';
+      position: absolute;
+      bottom: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: #555;
+      font-size: 10px;
+      font-weight: bold;
+      letter-spacing: 2px;
+    }
 
-    setTimeout(() => {
-      playRegister();
-      const itemEl = document.createElement('div');
-      itemEl.className = 'pos-item';
-      itemEl.innerHTML = `
+    .monitor-stand {
+      width: 45px;
+      height: 45px;
+      background: linear-gradient(to right, #111, #333, #111);
+      box-shadow: inset 0 5px 10px rgba(0, 0, 0, 0.8);
+      border-left: 1px solid #444;
+      border-right: 1px solid #444;
+    }
+
+    .monitor-base {
+      width: 150px;
+      height: 12px;
+      background: linear-gradient(to bottom, #333, #111);
+      border-radius: 15px 15px 0 0;
+      border-top: 1px solid #555;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.9);
+    }
+
+    /* UI Layar Monitor */
+    .pos-ui {
+      width: 100%;
+      height: 100%;
+      background: #020617;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .pos-ui::before {
+      content: '';
+      position: absolute;
+      inset: -50%;
+      pointer-events: none;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, transparent 40%);
+    }
+
+    .pos-header {
+      background: #1e293b;
+      color: #38bdf8;
+      font-size: 0.75rem;
+      font-family: 'Share Tech Mono', monospace;
+      padding: 6px 8px;
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 2px solid #0f172a;
+      align-items: center;
+    }
+
+    .btn-clear {
+      background: #ef4444;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 2px 6px;
+      font-size: 0.6rem;
+      cursor: pointer;
+      font-weight: bold;
+      font-family: 'Inter', sans-serif;
+      transition: all 0.2s;
+    }
+
+    .btn-clear:hover {
+      background: #dc2626;
+    }
+
+    .btn-clear:active {
+      transform: scale(0.95);
+    }
+
+    .pos-list {
+      flex: 1;
+      padding: 5px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .pos-item {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 5px 8px;
+      border-radius: 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #e2e8f0;
+      font-size: 0.7rem;
+      animation: slideIn 0.2s ease-out forwards;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .item-meta {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .item-code {
+      font-family: 'Share Tech Mono', monospace;
+      color: #64748b;
+      font-size: 0.6rem;
+      margin-top: 2px;
+    }
+
+    .item-price {
+      font-family: 'Share Tech Mono', monospace;
+      font-weight: bold;
+      color: #fff;
+    }
+
+    .pos-total-area {
+      background: #000;
+      padding: 8px 10px;
+      border-top: 2px solid #1e293b;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .pos-total-lbl {
+      color: #64748b;
+      font-size: 0.7rem;
+      font-weight: bold;
+    }
+
+    .pos-total-val {
+      color: #22c55e;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+
+    /* --- PRODUK (Tengah) --- */
+    .product {
+      position: absolute;
+      left: 360px;
+      bottom: 120px;
+      width: 120px;
+      height: 180px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: margin 0.2s;
+      /* Menggunakan margin agar tidak bentrok dengan mix-blend-mode */
+    }
+
+    .product-img {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      mix-blend-mode: darken;
+      /* Menghilangkan background putih foto kaleng dengan sempurna */
+    }
+
+    .barcode {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 25px;
+      height: 45px;
+      background: #fff;
+      border-radius: 2px;
+      padding: 2px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      border: 1px solid #ccc;
+      z-index: 2;
+    }
+
+    .b-line {
+      background: #000;
+      height: 100%;
+    }
+
+    .barcode-lines {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      flex: 1;
+    }
+
+    .barcode-lines .b-line:nth-child(1) {
+      width: 4px;
+    }
+
+    .barcode-lines .b-line:nth-child(2) {
+      width: 1px;
+    }
+
+    .barcode-lines .b-line:nth-child(3) {
+      width: 5px;
+    }
+
+    .barcode-lines .b-line:nth-child(4) {
+      width: 2px;
+    }
+
+    .barcode-lines .b-line:nth-child(5) {
+      width: 1px;
+    }
+
+    .barcode-lines .b-line:nth-child(6) {
+      width: 4px;
+    }
+
+    .barcode-lines .b-line:nth-child(7) {
+      width: 2px;
+    }
+
+    .barcode-lines .b-line:nth-child(8) {
+      width: 5px;
+    }
+
+    .barcode-num {
+      font-size: 4px;
+      font-weight: bold;
+      font-family: 'Share Tech Mono', monospace;
+      margin-top: 1px;
+    }
+
+    /* Pantulan Sinar Merah di Kaleng */
+    .product.glow-red::after {
+      content: '';
+      position: absolute;
+      inset: -5px;
+      border-radius: 10px;
+      background: radial-gradient(ellipse at right center, rgba(239, 68, 68, 0.7) 0%, transparent 60%);
+      z-index: 4;
+      pointer-events: none;
+      mix-blend-mode: screen;
+    }
+
+    /* --- BAYANGAN MEJA (Dinasmis) --- */
+    .shadow-product {
+      position: absolute;
+      left: 360px;
+      bottom: 105px;
+      width: 120px;
+      height: 15px;
+      background: rgba(0, 0, 0, 0.6);
+      filter: blur(6px);
+      border-radius: 50%;
+      z-index: 10;
+      transition: margin 0.2s;
+      pointer-events: none;
+    }
+
+    .shadow-scanner {
+      position: absolute;
+      left: 680px;
+      bottom: 105px;
+      width: 140px;
+      height: 20px;
+      background: rgba(0, 0, 0, 0.5);
+      filter: blur(10px);
+      border-radius: 50%;
+      z-index: 10;
+      transition: transform 0.1s;
+      pointer-events: none;
+    }
+
+    /* --- SCANNER FOTO NYATA (Dengan Fix Kotak Putih / Mix-Blend-Mode) --- */
+    /* Elemen utama diberi mix-blend-mode agar menyatu langsung dengan latar belakang meja */
+    .scanner-gun {
+      position: absolute;
+      left: 640px;
+      top: 130px;
+      width: 220px;
+      height: 260px;
+      cursor: grab;
+      z-index: 50;
+      transition: transform 0.1s;
+      mix-blend-mode: darken;
+      /* Menghilangkan background putih foto dengan lebih baik */
+    }
+
+    .scanner-img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      pointer-events: none;
+      /* Kontras dinaikkan sedikit agar warna hitam pekat */
+      filter: contrast(1.1);
+      transform: rotate(50deg) scale(1.2);
+      /* Memutar gambar agar berdiri tegak */
+    }
+
+    .scanner-gun.dragging {
+      cursor: grabbing;
+    }
+
+    /* Wadah terpisah untuk laser agar tidak ikut transparan (tidak kena blend-mode multiply) */
+    .laser-container {
+      position: absolute;
+      left: 640px;
+      top: 130px;
+      width: 220px;
+      height: 260px;
+      z-index: 60;
+      transition: transform 0.1s;
+      pointer-events: none;
+    }
+
+    .laser-ray {
+      position: absolute;
+      left: -210px;
+      top: 76px;
+      width: 220px;
+      height: 3px;
+      background: #fff;
+      box-shadow: 0 0 15px 5px rgba(239, 68, 68, 1), 0 0 30px 10px rgba(239, 68, 68, 0.8);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.1s;
+      mask-image: linear-gradient(to right, transparent 0%, black 100%);
+      -webkit-mask-image: linear-gradient(to right, transparent 0%, black 100%);
+      z-index: 2;
+    }
+
+    .laser-cone {
+      position: absolute;
+      left: -160px;
+      top: -24px;
+      width: 170px;
+      height: 200px;
+      background: conic-gradient(from 255deg at right center, transparent 0deg, rgba(255, 0, 0, 0.8) 10deg, rgba(255, 0, 0, 0.8) 20deg, transparent 30deg);
+      mask-image: linear-gradient(to left, black 0%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to left, black 0%, transparent 100%);
+      filter: blur(2px);
+      pointer-events: none;
+      mix-blend-mode: screen;
+      z-index: 1;
+      animation: pulseCone 1.5s infinite alternate;
+    }
+
+    @keyframes pulseCone {
+      0% {
+        opacity: 0.5;
+      }
+
+      100% {
+        opacity: 1;
+      }
+    }
+
+    .laser-container.scanning .laser-ray {
+      opacity: 1;
+      box-shadow: 0 0 20px 10px rgba(255, 0, 0, 1);
+    }
+
+    .laser-container.scanning .laser-cone {
+      opacity: 1;
+      background: conic-gradient(from 255deg at right center, transparent 0deg, rgba(255, 0, 0, 1) 10deg, rgba(255, 0, 0, 1) 20deg, transparent 30deg);
+    }
+
+    /* Cahaya siaga (Standby Glow) di dalam kaca scanner */
+    .scanner-glow {
+      position: absolute;
+      left: 10px;
+      top: 60px;
+      width: 25px;
+      height: 35px;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, rgba(255, 0, 0, 0.8) 40%, transparent 80%);
+      border-radius: 50%;
+      box-shadow: 0 0 25px 10px rgba(255, 0, 0, 0.6);
+      opacity: 1;
+      pointer-events: none;
+      mix-blend-mode: screen;
+      animation: pulseGlow 1.5s infinite alternate;
+    }
+
+    @keyframes pulseGlow {
+      0% {
+        opacity: 0.7;
+        transform: scale(0.9);
+      }
+
+      100% {
+        opacity: 1;
+        transform: scale(1.1);
+      }
+    }
+
+    /* Lampu Indikator LED kecil di bagian atas alat */
+    .led-indicator {
+      position: absolute;
+      left: 90px;
+      top: 60px;
+      width: 6px;
+      height: 6px;
+      background: #22c55e;
+      border-radius: 50%;
+      box-shadow: 0 0 10px 3px rgba(34, 197, 94, 0.6);
+      animation: blinkLed 1.5s infinite;
+    }
+
+    @keyframes blinkLed {
+
+      0%,
+      45%,
+      55%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.2;
+      }
+    }
+
+    /* Efek Data Melayang */
+    .floating-data {
+      position: absolute;
+      color: #10b981;
+      font-family: 'Share Tech Mono', monospace;
+      font-weight: bold;
+      font-size: 1.2rem;
+      pointer-events: none;
+      z-index: 100;
+      text-shadow: 0 0 8px rgba(16, 185, 129, 0.8);
+      animation: dataFly 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    }
+
+    @keyframes dataFly {
+      0% {
+        transform: scale(0.5);
+        opacity: 0;
+      }
+
+      20% {
+        transform: translateY(-20px) scale(1.1);
+        opacity: 1;
+      }
+
+      100% {
+        transform: translate(-100px, -80px) scale(0.5);
+        opacity: 0;
+      }
+    }
+
+    /* Scrollbar POS */
+    .pos-list::-webkit-scrollbar {
+      width: 3px;
+    }
+
+    .pos-list::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .pos-list::-webkit-scrollbar-thumb {
+      background: #334155;
+    }
+
+    /* --- RESPONSIVE MOBILE (Portrait Mode) --- */
+    @media (max-width: 650px) {
+      .wrap {
+        width: 100% !important;
+        height: 100% !important;
+        border-radius: 0 !important;
+        border: none !important;
+        transform: none !important;
+      }
+
+      .counter-desk {
+        height: 180px !important;
+        z-index: auto !important;
+      }
+
+      .header {
+        padding: 10px 15px !important;
+      }
+
+      .header h2 {
+        font-size: 0.85rem !important;
+      }
+
+      .btn-auto {
+        padding: 6px 12px !important;
+        font-size: 0.75rem !important;
+      }
+
+      .monitor-group {
+        left: 50% !important;
+        bottom: auto !important;
+        top: 80px !important;
+        transform: translateX(-50%) scale(0.65) !important;
+        transform-origin: top center !important;
+      }
+
+      .product {
+        left: 20px !important;
+        bottom: 50px !important;
+        width: 80px !important;
+        height: 120px !important;
+      }
+
+      .barcode {
+        width: 15px !important;
+        height: 25px !important;
+        right: 4px !important;
+        padding: 2px !important;
+      }
+
+      .barcode-num {
+        display: none !important;
+      }
+
+      .shadow-product {
+        left: 20px !important;
+        bottom: 40px !important;
+        width: 80px !important;
+        height: 10px !important;
+      }
+
+      .scanner-gun,
+      .laser-container {
+        left: 200px !important;
+        top: auto !important;
+        bottom: 40px !important;
+        transform: scale(0.65);
+        transform-origin: bottom center !important;
+      }
+
+      .shadow-scanner {
+        left: 220px !important;
+        bottom: 30px !important;
+        width: 100px !important;
+        height: 15px !important;
+      }
+
+      .drag-hint {
+        bottom: 15px !important;
+        font-size: 0.75rem !important;
+        padding: 6px 15px !important;
+        white-space: nowrap !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="wrap" id="wrap">
+    <!-- Latar Belakang & Meja -->
+    <div class="bg-blur"></div>
+    <div class="counter-desk"></div>
+
+    <!-- Header -->
+    <div class="header">
+      <h2><span style="font-size: 1.4rem;">🔫</span> Simulasi Scanner Asli (Motorola LS2208)</h2>
+      <button class="btn-auto" id="btnAuto" onclick="toggleAuto()">▶ Auto Play</button>
+    </div>
+
+    <div class="drag-hint" id="dragHint">Geser Scanner ke arah Barcode!</div>
+
+    <!-- Monitor Komputer (CSS Realistis) -->
+    <div class="monitor-group">
+      <div class="monitor-screen">
+        <div class="pos-ui">
+          <div class="pos-header">
+            <span>SMART-POS V.8</span>
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <button id="btnClear" class="btn-clear">Reset</button>
+              <span id="pos-time">10:00</span>
+            </div>
+          </div>
+          <div class="pos-list" id="posList"></div>
+          <div class="pos-total-area">
+            <span class="pos-total-lbl">TOTAL HARGA</span>
+            <span class="pos-total-val" id="totalPrice">Rp 0</span>
+          </div>
+        </div>
+      </div>
+      <div class="monitor-stand"></div>
+      <div class="monitor-base"></div>
+    </div>
+
+    <!-- Bayangan -->
+    <div class="shadow-product" id="shadowProduct"></div>
+    <div class="shadow-scanner" id="shadowScanner"></div>
+
+    <!-- Produk Kaleng Realistis -->
+    <div class="product" id="product">
+      <img src="" class="product-img" id="productImg" alt="Produk">
+      <div class="barcode" id="barcode">
+        <div class="barcode-lines">
+          <div class="b-line"></div>
+          <div class="b-line"></div>
+          <div class="b-line"></div>
+          <div class="b-line"></div>
+          <div class="b-line"></div>
+          <div class="b-line"></div>
+          <div class="b-line"></div>
+          <div class="b-line"></div>
+        </div>
+        <div class="barcode-num">89912345</div>
+      </div>
+    </div>
+
+    <!-- Alat Scanner Foto Asli -->
+    <!-- Layer 1: Gambar Scanner dipisah agar blend-mode multiply sempurna menghapus background putih -->
+    <div class="scanner-gun" id="scanner">
+      <img src="scanner_nyata.png" class="scanner-img" alt="Motorola Scanner">
+    </div>
+
+    <!-- Layer 2: Sinar Laser dipisah agar warna merah tidak ikut transparan -->
+    <div class="laser-container" id="laserContainer">
+      <div class="scanner-glow"></div>
+      <div class="led-indicator"></div>
+      <div class="laser-cone"></div>
+      <div class="laser-ray" id="laserRay"></div>
+    </div>
+
+  </div>
+
+  <script>
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    function playBeep() {
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      const o = audioCtx.createOscillator();
+      const g = audioCtx.createGain();
+      o.type = 'sine'; o.frequency.setValueAtTime(2500, audioCtx.currentTime);
+      g.gain.setValueAtTime(0.1, audioCtx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.1);
+      o.connect(g); g.connect(audioCtx.destination);
+      o.start(); o.stop(audioCtx.currentTime + 0.1);
+    }
+
+    function playRegister() {
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      const osc1 = audioCtx.createOscillator();
+      const osc2 = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+
+      osc1.type = 'square'; osc2.type = 'triangle';
+      osc1.frequency.setValueAtTime(3000, audioCtx.currentTime);
+      osc1.frequency.exponentialRampToValueAtTime(1000, audioCtx.currentTime + 0.15);
+      osc2.frequency.setValueAtTime(4000, audioCtx.currentTime);
+      osc2.frequency.exponentialRampToValueAtTime(2000, audioCtx.currentTime + 0.2);
+
+      gain.gain.setValueAtTime(0, audioCtx.currentTime);
+      gain.gain.linearRampToValueAtTime(0.05, audioCtx.currentTime + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
+
+      osc1.connect(gain); osc2.connect(gain); gain.connect(audioCtx.destination);
+      osc1.start(); osc2.start();
+      osc1.stop(audioCtx.currentTime + 0.3); osc2.stop(audioCtx.currentTime + 0.3);
+    }
+
+    const scanner = document.getElementById('scanner');
+    const laserCont = document.getElementById('laserContainer');
+    const product = document.getElementById('product');
+    const shadowProduct = document.getElementById('shadowProduct');
+    const shadowScanner = document.getElementById('shadowScanner');
+    const barcode = document.getElementById('barcode');
+    const posList = document.getElementById('posList');
+    const totalPriceEl = document.getElementById('totalPrice');
+    const dragHint = document.getElementById('dragHint');
+    const wrap = document.getElementById('wrap');
+
+    let isDragging = false;
+    let startX = 0, startY = 0, currentX = 0, currentY = 0;
+    let hasScannedThisPass = false, total = 0, scanCooldown = false;
+    let isAuto = false, autoTimer = null, autoInterval = null;
+
+    const productsDB = [
+      { name: "Coca Cola Kaleng", price: 8500, code: "89910001", img: "can_cola_1777576462082.png" },
+      { name: "Sprite Refresh", price: 8000, code: "89910002", img: "can_sprite_1777576494938.png" },
+      { name: "Fanta Orange", price: 8000, code: "89910003", img: "can_fanta_1777576512176.png" },
+      { name: "Pepsi Blue", price: 9000, code: "89910004", img: "can_pepsi_1777576801098.png" },
+      { name: "Monster Energy", price: 25500, code: "89910005", img: "can_monster_1777576822738.png" }
+    ];
+    let currentProductIndex = 0;
+
+    function loadProduct(idx) {
+      const p = productsDB[idx];
+      document.getElementById('productImg').src = p.img;
+      document.querySelector('.barcode-num').innerText = p.code;
+    }
+    loadProduct(0);
+
+    setInterval(() => {
+      const d = new Date();
+      document.getElementById('pos-time').innerText = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }, 1000);
+
+    function updateScale() {
+      const w = window.innerWidth;
+      const padding = 20;
+      const targetW = 800;
+      if (w <= 650) {
+        wrap.style.transform = 'none';
+        wrap.style.width = '100%';
+        wrap.style.height = '100%';
+      } else {
+        wrap.style.width = '800px';
+        wrap.style.height = '500px';
+        if (w < targetW + padding) {
+          wrap.style.transform = `scale(${(w - padding) / targetW})`;
+        } else {
+          wrap.style.transform = 'scale(1)';
+        }
+      }
+    }
+    window.addEventListener('resize', updateScale);
+    updateScale();
+
+    function formatRp(num) {
+      return 'Rp ' + num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    }
+
+    function triggerScan() {
+      if (hasScannedThisPass || scanCooldown) return;
+      hasScannedThisPass = true; scanCooldown = true;
+      dragHint.style.display = 'none';
+
+      laserCont.classList.add('scanning');
+      product.classList.add('glow-red');
+      playBeep();
+
+      const p = productsDB[currentProductIndex];
+      const floatCode = document.createElement('div');
+      floatCode.className = 'floating-data';
+      floatCode.innerText = p.code;
+
+      const bRect = barcode.getBoundingClientRect();
+      const wRect = wrap.getBoundingClientRect();
+      const scale = wRect.width / wrap.offsetWidth;
+      floatCode.style.left = ((bRect.left - wRect.left) / scale) + 'px';
+      floatCode.style.top = ((bRect.top - wRect.top) / scale) + 'px';
+      wrap.appendChild(floatCode);
+      setTimeout(() => floatCode.remove(), 600);
+
+      setTimeout(() => {
+        playRegister();
+        const itemEl = document.createElement('div');
+        itemEl.className = 'pos-item';
+        itemEl.innerHTML = `
         <div class="item-meta">
           <span>${p.name}</span>
           <span class="item-code">[${p.code}]</span>
         </div>
         <div class="item-price">${formatRp(p.price)}</div>
       `;
-      posList.appendChild(itemEl);
-      posList.scrollTop = posList.scrollHeight;
-      
-      total += p.price;
-      totalPriceEl.innerText = formatRp(total);
-      totalPriceEl.style.color = '#fff';
-      setTimeout(() => totalPriceEl.style.color = '#22c55e', 200);
-      
-      currentProductIndex = (currentProductIndex + 1) % productsDB.length;
-      loadProduct(currentProductIndex);
-      
-      product.style.marginLeft = "-10px";
-      shadowProduct.style.marginLeft = "-10px";
+        posList.appendChild(itemEl);
+        posList.scrollTop = posList.scrollHeight;
+
+        total += p.price;
+        totalPriceEl.innerText = formatRp(total);
+        totalPriceEl.style.color = '#fff';
+        setTimeout(() => totalPriceEl.style.color = '#22c55e', 200);
+
+        currentProductIndex = (currentProductIndex + 1) % productsDB.length;
+        loadProduct(currentProductIndex);
+
+        product.style.marginLeft = "-10px";
+        shadowProduct.style.marginLeft = "-10px";
+        setTimeout(() => {
+          product.style.marginLeft = "0px";
+          shadowProduct.style.marginLeft = "0px";
+        }, 150);
+
+      }, 200);
+
       setTimeout(() => {
-        product.style.marginLeft = "0px";
-        shadowProduct.style.marginLeft = "0px";
+        laserCont.classList.remove('scanning');
+        product.classList.remove('glow-red');
       }, 150);
-      
-    }, 200);
-
-    setTimeout(() => {
-      laserCont.classList.remove('scanning');
-      product.classList.remove('glow-red');
-    }, 150);
-    setTimeout(() => { scanCooldown = false; }, 800);
-  }
-
-  function checkCollision() {
-    const sRect = scanner.getBoundingClientRect();
-    const bRect = barcode.getBoundingClientRect();
-    const scannerNoseX = sRect.left + (sRect.width * 0.1);
-    const scannerNoseY = sRect.top + (sRect.height * 0.3);
-    const distanceX = scannerNoseX - bRect.right;
-    
-    const isMobile = window.innerWidth <= 650;
-    const triggerDist = isMobile ? 110 : 150;
-    const resetDist = isMobile ? 130 : 160;
-    
-    if (distanceX > -50 && distanceX < triggerDist && scannerNoseY < bRect.bottom + 60 && scannerNoseY > bRect.top - 60) {
-      triggerScan();
-    } else {
-      if(distanceX > resetDist) hasScannedThisPass = false;
+      setTimeout(() => { scanCooldown = false; }, 800);
     }
-  }
 
-  let collisionLoop;
+    function checkCollision() {
+      const sRect = scanner.getBoundingClientRect();
+      const bRect = barcode.getBoundingClientRect();
+      const scannerNoseX = sRect.left + (sRect.width * 0.1);
+      const scannerNoseY = sRect.top + (sRect.height * 0.3);
+      const distanceX = scannerNoseX - bRect.right;
 
-  scanner.addEventListener('mousedown', startDrag);
-  scanner.addEventListener('touchstart', startDrag, {passive: false});
+      const isMobile = window.innerWidth <= 650;
+      const triggerDist = isMobile ? 110 : 150;
+      const resetDist = isMobile ? 130 : 160;
 
-  function startDrag(e) {
-    if (isAuto) return;
-    isDragging = true;
-    scanner.classList.add('dragging');
-    const clientX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
-    const clientY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
-    
-    const rect = wrap.getBoundingClientRect();
-    const scale = rect.width / wrap.offsetWidth;
-    startX = (clientX / scale) - currentX;
-    startY = (clientY / scale) - currentY;
-    
-    document.addEventListener('mousemove', drag);
-    document.addEventListener('touchmove', drag, {passive: false});
-    document.addEventListener('mouseup', endDrag);
-    document.addEventListener('touchend', endDrag);
-    
-    collisionLoop = setInterval(checkCollision, 50);
-  }
+      if (distanceX > -50 && distanceX < triggerDist && scannerNoseY < bRect.bottom + 60 && scannerNoseY > bRect.top - 60) {
+        triggerScan();
+      } else {
+        if (distanceX > resetDist) hasScannedThisPass = false;
+      }
+    }
 
-  function drag(e) {
-    if (!isDragging) return;
-    e.preventDefault();
-    const clientX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
-    const clientY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
-    
-    const rect = wrap.getBoundingClientRect();
-    const scale = rect.width / wrap.offsetWidth;
-    currentX = (clientX / scale) - startX;
-    currentY = (clientY / scale) - startY;
-    
-    currentX = Math.max(-200, Math.min(100, currentX));
-    currentY = Math.max(-100, Math.min(150, currentY));
-    
-    const baseS = window.innerWidth <= 650 ? 0.65 : 1;
-    const transformStyle = `translate(${currentX}px, ${currentY}px) scale(${baseS * 1.02}) rotate(-5deg)`;
-    scanner.style.transform = transformStyle;
-    laserCont.style.transform = transformStyle;
-    shadowScanner.style.transform = `translate(${currentX}px, ${currentY}px)`;
-  }
+    let collisionLoop;
 
-  function endDrag() {
-    isDragging = false;
-    scanner.classList.remove('dragging');
-    document.removeEventListener('mousemove', drag);
-    document.removeEventListener('touchmove', drag);
-    document.removeEventListener('mouseup', endDrag);
-    document.removeEventListener('touchend', endDrag);
-    
-    const baseS = window.innerWidth <= 650 ? 0.65 : 1;
-    const transformStyle = `translate(${currentX}px, ${currentY}px) scale(${baseS}) rotate(0deg)`;
-    scanner.style.transform = transformStyle;
-    laserCont.style.transform = transformStyle;
-    shadowScanner.style.transform = `translate(${currentX}px, ${currentY}px)`;
-    
-    clearInterval(collisionLoop);
-  }
+    scanner.addEventListener('mousedown', startDrag);
+    scanner.addEventListener('touchstart', startDrag, { passive: false });
 
-  function toggleAuto() {
-    const btn = document.getElementById('btnAuto');
-    if (isAuto) {
-      isAuto = false;
-      btn.innerText = '▶ Auto Play';
-      btn.classList.remove('active');
-      clearInterval(autoInterval);
-      clearTimeout(autoTimer);
-      clearInterval(collisionLoop);
-      currentX = 0; currentY = 0;
-      scanner.style.transition = 'transform 0.5s ease-out';
-      laserCont.style.transition = 'transform 0.5s ease-out';
-      const baseS = window.innerWidth <= 650 ? 0.65 : 1;
-      scanner.style.transform = `translate(0px, 0px) scale(${baseS})`;
-      laserCont.style.transform = `translate(0px, 0px) scale(${baseS})`;
-      shadowScanner.style.transform = `translate(0px, 0px)`;
-      setTimeout(() => {
-        scanner.style.transition = 'transform 0.1s';
-        laserCont.style.transition = 'transform 0.1s';
-        shadowScanner.style.transition = 'transform 0.1s';
-      }, 500);
-    } else {
-      isAuto = true;
-      btn.innerText = '⏹ Stop Auto';
-      btn.classList.add('active');
-      dragHint.style.display = 'none';
-      
+    function startDrag(e) {
+      if (isAuto) return;
+      isDragging = true;
+      scanner.classList.add('dragging');
+      const clientX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+      const clientY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
+
+      const rect = wrap.getBoundingClientRect();
+      const scale = rect.width / wrap.offsetWidth;
+      startX = (clientX / scale) - currentX;
+      startY = (clientY / scale) - currentY;
+
+      document.addEventListener('mousemove', drag);
+      document.addEventListener('touchmove', drag, { passive: false });
+      document.addEventListener('mouseup', endDrag);
+      document.addEventListener('touchend', endDrag);
+
       collisionLoop = setInterval(checkCollision, 50);
-      
-      const playAnim = () => {
-        if (!isAuto) return;
-        scanner.style.transition = 'transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1)';
-        laserCont.style.transition = 'transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1)';
-        shadowScanner.style.transition = 'transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1)';
-        currentX = -50; 
-        const baseS = window.innerWidth <= 650 ? 0.65 : 1;
-        const animState1 = `translate(${currentX}px, 20px) scale(${baseS * 1.05}) rotate(-16deg)`;
-        scanner.style.transform = animState1;
-        laserCont.style.transform = animState1;
-        shadowScanner.style.transform = `translate(${currentX}px, 0px)`;
-        
-        autoTimer = setTimeout(() => {
-          if (!isAuto) return;
-          scanner.style.transition = 'transform 1s ease-in-out';
-          laserCont.style.transition = 'transform 1s ease-in-out';
-          shadowScanner.style.transition = 'transform 1s ease-in-out';
-          currentX = 0;
-          const animState2 = `translate(${currentX}px, 0px) scale(${baseS}) rotate(0deg)`;
-          scanner.style.transform = animState2;
-          laserCont.style.transform = animState2;
-          shadowScanner.style.transform = `translate(${currentX}px, 0px)`;
-        }, 1200);
-      };
-      
-      playAnim();
-      autoInterval = setInterval(playAnim, 3000);
     }
-  }
 
-  // Clear button logic
-  const btnClear = document.getElementById('btnClear');
-  if(btnClear) {
-    btnClear.addEventListener('click', () => {
-      posList.innerHTML = '';
-      total = 0;
-      totalPriceEl.innerText = 'Rp 0';
-      totalPriceEl.style.color = '#10b981';
-    });
-  }
+    function drag(e) {
+      if (!isDragging) return;
+      e.preventDefault();
+      const clientX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+      const clientY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
 
-</script>
+      const rect = wrap.getBoundingClientRect();
+      const scale = rect.width / wrap.offsetWidth;
+      currentX = (clientX / scale) - startX;
+      currentY = (clientY / scale) - startY;
+
+      currentX = Math.max(-200, Math.min(100, currentX));
+      currentY = Math.max(-100, Math.min(150, currentY));
+
+      const baseS = window.innerWidth <= 650 ? 0.65 : 1;
+      const transformStyle = `translate(${currentX}px, ${currentY}px) scale(${baseS * 1.02}) rotate(-5deg)`;
+      scanner.style.transform = transformStyle;
+      laserCont.style.transform = transformStyle;
+      shadowScanner.style.transform = `translate(${currentX}px, ${currentY}px)`;
+    }
+
+    function endDrag() {
+      isDragging = false;
+      scanner.classList.remove('dragging');
+      document.removeEventListener('mousemove', drag);
+      document.removeEventListener('touchmove', drag);
+      document.removeEventListener('mouseup', endDrag);
+      document.removeEventListener('touchend', endDrag);
+
+      const baseS = window.innerWidth <= 650 ? 0.65 : 1;
+      const transformStyle = `translate(${currentX}px, ${currentY}px) scale(${baseS}) rotate(0deg)`;
+      scanner.style.transform = transformStyle;
+      laserCont.style.transform = transformStyle;
+      shadowScanner.style.transform = `translate(${currentX}px, ${currentY}px)`;
+
+      clearInterval(collisionLoop);
+    }
+
+    function toggleAuto() {
+      const btn = document.getElementById('btnAuto');
+      if (isAuto) {
+        isAuto = false;
+        btn.innerText = '▶ Auto Play';
+        btn.classList.remove('active');
+        clearInterval(autoInterval);
+        clearTimeout(autoTimer);
+        clearInterval(collisionLoop);
+        currentX = 0; currentY = 0;
+        scanner.style.transition = 'transform 0.5s ease-out';
+        laserCont.style.transition = 'transform 0.5s ease-out';
+        const baseS = window.innerWidth <= 650 ? 0.65 : 1;
+        scanner.style.transform = `translate(0px, 0px) scale(${baseS})`;
+        laserCont.style.transform = `translate(0px, 0px) scale(${baseS})`;
+        shadowScanner.style.transform = `translate(0px, 0px)`;
+        setTimeout(() => {
+          scanner.style.transition = 'transform 0.1s';
+          laserCont.style.transition = 'transform 0.1s';
+          shadowScanner.style.transition = 'transform 0.1s';
+        }, 500);
+      } else {
+        isAuto = true;
+        btn.innerText = '⏹ Stop Auto';
+        btn.classList.add('active');
+        dragHint.style.display = 'none';
+
+        collisionLoop = setInterval(checkCollision, 50);
+
+        const playAnim = () => {
+          if (!isAuto) return;
+          scanner.style.transition = 'transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1)';
+          laserCont.style.transition = 'transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1)';
+          shadowScanner.style.transition = 'transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1)';
+          currentX = -50;
+          const baseS = window.innerWidth <= 650 ? 0.65 : 1;
+          const animState1 = `translate(${currentX}px, 20px) scale(${baseS * 1.05}) rotate(-16deg)`;
+          scanner.style.transform = animState1;
+          laserCont.style.transform = animState1;
+          shadowScanner.style.transform = `translate(${currentX}px, 0px)`;
+
+          autoTimer = setTimeout(() => {
+            if (!isAuto) return;
+            scanner.style.transition = 'transform 1s ease-in-out';
+            laserCont.style.transition = 'transform 1s ease-in-out';
+            shadowScanner.style.transition = 'transform 1s ease-in-out';
+            currentX = 0;
+            const animState2 = `translate(${currentX}px, 0px) scale(${baseS}) rotate(0deg)`;
+            scanner.style.transform = animState2;
+            laserCont.style.transform = animState2;
+            shadowScanner.style.transform = `translate(${currentX}px, 0px)`;
+          }, 1200);
+        };
+
+        playAnim();
+        autoInterval = setInterval(playAnim, 3000);
+      }
+    }
+
+    // Clear button logic
+    const btnClear = document.getElementById('btnClear');
+    if (btnClear) {
+      btnClear.addEventListener('click', () => {
+        posList.innerHTML = '';
+        total = 0;
+        totalPriceEl.innerText = 'Rp 0';
+        totalPriceEl.style.color = '#10b981';
+      });
+    }
+
+  </script>
 </body>
+
 </html>
