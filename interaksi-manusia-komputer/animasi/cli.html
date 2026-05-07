@@ -3,344 +3,349 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>CLI Simulator - Masterpiece Edition</title>
+    <title>CLI Simulator - Mobile Input Fix</title>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --neon-green: #33ff33;
-            --neon-blue: #38bdf8;
-            --bg-dark: #0f172a;
-            --window-bg: #111111;
-            --sidebar-bg: rgba(30, 41, 59, 0.7);
-        }
-
+        /* RESET */
         * { box-sizing: border-box; }
         body {
-            margin: 0; padding: 10px; /* Padding for mobile edges */
-            background: var(--bg-dark);
-            background-image: radial-gradient(circle at 50% 50%, #1e293b 0%, #0f172a 100%);
-            height: 100vh; display: flex; align-items: center; justify-content: center;
-            font-family: 'Segoe UI', sans-serif; overflow: hidden;
+            margin: 0; padding: 0;
+            background: #e2e8f0;
+            height: 100vh; height: 100vh;
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Segoe UI', sans-serif;
+            overflow: hidden;
         }
 
-        /* WINDOW WITH FOCUS GLOW */
+        /* WINDOW */
         .app-window {
-            width: 100%; max-width: 1100px; height: 92vh; background-color: var(--window-bg);
-            border-radius: 15px; box-shadow: 0 30px 70px rgba(0,0,0,0.8);
-            display: flex; flex-direction: column; border: 1px solid #334155;
-            position: relative; overflow: hidden; transition: box-shadow 0.4s, border-color 0.4s;
-        }
-        .app-window.focused {
-            border-color: var(--neon-blue);
-            box-shadow: 0 0 40px rgba(56, 189, 248, 0.2), 0 30px 70px rgba(0,0,0,0.8);
+            width: 95%; max-width: 1000px; height: 90vh;
+            background-color: #1e1e1e;
+            border-radius: 8px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            display: flex; flex-direction: column;
+            border: 1px solid #333;
+            text-align: left; 
+            position: relative;
         }
 
         /* HEADER */
         .title-bar {
-            background-color: #1e293b; height: 40px; display: flex; align-items: center;
-            padding: 0 15px; font-size: 13px; color: #94a3b8; border-bottom: 1px solid #000;
+            background-color: #252526; height: 35px;
+            display: flex; align-items: center; padding: 0 15px;
+            font-size: 13px; color: #ccc; border-bottom: 1px solid #111;
             flex-shrink: 0; user-select: none;
         }
         .dots { display: flex; gap: 8px; margin-right: 15px; }
         .dot { width: 12px; height: 12px; border-radius: 50%; }
         .red { background: #ff5f56; } .yellow { background: #ffbd2e; } .green { background: #27c93f; }
-        
-        .main-area { display: flex; flex: 1; height: 100%; overflow: hidden; position: relative; }
-        
-        /* TERMINAL */
-        .terminal-container {
-            flex: 3; background-color: #050505; padding: 25px;
-            font-family: 'JetBrains Mono', monospace; font-size: 15px;
-            color: var(--neon-green); overflow-y: auto; overflow-x: auto;
-            position: relative; cursor: text; -webkit-overflow-scrolling: touch;
-        }
-        
-        /* CRT SCANLINES */
-        .terminal-container::after {
-            content: ""; display: block; position: absolute; top: 0; left: 0; bottom: 0; right: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), 
-                        linear-gradient(90deg, rgba(255, 0, 0, 0.02), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.02));
-            z-index: 2; background-size: 100% 3px, 3px 100%; pointer-events: none; opacity: 0.5;
-        }
-        .terminal-container { text-shadow: 0 0 5px rgba(51, 255, 51, 0.5); animation: flicker 0.2s infinite; }
-        @keyframes flicker { 0% { opacity: 0.99; } 50% { opacity: 1; } 100% { opacity: 0.99; } }
 
-        .line { margin-bottom: 5px; opacity: 0; animation: fadeIn 0.1s forwards; white-space: pre; }
-        @keyframes fadeIn { to { opacity: 1; } }
+        /* MAIN AREA */
+        .main-area { 
+            display: flex; 
+            flex: 1; 
+            height: 100%; 
+            overflow: hidden; 
+            position: relative;
+        }
+
+        /* TERMINAL CONTAINER */
+        .terminal-container {
+            flex: 3; 
+            background-color: #0e0e0e; 
+            padding: 15px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            color: #d4d4d4;
+            overflow-y: auto; 
+            overflow-x: auto; /* Scroll Horizontal Aktif */
+            white-space: nowrap; 
+            display: block; 
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* Scrollbar Styling */
+        .terminal-container::-webkit-scrollbar { width: 8px; height: 8px; }
+        .terminal-container::-webkit-scrollbar-track { background: #1e1e1e; }
+        .terminal-container::-webkit-scrollbar-thumb { background: #444; border-radius: 4px; }
+
+        /* LINE & INPUT */
+        .line { margin-bottom: 2px; display: block; }
+        #currentLine { display: flex; align-items: center; margin-top: 5px; }
         
-        #currentLine { display: flex; align-items: center; margin-top: 10px; }
-        .prompt { color: var(--neon-green); margin-right: 10px; font-weight: bold; opacity: 0.8; }
+        .prompt { color: #d4d4d4; margin-right: 5px; }
+        .dir-blue { color: #569cd6; font-weight: bold; }
+        .file-white { color: #ce9178; }
+        .cmd-text { color: #dcdcaa; }
+
         .cursor {
-            display: inline-block; width: 10px; height: 18px; background: var(--neon-green);
+            display: inline-block; width: 8px; height: 16px; background: #d4d4d4;
             animation: blink 1s step-end infinite; vertical-align: middle;
-            box-shadow: 0 0 10px var(--neon-green);
         }
         @keyframes blink { 50% { opacity: 0; } }
 
-        /* SIDEBAR GLASSMORPHISM */
+        /* SIDEBAR DEFAULT */
         .sidebar {
-            flex: 1; background: var(--sidebar-bg); backdrop-filter: blur(12px);
-            border-left: 1px solid rgba(255, 255, 255, 0.1);
-            display: flex; flex-direction: column; min-width: 250px;
+            flex: 1; background-color: #252526; border-left: 1px solid #333;
+            display: flex; flex-direction: column; text-align: left;
+            min-width: 200px;
         }
-        .sidebar-header { 
-            padding: 18px; font-weight: bold; color: var(--neon-blue); 
-            background: rgba(0,0,0,0.2); font-size: 12px; 
-            text-transform: uppercase; letter-spacing: 2px;
+        .sidebar-header {
+            padding: 15px; font-weight: bold; color: #fff; background: #333;
+            font-size: 12px; text-transform: uppercase;
         }
-        .cmd-list { padding: 15px; overflow-y: auto; }
+        .cmd-list { padding: 10px; overflow-y: auto; }
         .cmd-item {
-            background: rgba(255, 255, 255, 0.05); margin-bottom: 15px; padding: 15px;
-            border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1); 
-            cursor: pointer; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            display: flex; align-items: center; gap: 12px;
+            background: #2d2d2d; margin-bottom: 10px; padding: 12px;
+            border-radius: 4px; border-left: 3px solid #555;
+            cursor: pointer; transition: 0.2s; user-select: none;
         }
-        .cmd-item:hover { 
-            background: rgba(56, 189, 248, 0.15); 
-            border-color: var(--neon-blue); transform: translateX(8px);
-        }
-        .cmd-icon { font-size: 1.5rem; }
-        .cmd-info { display: flex; flex-direction: column; }
-        .code-pill { 
-            color: var(--neon-blue); font-size: 14px; font-weight: bold; 
-            font-family: 'JetBrains Mono', monospace; 
-        }
-        .desc { font-size: 11px; color: #94a3b8; }
-
-        #cliHiddenForm { position: absolute; width: 0; height: 0; opacity: 0; pointer-events: none; }
+        .cmd-item:hover { background: #383838; border-left-color: #007acc; }
+        .cmd-item:active { background: #505050; }
         
-        #bootScreen {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: #000; z-index: 100; padding: 30px; font-family: 'JetBrains Mono', monospace;
-            font-size: 14px; color: var(--neon-green); display: flex; flex-direction: column;
+        .code-pill {
+            display: inline-block; background: #000; color: #4ec9b0;
+            padding: 3px 8px; border-radius: 4px; font-size: 13px;
+            font-weight: bold; font-family: 'JetBrains Mono', monospace; margin-bottom: 5px;
         }
+        .desc { font-size: 11px; color: #aaa; }
 
-        .master-table { border-collapse: collapse; margin: 10px 0; color: var(--neon-green); }
-        .master-table td { padding: 4px 15px 4px 0; }
-        .dir-blue { color: var(--neon-blue); font-weight: bold; }
+        /* FORM HIDDEN (PENTING BUAT HP) */
+        #cmdForm {
+            position: fixed; top: 0; left: 0; width: 1px; height: 1px; opacity: 0; z-index: -1;
+        }
+        
+        /* TABLE DEFAULT DESKTOP */
+        .master-table {
+            border-collapse: collapse;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            color: #d4d4d4;
+            margin-top: 5px;
+            width: auto;
+            table-layout: fixed;
+        }
+        .master-table td { padding: 2px 0; vertical-align: top; }
+        
+        .col-1 { width: 100px; } 
+        .col-2 { width: 100px; text-align: right; padding-right: 15px; } 
+        .col-3 { width: 120px; text-align: right; }
+        .col-4 { width: 30px; }
+        .col-5 { width: auto; min-width: 150px; }
 
-        @media screen and (max-width: 768px) {
-            body { padding: 5px; }
-            .app-window { height: 98vh; border-radius: 10px; }
-            .main-area { flex-direction: column; }
-            .terminal-container { flex: 1; padding: 15px; font-size: 13px; }
-            .sidebar { flex: none; width: 100%; height: 110px; min-width: unset; }
+
+        /* =========================================
+           RESPONSIVE MOBILE
+           ========================================= */
+           @media screen and (max-width: 768px) {
+               body {
+                display: flex; align-items: center; justify-content: center;
+               }
+               .app-window { 
+                    margin-top: 4em;
+                   width: 100%;
+                   height: 400px;
+                   border: none;
+                   border-radius: 0;
+                transform: scale(0.8);
+                transform-origin: top center;
+            }
+            .main-area { 
+                flex-direction: column;
+            }
+            
+            .terminal-container {
+                /* max-height: 70%; */
+                flex: 1; width: 100%; padding: 10px; padding-bottom: 20px;
+                font-size: 11px;
+            }
+            
+            .sidebar {
+                flex: none; height: auto; border-left: none; border-top: 1px solid #333; width: 100%;
+            }
             .sidebar-header { display: none; }
-            .cmd-list { 
-                display: flex; flex-direction: row; overflow-x: auto; 
-                padding: 10px; gap: 12px; height: 100%; align-items: center;
-                scrollbar-width: none; /* Hide scrollbar for clean look */
+            
+            .cmd-list {
+                display: flex; flex-direction: row; overflow-x: auto;
+                padding: 10px; gap: 10px; background: #1e1e1e;
             }
-            .cmd-list::-webkit-scrollbar { display: none; }
-            .cmd-item { 
-                margin-bottom: 0; min-width: 140px; height: 80px;
-                flex-shrink: 0; padding: 10px; justify-content: center;
-                flex-direction: column; text-align: center; gap: 5px;
+
+            .cmd-item {
+                margin-bottom: 0; min-width: 90px;
+                display: flex; flex-direction: column; align-items: center; justify-content: center;
+                text-align: center; border-left: none; border-bottom: 3px solid #555;
+                padding: 8px;
             }
-            .cmd-item:hover { transform: translateY(-5px); }
-            .cmd-icon { font-size: 1.2rem; }
+            
+            /* TABEL MOBILE */
+            .master-table { font-size: 11px; }
+            .col-1 { width: 75px; } 
+            .col-2 { width: 45px; padding-right: 5px; } 
+            .col-3 { width: 70px; } 
+            .col-4 { width: 15px; } 
+            .col-5 { width: auto; }
         }
+
     </style>
 </head>
 <body>
 
-    <div class="app-window" id="appWindow">
+    <div class="app-window">
         <div class="title-bar">
             <div class="dots"><div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div></div>
-            <span style="margin-left: 10px; font-weight: 700; letter-spacing: 0.5px;">SYSTEM TERMINAL v2.0</span>
+            <span style="margin-left: 10px;">Admin: CMD</span>
         </div>
 
-        <div class="main-area">
-            <div class="terminal-container" id="terminalContainer" onclick="focusCLIInput()">
-                <div id="bootScreen"></div>
-                <div id="cliOutput">
-                    <div class="line">Initializing Microsoft Windows...</div>
-                    <div class="line">Kernel Build 19045.3693 [Stable]</div>
-                    <div class="line">Secure link established.</div>
+        <div class="main-area" id="bruh">
+            <div class="terminal-container" id="terminal" onclick="focusInput()">
+                <div id="output">
+                    <div class="line">Microsoft Windows [Version 10.0.19045]</div>
+                    <div class="line">(c) Microsoft Corporation.</div>
                     <div class="line"><br></div>
                 </div>
                 
                 <div class="line" id="currentLine">
-                    <span class="prompt">C:\Users\Admin></span>
-                    <span id="cliTypedText" style="color: #fff; text-shadow: 0 0 8px #fff;"></span><span class="cursor"></span>
+                    <span class="prompt">C:\Users\Siswa></span>
+                    <span id="typedText" class="command-text"></span><span class="cursor"></span>
                 </div>
-
-                <form id="cliHiddenForm" action="#" onsubmit="return false;">
-                    <input type="text" id="cliHiddenInput" autocomplete="off" spellcheck="false">
-                </form>
             </div>
 
             <div class="sidebar">
-                <div class="sidebar-header">Quick Commands</div>
+                <div class="sidebar-header">Materi Praktikum</div>
                 <div class="cmd-list">
-                    <div class="cmd-item" onclick="cliAutoType('dir')">
-                        <div class="cmd-icon">📂</div>
-                        <div class="cmd-info">
-                            <span class="code-pill">dir</span>
-                            <span class="desc">Daftar File</span>
-                        </div>
+                    <div class="cmd-item" onclick="autoType('dir')">
+                        <span class="code-pill">dir</span><div class="desc">List File</div>
                     </div>
-                    <div class="cmd-item" onclick="cliAutoType('tree')">
-                        <div class="cmd-icon">🌿</div>
-                        <div class="cmd-info">
-                            <span class="code-pill">tree</span>
-                            <span class="desc">Struktur Folder</span>
-                        </div>
+                    <div class="cmd-item" onclick="autoType('tree')">
+                        <span class="code-pill">tree</span><div class="desc">Pohon Folder</div>
                     </div>
-                    <div class="cmd-item" onclick="cliAutoType('cls')">
-                        <div class="cmd-icon">🧹</div>
-                        <div class="cmd-info">
-                            <span class="code-pill">cls</span>
-                            <span class="desc">Hapus Layar</span>
-                        </div>
+                    <div class="cmd-item" onclick="autoType('cls')">
+                        <span class="code-pill">cls</span><div class="desc">Hapus Layar</div>
                     </div>
-                    <div class="cmd-item" onclick="cliAutoType('ver')">
-                        <div class="cmd-icon">ℹ️</div>
-                        <div class="cmd-info">
-                            <span class="code-pill">ver</span>
-                            <span class="desc">Versi OS</span>
-                        </div>
+                    <div class="cmd-item" onclick="autoType('ver')">
+                        <span class="code-pill">ver</span><div class="desc">Versi Win</div>
                     </div>
-                    <div class="cmd-item" onclick="cliAutoType('help')">
-                        <div class="cmd-icon">💡</div>
-                        <div class="cmd-info">
-                            <span class="code-pill">help</span>
-                            <span class="desc">Bantuan</span>
-                        </div>
+                    <div class="cmd-item" onclick="autoType('help')">
+                        <span class="code-pill">help</span><div class="desc">Bantuan</div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <audio id="typeSound" src="https://www.soundjay.com/communication/typewriter-key-1.mp3" preload="auto"></audio>
-    <audio id="enterSound" src="https://www.soundjay.com/communication/typewriter-return-1.mp3" preload="auto"></audio>
-    
-    <script>
-        const cliOutput = document.getElementById('cliOutput');
-        const cliTypedText = document.getElementById('cliTypedText');
-        const cliHiddenInput = document.getElementById('cliHiddenInput');
-        const terminalContainer = document.getElementById('terminalContainer');
-        const appWindow = document.getElementById('appWindow');
-        const cliHiddenForm = document.getElementById('cliHiddenForm');
-        const typeSound = document.getElementById('typeSound');
-        const enterSound = document.getElementById('enterSound');
+    <!-- 
+       PERBAIKAN UTAMA:
+       Input dibungkus FORM agar tombol 'Enter/Go' di HP memicu event submit.
+    -->
+    <form id="cmdForm" action="#" onsubmit="return false;">
+        <input type="text" id="hiddenInput" autocomplete="off" spellcheck="false">
+    </form>
 
-        let cliHistory = [];
-        let cliHistoryIndex = -1;
-        let cliIsProcessing = false;
+    <script>
+        const outputDiv = document.getElementById('output');
+        const typedText = document.getElementById('typedText');
+        const hiddenInput = document.getElementById('hiddenInput');
+        const terminal = document.getElementById('terminal');
+        const cmdForm = document.getElementById('cmdForm');
 
         const responses = {
-            'dir': `<div class='line'> Volume in drive C has no label.</div><div class='line'> Volume Serial Number is 9CD1-1174</div><div class='line'><br></div><div class='line'> Directory of C:\\Users\\Admin</div><div class='line'><br></div><table class="master-table"><tr><td>20/10/23</td><td>08:00</td><td class="dir-blue">&lt;DIR&gt;</td><td>.</td></tr><tr><td>20/10/23</td><td>08:00</td><td class="dir-blue">&lt;DIR&gt;</td><td>..</td></tr><tr><td>22/09/23</td><td>11:00</td><td>1,024</td><td>tugas.docx</td></tr><tr><td>22/09/23</td><td>12:00</td><td>55,000</td><td>foto.jpg</td></tr></table>`,
-            'tree': `<div class='line'>Folder PATH listing for volume C:</div><div class='line'>C:.</div><div class='line'>├───Documents</div><div class='line'>│   └───Tugas_Sekolah</div><div class='line'>└───Downloads</div>`,
-            'help': `<div class='line' style='color:#38bdf8'>BANTUAN PERINTAH:</div><table class="master-table"><tr><td>DIR</td><td>Daftar file</td></tr><tr><td>TREE</td><td>Pohon folder</td></tr><tr><td>CLS</td><td>Bersihkan layar</td></tr><tr><td>VER</td><td>Versi Windows</td></tr></table>`,
+            'dir': 
+`<div class='line'> Volume in drive C has no label.</div>
+<div class='line'> Volume Serial Number is 9CD1-1174</div>
+<div class='line'><br></div>
+<div class='line'> Directory of C:\\Users\\Siswa</div>
+<div class='line'><br></div>
+<table class="master-table">
+    <tr><td class="col-1">20/10/23</td><td class="col-2">08:00</td><td class="col-3"><span class='dir-blue'>&lt;DIR&gt;</span></td><td class="col-4"></td><td class="col-5">.</td></tr>
+    <tr><td class="col-1">20/10/23</td><td class="col-2">08:00</td><td class="col-3"><span class='dir-blue'>&lt;DIR&gt;</span></td><td class="col-4"></td><td class="col-5">..</td></tr>
+    <tr><td class="col-1">20/10/23</td><td class="col-2">08:30</td><td class="col-3"><span class='dir-blue'>&lt;DIR&gt;</span></td><td class="col-4"></td><td class="col-5"><span class='dir-blue'>Documents</span></td></tr>
+    <tr><td class="col-1">20/10/23</td><td class="col-2">09:00</td><td class="col-3"><span class='dir-blue'>&lt;DIR&gt;</span></td><td class="col-4"></td><td class="col-5"><span class='dir-blue'>Downloads</span></td></tr>
+    <tr><td class="col-1">22/09/23</td><td class="col-2">11:00</td><td class="col-3">1,024</td><td class="col-4"></td><td class="col-5"><span class='file-white'>tugas.docx</span></td></tr>
+    <tr><td class="col-1">22/09/23</td><td class="col-2">12:00</td><td class="col-3">55,000</td><td class="col-4"></td><td class="col-5"><span class='file-white'>foto.jpg</span></td></tr>
+    <tr><td class="col-1"></td><td class="col-2">2 File(s)</td><td class="col-3">56,024</td><td class="col-4"></td><td class="col-5">bytes</td></tr>
+    <tr><td class="col-1"></td><td class="col-2">4 Dir(s)</td><td class="col-3">99 M</td><td class="col-4"></td><td class="col-5">bytes free</td></tr>
+</table>`,
+            
+            'tree': 
+`<div class='line'>Folder PATH listing for volume Local Disk</div>
+<div class='line'>Volume serial number is 0000-0000</div>
+<div class='line'><span class='dir-blue'>C:.</span></div>
+<div class='line'>├───<span class='dir-blue'>Documents</span></div>
+<div class='line'>│   ├───<span class='dir-blue'>Tugas_IPA</span></div>
+<div class='line'>│   └───<span class='dir-blue'>Tugas_IPS</span></div>
+<div class='line'>├───<span class='dir-blue'>Downloads</span></div>
+<div class='line'>└───<span class='file-white'>foto_liburan.jpg</span></div>`,
+            
+            'help': 
+`<div class='line' style='color:#4ec9b0'>Commands List:</div>
+<table class="master-table">
+    <tr><td style="width:60px"><span class='code-pill'>DIR</span></td><td>List files</td></tr>
+    <tr><td><span class='code-pill'>TREE</span></td><td>Show structure</td></tr>
+    <tr><td><span class='code-pill'>CLS</span></td><td>Clear screen</td></tr>
+    <tr><td><span class='code-pill'>VER</span></td><td>Show version</td></tr>
+</table>`,
+
             'ver': `<div class='line'>Microsoft Windows [Version 10.0.19045.3693]</div>`
         };
 
-        const bootTexts = [
-            "SYSTEM BOOT LOADER v2.1",
-            "CHECKING HARDWARE ... OK",
-            "CONNECTING TO NETWORK ... OK",
-            "LOADING OS KERNEL ... DONE",
-            "READY FOR COMMANDS."
-        ];
+        function focusInput() { hiddenInput.focus(); }
+        window.onload = focusInput;
 
-        async function showBootSequence() {
-            const boot = document.getElementById('bootScreen');
-            for (let text of bootTexts) {
-                const line = document.createElement('div');
-                line.textContent = text;
-                boot.appendChild(line);
-                await new Promise(r => setTimeout(r, 250));
-            }
-            setTimeout(() => { 
-                boot.style.display = 'none'; 
-                focusCLIInput();
-            }, 600);
-        }
-
-        function focusCLIInput() { 
-            if (!cliIsProcessing) {
-                cliHiddenInput.focus({ preventScroll: true });
-                appWindow.classList.add('focused');
-            }
-        }
-
-        // Remove focus glow when user clicks away
-        document.addEventListener('mousedown', (e) => {
-            if (!terminalContainer.contains(e.target)) {
-                appWindow.classList.remove('focused');
-            }
-        });
-
-        cliHiddenInput.addEventListener('input', function() {
-            cliTypedText.textContent = this.value;
-            typeSound.currentTime = 0; typeSound.volume = 0.1; typeSound.play().catch(e => {});
+        // Listener untuk efek ngetik visual
+        hiddenInput.addEventListener('input', function() {
+            typedText.textContent = this.value;
             scrollToBottom();
         });
 
-        async function typeLine(html) {
-            const temp = document.createElement('div');
-            temp.innerHTML = html;
-            const nodes = Array.from(temp.childNodes);
-            for (let node of nodes) {
-                cliOutput.appendChild(node.cloneNode(true));
-                scrollToBottom();
-                await new Promise(r => setTimeout(r, 60));
-            }
-        }
-
-        cliHiddenForm.addEventListener('submit', async function(e) {
-            e.preventDefault();
-            if (cliIsProcessing) return;
-            cliIsProcessing = true;
-            enterSound.currentTime = 0; enterSound.volume = 0.2; enterSound.play().catch(e => {});
+        // PERBAIKAN: Menggunakan Event 'submit' pada form, bukan 'keydown'
+        cmdForm.addEventListener('submit', function(e) {
+            e.preventDefault(); // Mencegah reload halaman
             
-            const rawCmd = cliHiddenInput.value;
+            const rawCmd = hiddenInput.value;
             const cmd = rawCmd.trim().toLowerCase();
-            if (rawCmd.trim() !== '') { cliHistory.push(rawCmd); cliHistoryIndex = -1; }
             
-            const historyLine = document.createElement('div');
-            historyLine.className = 'line'; 
-            historyLine.innerHTML = `<span class="prompt">C:\\Users\\Admin></span><span style="color:#fff">${rawCmd}</span>`;
-            cliOutput.appendChild(historyLine);
+            // Tampilkan history perintah
+            const history = document.createElement('div');
+            history.className = 'line'; 
+            history.innerHTML = `<span class="prompt">C:\\Users\\Siswa></span><span class="command-text">${rawCmd}</span>`;
+            outputDiv.appendChild(history);
 
-            cliHiddenInput.value = ''; cliTypedText.textContent = '';
-            
-            if (cmd === 'cls') { cliOutput.innerHTML = ''; }
-            else if (responses[cmd]) {
-                await new Promise(r => setTimeout(r, 200));
-                await typeLine(responses[cmd]);
+            // Reset input
+            hiddenInput.value = ''; 
+            typedText.textContent = '';
+
+            // Proses logika
+            if (cmd === 'cls') {
+                outputDiv.innerHTML = '';
+            } else if (responses[cmd]) {
+                outputDiv.insertAdjacentHTML('beforeend', responses[cmd]);
             } else if (cmd !== '') {
                 const err = document.createElement('div');
-                err.className = 'line'; err.style.color = '#ff5f56';
-                err.textContent = `'${cmd}' is not recognized as a command.`;
-                cliOutput.appendChild(err);
+                err.className = 'line';
+                err.style.color = '#ff5f56';
+                err.textContent = `'${cmd}' is not recognized.`;
+                outputDiv.appendChild(err);
             }
             
-            cliIsProcessing = false;
             scrollToBottom();
-            setTimeout(() => focusCLIInput(), 10);
+            
+            // Jaga fokus agar keyboard tidak tertutup (opsional, tergantung browser HP)
+            setTimeout(() => hiddenInput.focus(), 10);
         });
 
-        function cliAutoType(txt) {
-            if (cliIsProcessing) return;
-            cliHiddenInput.value = txt; 
-            cliTypedText.textContent = txt; 
-            focusCLIInput();
+        function autoType(txt) {
+            hiddenInput.value = txt; 
+            typedText.textContent = txt; 
+            hiddenInput.focus();
             scrollToBottom();
         }
 
         function scrollToBottom() {
             setTimeout(() => { 
-                terminalContainer.scrollTo({
-                    top: terminalContainer.scrollHeight,
-                    behavior: 'smooth'
-                });
+                terminal.scrollTop = terminal.scrollHeight; 
+                terminal.scrollLeft = 0; 
             }, 10);
         }
-
-        window.onload = showBootSequence;
     </script>
 </body>
 </html>

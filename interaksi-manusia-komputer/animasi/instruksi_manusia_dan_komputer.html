@@ -2,260 +2,382 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>HCI Simulator - Mobile Optimized</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HCI: Final Fix (Space & Log)</title>
     <style>
+        /* --- TEMA --- */
         :root {
-            --bg-dark: #020617;
-            --neon-blue: #3b82f6;
-            --neon-red: #ef4444;
-            --neon-green: #10b981;
-            --neon-orange: #f59e0b;
-            --neon-purple: #d946ef;
-            --glass: rgba(15, 23, 42, 0.8);
-            --border: rgba(255, 255, 255, 0.05);
+            --bg: #e2e8f0;
+            --box-bg: #1e293b;
+            --line-color: #475569;
+            --terminal-bg: #020617;
+            --c-input: #3b82f6; --c-cpu: #ef4444; --c-output: #10b981; --c-storage: #f59e0b; --c-feedback: #d946ef;
         }
 
-        * { box-sizing: border-box; }
         body {
-            background-color: var(--bg-dark);
-            background-image: radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.1) 0%, transparent 50%);
-            color: #f8fafc;
-            font-family: 'Orbitron', sans-serif;
+            background-color: var(--bg);
+            color: #f3f4f6;
+            font-family: 'Segoe UI', monospace;
             display: flex; flex-direction: column; align-items: center;
-            min-height: 100vh; margin: 0; padding: 10px;
-            overflow-x: hidden;
+            min-height: 100vh;
+            margin: 0; padding: 10px;
+            overflow: hidden;
         }
 
         h1 { 
-            font-size: 1rem; text-align: center; margin: 10px 0;
-            text-transform: uppercase; letter-spacing: 3px;
-            color: #fff; text-shadow: 0 0 10px var(--neon-blue);
+            margin: 10px 0 20px 0; 
+            text-transform: uppercase; letter-spacing: 2px; 
+            text-align: center; font-size: 1.1rem; 
         }
 
-        /* --- CONTROLS (Border Removed) --- */
+        /* --- CONTROLS --- */
         .controls {
-            z-index: 100; background: transparent; 
-            padding: 10px; border: none; /* Garis pembungkus dihilangkan */
-            display: flex; gap: 8px; margin-bottom: 20px;
+            z-index: 100;
+            background: rgba(30, 41, 59, 0.95); 
+            padding: 12px;
+            border-radius: 8px; border: 1px solid #475569;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            display: flex; gap: 8px; 
+            flex-wrap: wrap; justify-content: center;
+            margin-bottom: 20px; 
         }
-        input { background: rgba(0, 0, 0, 0.6); border: 1px solid var(--neon-blue); color: white; padding: 8px; border-radius: 6px; font-family: 'JetBrains Mono', monospace; outline: none; width: 130px; font-size: 0.75rem; }
-        button { background: var(--neon-blue); color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-family: 'Orbitron', sans-serif; font-size: 0.7rem; font-weight: bold; transition: 0.3s; }
-        button:disabled { opacity: 0.4; }
 
-        /* --- SCENE --- */
-        .scene { perspective: 1000px; width: 100%; display: flex; justify-content: center; }
+        input { background: #0f172a; border: 1px solid #475569; color: white; padding: 8px; border-radius: 4px; width: 150px; }
+        button { background: var(--c-input); color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-weight: bold;}
+        button:hover { opacity: 0.9; }
+        button:disabled { background: #475569; cursor: not-allowed; }
+
+        /* --- DIAGRAM CONTAINER --- */
         .diagram-container {
-            transform: rotateX(15deg); transform-style: preserve-3d;
-            display: grid; 
-            grid-template-columns: 120px 45px 120px 45px 120px;
-            grid-template-rows: 90px 50px 90px; gap: 0; align-items: center; justify-items: center;
-            position: relative; width: 450px;
+            width: 100%;
+            display: flex; justify-content: center;
+            transform-origin: top center;
+            transition: transform 0.3s ease;
+            padding-bottom: 50px; 
         }
 
-        /* --- BOXES --- */
+        /* --- GRID LAYOUT --- */
+        .diagram-grid {
+            display: grid;
+            grid-template-columns: 130px 40px 130px 40px 130px;
+            grid-template-rows: 90px 40px 90px 50px auto; 
+            justify-items: center; align-items: center;
+            position: relative;
+        }
+
+        /* --- BOX STANDAR --- */
         .box {
-            width: 100%; height: 100%; background: var(--glass); border: 1px solid var(--border); border-radius: 12px;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            transition: 0.5s; position: relative; z-index: 10;
+            width: 100%; height: 100%;
+            background: var(--box-bg);
+            border: 2px solid #475569; border-radius: 8px;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            z-index: 10; transition: 0.3s;
+            position: relative;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
         }
-        .box i { font-size: 1.5rem; margin-bottom: 5px; font-style: normal; position: relative; z-index: 20; }
-        .box h3 { font-size: 0.6rem; margin: 0; letter-spacing: 1.5px; color: #94a3b8; text-transform: uppercase; position: relative; z-index: 20; }
-        .box-input { border-bottom: 3px solid var(--neon-blue); }
-        .box-cpu { border-bottom: 3px solid var(--neon-red); }
-        .box-storage { border-bottom: 3px solid var(--neon-orange); }
-        .box.active { transform: translateZ(30px) scale(1.05); border-color: #fff; box-shadow: 0 0 25px rgba(255,255,255,0.2); }
-
-        /* --- CORE --- */
-        .quantum-core { position: absolute; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; opacity: 0.1; mix-blend-mode: screen; z-index: 1; }
-        .box-storage.active .quantum-core { opacity: 0.7; }
-        .core-center { width: 25px; height: 25px; background: var(--neon-orange); border-radius: 50%; box-shadow: 0 0 20px var(--neon-orange); }
-        .core-ring { position: absolute; border: 1px solid var(--neon-orange); border-radius: 50%; animation: orbit 3s infinite linear; }
-        .ring-1 { width: 45px; height: 45px; }
-        @keyframes orbit { from { transform: rotate(0deg) rotateX(60deg); } to { transform: rotate(360deg) rotateX(60deg); } }
-
-        /* --- PIPES & PARTICLES --- */
-        .pipe-h { width: 100%; height: 2px; background: rgba(255,255,255,0.05); }
-        .pipe-v { height: 100%; width: 2px; background: rgba(255,255,255,0.05); }
-        .particle { position: absolute; width: 6px; height: 6px; background: #fff; border-radius: 50%; box-shadow: 0 0 10px #fff, 0 0 15px var(--neon-blue); opacity: 0; z-index: 100; transform: translate(-3px, -3px); }
+        .box i { font-size: 1.6rem; margin-bottom: 4px; color: #94a3b8; font-style: normal; }
+        .box h3 { font-size: 0.8rem; margin: 0; color: #e2e8f0; margin-top: 3px; font-weight: 600; }
+        
+        .box-input { border-bottom: 4px solid var(--c-input); }
+        .box-cpu { border-bottom: 4px solid var(--c-cpu); }
+        .box-storage { border-bottom: 4px solid var(--c-storage); }
+        .box.active { transform: scale(1.05); border-color: white !important; box-shadow: 0 0 15px rgba(255,255,255,0.2); }
 
         /* --- MONITOR --- */
-        .monitor-frame { width: 85%; height: 45px; background: #000; border: 1px solid #333; border-radius: 6px; display: flex; align-items: center; justify-content: center; }
-        .monitor-screen { width: 100%; height: 100%; font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; color: var(--neon-green); text-align: center; overflow: hidden; }
-
-        /* --- FEEDBACK --- */
-        .feedback-line { position: absolute; top: 45px; left: 60px; width: 330px; height: 200px; border: 1.5px dashed rgba(255, 255, 255, 0.15); border-top: none; border-radius: 0 0 40px 40px; pointer-events: none; }
-
-        /* --- LOG (Compact & Limited Line) --- */
-        .log-container {
-            margin-top: 25px; width: 95%; max-width: 450px; height: 90px;
-            background: rgba(0,0,0,0.6); border-left: 3px solid var(--neon-blue); /* Garis biru dibuat lebih tipis & pendek sesuai box */
-            padding: 10px; border-radius: 4px; overflow-y: auto;
-            font-family: 'JetBrains Mono', monospace; font-size: 0.65rem;
+        .monitor-wrapper {
+            width: 100%; height: 100%; 
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: space-between;
+            position: relative; z-index: 10;
         }
-        .log-entry { margin-bottom: 3px; color: #4b5563; }
-        .log-info { color: var(--neon-blue); }
-        .log-proc { color: var(--neon-red); }
-        .log-store { color: var(--neon-orange); }
+        .monitor-bezel {
+            width: 100%; flex-grow: 1; 
+            background: #334155; border-radius: 6px; padding: 4px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            display: flex; align-items: center; justify-content: center;
+            border: 1px solid #475569; transition: 0.3s;
+            margin-bottom: -2px; z-index: 12;
+        }
+        .monitor-screen { width: 100%; height: 100%; background: #000; border-radius: 4px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        
+        /* --- TEXT & CURSOR FIX --- */
+        .monitor-text { 
+            color: var(--c-output); 
+            font-family: 'Courier New', monospace; 
+            font-size: 0.9rem; 
+            font-weight: bold; 
+            text-shadow: 0 0 5px var(--c-output); 
+            
+            /* INI SOLUSINYA: Agar spasi terbaca */
+            white-space: pre-wrap; 
+        }
+        
+        .cursor {
+            display: inline-block; 
+            width: 3px;         
+            height: 14px;       
+            background: var(--c-output); 
+            margin-left: 1px;
+            position: relative; 
+            top: 2px;           
+            animation: blink 0.8s infinite;
+        }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+        
+        .monitor-stand-neck { width: 16px; height: 15px; background: #1e293b; z-index: 10; }
+        .monitor-stand-base { width: 60px; height: 6px; background: #334155; border-radius: 4px 4px 0 0; margin-bottom: 0; }
+        .monitor-wrapper.active .monitor-bezel { border-color: var(--c-output); box-shadow: 0 0 20px rgba(16, 185, 129, 0.4); transform: scale(1.05); }
+        .monitor-wrapper.active .monitor-screen { background: #022c22; }
 
-        @keyframes flowRight { 0% { left: 0; opacity: 1; } 100% { left: 100%; opacity: 1; } }
-        @keyframes flowDown { 0% { top: 0; opacity: 1; } 100% { top: 100%; opacity: 1; } }
-        @keyframes flowUp { 0% { top: 100%; opacity: 1; } 100% { top: 0; opacity: 1; } }
-        @keyframes flowFB {
-            0% { top: 45px; left: 390px; opacity: 0; }
-            5% { opacity: 1; }
-            35% { top: 245px; left: 390px; }
-            65% { top: 245px; left: 60px; }
-            100% { top: 45px; left: 60px; opacity: 0; }
+        /* --- PARTICLES --- */
+        .pipe-h { width: 140%; height: 4px; background: var(--line-color); position: relative; z-index: 1; border-radius: 2px; }
+        .pipe-v { width: 4px; height: 160%; background: var(--line-color); position: relative; z-index: 1; }
+        .comet { position: absolute; background: white; opacity: 0; box-shadow: 0 0 8px white; border-radius: 50%; width: 6px; height: 6px; }
+
+        /* --- FEEDBACK LINE --- */
+        .feedback-track {
+            position: absolute;
+            top: 45px; left: 65px; right: 65px; height: 180px;      
+            border: 2px dashed var(--line-color); border-top: none; border-radius: 0 0 20px 20px;
+            z-index: 0; pointer-events: none; opacity: 0.3; transition: 0.5s;
+        }
+        
+        .fb-ball { 
+            position: absolute; width: 10px; height: 10px; 
+            background: var(--c-feedback); border-radius: 50%; 
+            box-shadow: 0 0 10px var(--c-feedback); opacity: 0; z-index: 5;
+            transform: translate(-50%, -50%);
         }
 
-        /* --- MOBILE FIX --- */
+        @keyframes fb-move {
+            0% { top: 45px; left: calc(100% - 65px); opacity: 1; } 
+            30% { top: 225px; left: calc(100% - 65px); } 
+            70% { top: 225px; left: 65px; } 
+            100% { top: 45px; left: 65px; opacity: 1; } 
+        }
+
+        .terminal-container {
+            grid-column: 1 / span 5; grid-row: 5; width: 100%; height: 120px; 
+            background: var(--terminal-bg); border: 1px solid #333; border-left: 4px solid #64748b;
+            border-radius: 6px; padding: 10px; box-sizing: border-box; overflow-y: auto; font-size: 0.75rem;
+            display: flex; flex-direction: column; z-index: 20; 
+        }
+        .log-line { margin: 2px 0; border-left: 2px solid transparent; padding-left: 6px; animation: fadeIn 0.3s; }
+        .log-info { border-color: var(--c-input); color: #93c5fd; }
+        .log-proc { border-color: var(--c-cpu); color: #fca5a5; }
+        .log-store { border-color: var(--c-storage); color: #fcd34d; }
+        .log-out { border-color: var(--c-output); color: #86efac; }
+        .log-feed { border-color: var(--c-feedback); color: #f0abfc; font-weight: bold; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateX(-5px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes shoot-r { 0% { left: 0; opacity: 1; } 100% { left: 100%; opacity: 1; } }
+        @keyframes shoot-d { 0% { top: 0; opacity: 1; } 100% { top: 100%; opacity: 1; } }
+        @keyframes shoot-u { 0% { top: 100%; opacity: 1; } 100% { top: 0; opacity: 1; } }
+
         @media (max-width: 600px) {
-            h1 { font-size: 0.9rem; }
-            .controls { gap: 5px; transform: scale(0.9); margin-bottom: 10px; }
-            input { width: 100px; }
-            .scene { transform: scale(0.65); margin-top: -30px; } /* Diperkecil supaya muat di layar potret HP */
-            .log-container { width: 90%; margin-top: 10px; }
+            .diagram-container { 
+                transform: scale(0.5);
+                 margin-top: 0px; 
+                 margin-bottom: -50px;
+                  margin-left: -5px; }
+            .controls { 
+                width: 90%;
+                margin-bottom: 10px;
+                transform: scale(0.8);
+            }
+            h1 { font-size: 1rem; margin-bottom: 15px; }
+            body { overflow: hidden; padding-bottom: 50px;}
         }
     </style>
 </head>
 <body>
 
-    <h1>HCI Ultimate Hub</h1>
+    <h1 style="color: #000;">Simulasi Interaksi Manusia & Komputer</h1>
 
     <div class="controls">
-        <input type="text" id="userInput" placeholder="INJECT DATA..." autocomplete="off">
-        <button id="btnRun" onclick="runSystem()">Run</button>
-        <button onclick="location.reload()" style="background:#334155;">Reset</button>
+        <input type="text" id="userInput" placeholder="Ketik Data..." autocomplete="off">
+        <button id="btnRun" onclick="runSystem()">PROSES</button>
+        <button onclick="resetSystem()" style="background:#475569;">RESET</button>
     </div>
 
-    <div class="scene">
-        <div class="diagram-container">
-            <div class="box box-input" id="bInput"><i>⌨️</i><h3>INPUT</h3></div>
-            <div class="pipe-h" id="p1"></div>
-            <div class="box box-cpu" id="bCpu"><i>⚙️</i><h3>CPU</h3></div>
-            <div class="pipe-h" id="p2"></div>
-            <div class="box box-output" id="bOut">
-                <div class="monitor-frame"><div class="monitor-screen" id="screenText"></div></div>
-                <h3>OUTPUT</h3>
+    <div class="diagram-container">
+        <div class="diagram-grid">
+            <div class="box box-input" id="bInput" style="grid-column:1; grid-row:1"><i>⌨️</i><h3>INPUT</h3></div>
+            <div class="pipe-h" style="grid-column:2; grid-row:1"><div class="comet" id="c1"></div></div>
+            <div class="box box-cpu" id="bCpu" style="grid-column:3; grid-row:1"><i>⚙️</i><h3>CPU</h3></div>
+            <div class="pipe-h" style="grid-column:4; grid-row:1"><div class="comet" id="c2"></div></div>
+            
+            <div class="monitor-wrapper" id="bOut" style="grid-column:5; grid-row:1">
+                <div class="monitor-bezel">
+                    <div class="monitor-screen">
+                        <span class="monitor-text" id="screenText"></span><span class="cursor" id="cursor"></span>
+                    </div>
+                </div>
+                <div class="monitor-stand-neck"></div>
+                <div class="monitor-stand-base"></div>
+                <h3 style="margin: 0; margin-top: 2px; font-size:0.8rem; color:#e2e8f0; font-weight: 600;">OUTPUT</h3>
             </div>
 
-            <div></div><div></div><div class="pipe-v" id="p3"></div><div></div><div></div>
+            <div class="pipe-v" style="grid-column:3; grid-row:2"><div class="comet" id="c3"></div></div>
+            <div class="box box-storage" id="bStore" style="grid-column:3; grid-row:3"><i>💾</i><h3>STORAGE</h3></div>
 
-            <div></div><div></div>
-            <div class="box box-storage" id="bStore">
-                <div class="quantum-core"><div class="core-center"></div><div class="core-ring ring-1"></div></div>
-                <i>💾</i><h3>STORAGE</h3>
+            <div class="feedback-track" id="fbTrack"></div>
+            <div class="fb-ball" id="fbBall"></div>
+
+            <div class="terminal-container" id="terminal">
+                <div style="color: #64748b;">// Menunggu Input User...</div>
             </div>
-            <div></div><div></div>
-
-            <div class="feedback-line"></div>
-            <div id="pLayer" style="position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; transform-style:preserve-3d;"></div>
         </div>
     </div>
 
-    <div class="log-container" id="log">
-        <div class="log-entry">// Sistem Standby...</div>
-    </div>
-
     <script>
-        const log = document.getElementById('log');
+        const terminal = document.getElementById('terminal');
         const btn = document.getElementById('btnRun');
-        const input = document.getElementById('userInput');
-        const screen = document.getElementById('screenText');
-        const pLayer = document.getElementById('pLayer');
+        const screenText = document.getElementById('screenText');
+        const cursor = document.getElementById('cursor'); 
+        const userInput = document.getElementById('userInput');
+        
+        const boxes = { in: document.getElementById('bInput'), cpu: document.getElementById('bCpu'), out: document.getElementById('bOut'), store: document.getElementById('bStore') };
+        const comets = { c1: document.getElementById('c1'), c2: document.getElementById('c2'), c3: document.getElementById('c3') };
+        const fb = { track: document.getElementById('fbTrack'), ball: document.getElementById('fbBall') };
 
-        const boxes = {
-            in: document.getElementById('bInput'),
-            cpu: document.getElementById('bCpu'),
-            out: document.getElementById('bOut'),
-            store: document.getElementById('bStore')
-        };
-
-        const pipes = { p1: document.getElementById('p1'), p2: document.getElementById('p2'), p3: document.getElementById('p3') };
+        let isProcessing = false;
 
         function addLog(msg, type) {
             const div = document.createElement('div');
-            div.className = `log-entry log-${type}`;
-            div.innerHTML = `> ${msg}`;
-            log.appendChild(div);
-            log.scrollTop = log.scrollHeight;
+            const time = new Date().toLocaleTimeString('id-ID', { hour12: false, hour: '2-digit', minute:'2-digit', second:'2-digit' });
+            div.className = `log-line log-${type}`;
+            div.innerHTML = `<span style="opacity:0.5">[${time}]</span> ${msg}`;
+            terminal.appendChild(div);
+            terminal.scrollTop = terminal.scrollHeight;
         }
 
-        function spawnParticles(pipe, direction, color) {
-            for (let i = 0; i < 6; i++) {
-                setTimeout(() => {
-                    const p = document.createElement('div');
-                    p.className = 'particle';
-                    p.style.boxShadow = `0 0 10px #fff, 0 0 15px ${color}`;
-                    if (direction === 'right') p.style.animation = 'flowRight 0.7s linear forwards';
-                    else if (direction === 'down') p.style.animation = 'flowDown 0.7s linear forwards';
-                    else if (direction === 'up') p.style.animation = 'flowUp 0.7s linear forwards';
-                    pipe.appendChild(p);
-                    setTimeout(() => p.remove(), 800);
-                }, i * 130);
-            }
+        function wait(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+        // FUNGSI RESET
+        function resetSystem() {
+            userInput.value = "";
+            screenText.innerText = "";
+            cursor.style.display = "none";
+            terminal.innerHTML = '<div style="color: #64748b;">// System Reset. Menunggu Input...</div>';
+            
+            Object.values(boxes).forEach(b => b.classList.remove('active'));
+            boxes.in.style.borderColor = '';
+            
+            Object.values(comets).forEach(c => c.style.animation = 'none');
+            fb.ball.style.animation = 'none';
+            fb.ball.style.opacity = 0;
+            
+            fb.track.style.borderColor = '#475569'; 
+            fb.track.style.boxShadow = 'none'; 
+            fb.track.style.opacity = '0.3';
+
+            btn.disabled = false;
+            isProcessing = false;
         }
 
         async function runSystem() {
-            const val = input.value;
-            if (!val) return;
+            const val = userInput.value;
+            if(!val) { alert("Isi teks dulu!"); return; }
+            if(isProcessing) return; 
+
+            isProcessing = true;
             btn.disabled = true;
-            log.innerHTML = ''; screen.innerText = '';
             
-            addLog(`KONEKSI NEURAL AKTIF: "${val}"`, 'info');
-            boxes.in.classList.add('active');
-            await new Promise(r => setTimeout(r, 800));
-            spawnParticles(pipes.p1, 'right', 'var(--neon-blue)');
-            await new Promise(r => setTimeout(r, 700));
-            boxes.in.classList.remove('active');
-
-            addLog(`INTI PROSESOR: ANALISIS DATA...`, 'proc');
-            boxes.cpu.classList.add('active');
-            await new Promise(r => setTimeout(r, 1000));
-
-            addLog(`INTI KUANTUM: MENYIMPAN DATA...`, 'store');
-            spawnParticles(pipes.p3, 'down', 'var(--neon-orange)');
-            await new Promise(r => setTimeout(r, 600));
-            boxes.store.classList.add('active');
-            await new Promise(r => setTimeout(r, 1200));
+            // CLEAR LOG LAMA SAAT PROSES BARU DI KLIK
+            terminal.innerHTML = ""; 
+            screenText.innerText = ""; 
+            cursor.style.display = "none";
             
-            addLog(`INTI KUANTUM: MEMBACA DATA...`, 'store');
-            spawnParticles(pipes.p3, 'up', 'var(--neon-blue)');
-            await new Promise(r => setTimeout(r, 600));
-            boxes.store.classList.remove('active');
-            
-            addLog(`DISPLAY: MERENDER VISUAL...`, 'out');
-            spawnParticles(pipes.p2, 'right', 'var(--neon-green)');
-            await new Promise(r => setTimeout(r, 700));
-            boxes.cpu.classList.remove('active');
-            boxes.out.classList.add('active');
+            const check = async (ms) => {
+                await wait(ms);
+                if(!isProcessing) throw "RESET";
+            };
 
-            for (let char of val) {
-                screen.innerText += char;
-                await new Promise(r => setTimeout(r, 80));
+            try {
+                // 1. INPUT
+                addLog(`User mengetik: "${val}"`, 'info');
+                boxes.in.classList.add('active');
+                await check(600);
+                
+                addLog("Mengirim ke CPU...", 'info');
+                comets.c1.style.animation = 'shoot-r 0.6s linear forwards';
+                await check(600);
+                comets.c1.style.animation = 'none';
+                boxes.in.classList.remove('active');
+
+                // 2. CPU
+                addLog("CPU Memproses...", 'proc');
+                boxes.cpu.classList.add('active');
+                await check(800);
+
+                // 3. STORAGE
+                addLog("Simpan ke Storage...", 'store');
+                comets.c3.style.animation = 'shoot-d 0.5s linear forwards';
+                await check(500);
+                comets.c3.style.animation = 'none';
+
+                boxes.store.classList.add('active');
+                await check(600);
+                
+                addLog("Ambil dari Storage...", 'proc');
+                comets.c3.style.animation = 'shoot-u 0.5s linear forwards';
+                boxes.store.classList.remove('active');
+                await check(500);
+                comets.c3.style.animation = 'none';
+                boxes.cpu.classList.remove('active');
+
+                // 4. OUTPUT
+                addLog("Tampilkan Output...", 'out');
+                comets.c2.style.animation = 'shoot-r 0.5s linear forwards';
+                await check(500);
+                comets.c2.style.animation = 'none';
+
+                boxes.out.classList.add('active');
+                cursor.style.display = "inline-block"; 
+                
+                // Typing Effect
+                for (let i = 0; i < val.length; i++) {
+                    if(!isProcessing) throw "RESET";
+                    screenText.innerText += val.charAt(i);
+                    await wait(80); 
+                }
+
+                addLog(`Layar: "${val}"`, 'out');
+                await check(1500);
+
+                // 5. FEEDBACK
+                boxes.out.classList.remove('active');
+                addLog("Feedback Visual...", 'feed');
+                
+                fb.track.style.borderColor = '#d946ef';
+                fb.track.style.boxShadow = '0 0 10px rgba(217, 70, 239, 0.2)';
+                fb.track.style.opacity = '1';
+                
+                fb.ball.style.animation = 'fb-move 1.5s linear forwards';
+                await check(1500);
+
+                boxes.in.classList.add('active');
+                boxes.in.style.borderColor = '#d946ef';
+                addLog("Selesai.", 'feed');
+
+                await check(1500);
+                
+                // FINISH (TETAP MENYIMPAN HASIL)
+                boxes.in.classList.remove('active');
+                boxes.in.style.borderColor = '';
+                fb.ball.style.opacity = 0;
+                
+                btn.disabled = false;
+                isProcessing = false;
+
+            } catch (e) {
+                if (e === "RESET") {
+                    console.log("Reset trigger");
+                } else {
+                    console.error(e);
+                }
             }
-            await new Promise(r => setTimeout(r, 1200));
-
-            addLog(`SINKRONISASI FEEDBACK...`, 'info');
-            for (let i = 0; i < 6; i++) {
-                setTimeout(() => {
-                    const p = document.createElement('div');
-                    p.className = 'particle';
-                    p.style.animation = 'flowFB 1.6s linear forwards';
-                    pLayer.appendChild(p);
-                    setTimeout(() => p.remove(), 1800);
-                }, i * 200);
-            }
-            await new Promise(r => setTimeout(r, 1800));
-            
-            boxes.in.classList.add('active');
-            addLog(`SIKLUS SELESAI.`, 'info');
-            await new Promise(r => setTimeout(r, 800));
-            boxes.in.classList.remove('active');
-            boxes.out.classList.remove('active');
-            btn.disabled = false;
         }
     </script>
 </body>
