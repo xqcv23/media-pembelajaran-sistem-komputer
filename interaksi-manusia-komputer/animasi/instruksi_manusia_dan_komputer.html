@@ -2,8 +2,8 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HCI Simulator - Ultimate Edition</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>HCI Simulator - Mobile Optimized</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -13,187 +13,110 @@
             --neon-green: #10b981;
             --neon-orange: #f59e0b;
             --neon-purple: #d946ef;
-            --glass: rgba(30, 41, 59, 0.7);
-            --border: rgba(255, 255, 255, 0.1);
+            --glass: rgba(15, 23, 42, 0.8);
+            --border: rgba(255, 255, 255, 0.05);
         }
 
         * { box-sizing: border-box; }
         body {
             background-color: var(--bg-dark);
-            background-image: 
-                radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.12) 0%, transparent 50%),
-                linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-            background-size: 100% 100%, 40px 40px, 40px 40px;
+            background-image: radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.1) 0%, transparent 50%);
             color: #f8fafc;
             font-family: 'Orbitron', sans-serif;
             display: flex; flex-direction: column; align-items: center;
-            height: 100vh; margin: 0; padding: 15px;
-            overflow: hidden;
+            min-height: 100vh; margin: 0; padding: 10px;
+            overflow-x: hidden;
         }
 
         h1 { 
-            font-size: 1.1rem; text-align: center; margin: 15px 0;
-            text-transform: uppercase; letter-spacing: 4px;
-            color: #fff; text-shadow: 0 0 15px var(--neon-blue);
+            font-size: 1rem; text-align: center; margin: 10px 0;
+            text-transform: uppercase; letter-spacing: 3px;
+            color: #fff; text-shadow: 0 0 10px var(--neon-blue);
         }
 
-        /* --- CONTROLS --- */
+        /* --- CONTROLS (Border Removed) --- */
         .controls {
-            z-index: 100; background: var(--glass); backdrop-filter: blur(15px);
-            padding: 12px; border-radius: 15px; border: 1px solid var(--border);
-            display: flex; gap: 12px; margin-bottom: 30px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+            z-index: 100; background: transparent; 
+            padding: 10px; border: none; /* Garis pembungkus dihilangkan */
+            display: flex; gap: 8px; margin-bottom: 20px;
         }
-        input { background: rgba(0, 0, 0, 0.6); border: 1px solid var(--neon-blue); color: white; padding: 10px; border-radius: 6px; font-family: 'JetBrains Mono', monospace; outline: none; width: 160px; font-size: 0.85rem; }
-        button { background: var(--neon-blue); color: white; border: none; padding: 10px 22px; border-radius: 6px; cursor: pointer; font-family: 'Orbitron', sans-serif; font-size: 0.8rem; font-weight: bold; transition: 0.4s; text-transform: uppercase; }
-        button:hover:not(:disabled) { box-shadow: 0 0 20px var(--neon-blue); transform: translateY(-2px); }
-        button:disabled { opacity: 0.4; transform: none; }
+        input { background: rgba(0, 0, 0, 0.6); border: 1px solid var(--neon-blue); color: white; padding: 8px; border-radius: 6px; font-family: 'JetBrains Mono', monospace; outline: none; width: 130px; font-size: 0.75rem; }
+        button { background: var(--neon-blue); color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-family: 'Orbitron', sans-serif; font-size: 0.7rem; font-weight: bold; transition: 0.3s; }
+        button:disabled { opacity: 0.4; }
 
         /* --- SCENE --- */
-        .scene { perspective: 1200px; width: 100%; display: flex; justify-content: center; margin-top: 10px; }
+        .scene { perspective: 1000px; width: 100%; display: flex; justify-content: center; }
         .diagram-container {
             transform: rotateX(15deg); transform-style: preserve-3d;
             display: grid; 
-            grid-template-columns: 130px 60px 130px 60px 130px;
-            grid-template-rows: 100px 60px 100px; gap: 0; align-items: center; justify-items: center;
-            position: relative; width: 510px;
+            grid-template-columns: 120px 45px 120px 45px 120px;
+            grid-template-rows: 90px 50px 90px; gap: 0; align-items: center; justify-items: center;
+            position: relative; width: 450px;
         }
 
         /* --- BOXES --- */
         .box {
-            width: 100%; height: 100%; background: var(--glass); border: 1px solid var(--border); border-radius: 15px;
+            width: 100%; height: 100%; background: var(--glass); border: 1px solid var(--border); border-radius: 12px;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
-            transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; z-index: 10;
-            overflow: hidden;
+            transition: 0.5s; position: relative; z-index: 10;
         }
-        .box i { font-size: 1.8rem; margin-bottom: 5px; font-style: normal; text-shadow: 0 0 15px rgba(255,255,255,0.6); position: relative; z-index: 20; }
-        .box h3 { font-size: 0.65rem; margin: 0; letter-spacing: 2px; color: #fff; font-weight: 700; text-transform: uppercase; position: relative; z-index: 20; }
-        
-        .box-input { border-bottom: 4px solid var(--neon-blue); }
-        .box-cpu { border-bottom: 4px solid var(--neon-red); }
-        .box-storage { border-bottom: 4px solid var(--neon-orange); }
-        
-        .box.active { transform: translateZ(40px) scale(1.1); border-color: #fff; box-shadow: 0 0 40px rgba(255,255,255,0.3); }
+        .box i { font-size: 1.5rem; margin-bottom: 5px; font-style: normal; position: relative; z-index: 20; }
+        .box h3 { font-size: 0.6rem; margin: 0; letter-spacing: 1.5px; color: #94a3b8; text-transform: uppercase; position: relative; z-index: 20; }
+        .box-input { border-bottom: 3px solid var(--neon-blue); }
+        .box-cpu { border-bottom: 3px solid var(--neon-red); }
+        .box-storage { border-bottom: 3px solid var(--neon-orange); }
+        .box.active { transform: translateZ(30px) scale(1.05); border-color: #fff; box-shadow: 0 0 25px rgba(255,255,255,0.2); }
 
-        /* --- INPUT ENHANCEMENTS --- */
-        .input-waves {
-            position: absolute; width: 100%; height: 100%; top: 0; left: 0;
-            display: flex; justify-content: center; align-items: center;
-            pointer-events: none; opacity: 0; transition: 0.5s;
-        }
-        .box-input.active .input-waves { opacity: 1; }
-        .wave {
-            position: absolute; width: 20px; height: 20px; border: 2px solid var(--neon-blue);
-            border-radius: 50%; animation: waveAnim 1s infinite;
-        }
-        .wave:nth-child(2) { animation-delay: 0.3s; }
-        .wave:nth-child(3) { animation-delay: 0.6s; }
-        
-        @keyframes waveAnim {
-            0% { width: 10px; height: 10px; opacity: 1; }
-            100% { width: 150px; height: 150px; opacity: 0; }
-        }
-
-        .input-data-stream {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            font-family: 'JetBrains Mono', monospace; font-size: 0.5rem;
-            color: var(--neon-blue); opacity: 0; overflow: hidden;
-            display: flex; flex-wrap: wrap; justify-content: center; padding: 5px;
-        }
-        .box-input.active .input-data-stream { opacity: 0.4; animation: pulseData 0.2s infinite; }
-        @keyframes pulseData { 0%, 100% { opacity: 0.4; } 50% { opacity: 0.8; } }
-
-        /* --- CPU GEAR --- */
-        .box-cpu.active i { animation: rotateGear 2s infinite linear; display: inline-block; }
-        @keyframes rotateGear { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-
-        /* --- QUANTUM STORAGE CORE --- */
-        .quantum-core {
-            position: absolute; width: 100%; height: 100%; top: 0; left: 0;
-            display: flex; justify-content: center; align-items: center;
-            pointer-events: none; opacity: 0.1; transition: 0.5s;
-            mix-blend-mode: screen; z-index: 1;
-        }
-        .box-storage.active .quantum-core { opacity: 0.8; }
-        
-        .core-center {
-            width: 30px; height: 30px; background: var(--neon-orange); border-radius: 50%;
-            box-shadow: 0 0 20px var(--neon-orange), 0 0 40px var(--neon-orange);
-            position: relative; z-index: 2;
-        }
-        .core-ring {
-            position: absolute; border: 2px solid var(--neon-orange); border-radius: 50%;
-            opacity: 0.5; transition: 0.5s;
-        }
-        .ring-1 { width: 50px; height: 50px; animation: orbit 3s infinite linear; border-top-color: transparent; }
-        .ring-2 { width: 70px; height: 70px; animation: orbit 2s infinite linear reverse; border-bottom-color: transparent; }
-        
-        .box-storage.active .core-center { animation: pulseCore 0.5s infinite alternate; }
-        
+        /* --- CORE --- */
+        .quantum-core { position: absolute; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; opacity: 0.1; mix-blend-mode: screen; z-index: 1; }
+        .box-storage.active .quantum-core { opacity: 0.7; }
+        .core-center { width: 25px; height: 25px; background: var(--neon-orange); border-radius: 50%; box-shadow: 0 0 20px var(--neon-orange); }
+        .core-ring { position: absolute; border: 1px solid var(--neon-orange); border-radius: 50%; animation: orbit 3s infinite linear; }
+        .ring-1 { width: 45px; height: 45px; }
         @keyframes orbit { from { transform: rotate(0deg) rotateX(60deg); } to { transform: rotate(360deg) rotateX(60deg); } }
-        @keyframes pulseCore { from { transform: scale(1); filter: brightness(1); } to { transform: scale(1.2); filter: brightness(2); } }
 
-        /* --- PIPES --- */
-        .pipe-h { width: 100%; height: 2px; background: rgba(255,255,255,0.1); position: relative; }
-        .pipe-v { height: 100%; width: 2px; background: rgba(255,255,255,0.1); position: relative; }
-
-        /* --- PARTICLES --- */
-        .particle {
-            position: absolute; width: 8px; height: 8px; background: #fff; border-radius: 50%;
-            box-shadow: 0 0 12px #fff, 0 0 20px var(--neon-blue); opacity: 0; z-index: 100;
-            transform: translate(-4px, -4px);
-        }
+        /* --- PIPES & PARTICLES --- */
+        .pipe-h { width: 100%; height: 2px; background: rgba(255,255,255,0.05); }
+        .pipe-v { height: 100%; width: 2px; background: rgba(255,255,255,0.05); }
+        .particle { position: absolute; width: 6px; height: 6px; background: #fff; border-radius: 50%; box-shadow: 0 0 10px #fff, 0 0 15px var(--neon-blue); opacity: 0; z-index: 100; transform: translate(-3px, -3px); }
 
         /* --- MONITOR --- */
-        .monitor-frame {
-            width: 85%; height: 60px; background: #0c0c0c; border: 2px solid #333; border-radius: 10px; padding: 5px;
-            display: flex; align-items: center; justify-content: center; transition: 0.4s;
-        }
-        .monitor-screen {
-            width: 100%; height: 100%; background: #000; border-radius: 6px;
-            display: flex; align-items: center; justify-content: center; overflow: hidden;
-            font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--neon-green);
-        }
-        .box-output.active .monitor-frame { border-color: var(--neon-green); box-shadow: 0 0 25px var(--neon-green); }
+        .monitor-frame { width: 85%; height: 45px; background: #000; border: 1px solid #333; border-radius: 6px; display: flex; align-items: center; justify-content: center; }
+        .monitor-screen { width: 100%; height: 100%; font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; color: var(--neon-green); text-align: center; overflow: hidden; }
 
-        /* --- FEEDBACK TRACK --- */
-        .feedback-line {
-            position: absolute; 
-            top: 50px; left: 65px; width: 380px; height: 230px;
-            border: 2px dashed rgba(255, 255, 255, 0.2); border-top: none; border-radius: 0 0 50px 50px;
-            pointer-events: none; z-index: 1;
-        }
+        /* --- FEEDBACK --- */
+        .feedback-line { position: absolute; top: 45px; left: 60px; width: 330px; height: 200px; border: 1.5px dashed rgba(255, 255, 255, 0.15); border-top: none; border-radius: 0 0 40px 40px; pointer-events: none; }
 
-        /* --- LOG --- */
+        /* --- LOG (Compact & Limited Line) --- */
         .log-container {
-            margin-top: 40px; width: 90%; max-width: 600px; height: 130px;
-            background: rgba(0,0,0,0.85); border-left: 5px solid var(--neon-blue);
-            padding: 15px; border-radius: 8px; overflow-y: auto;
-            font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; line-height: 1.5;
+            margin-top: 25px; width: 95%; max-width: 450px; height: 90px;
+            background: rgba(0,0,0,0.6); border-left: 3px solid var(--neon-blue); /* Garis biru dibuat lebih tipis & pendek sesuai box */
+            padding: 10px; border-radius: 4px; overflow-y: auto;
+            font-family: 'JetBrains Mono', monospace; font-size: 0.65rem;
         }
-        .log-entry { margin-bottom: 5px; color: #4b5563; }
-        .log-info { color: var(--neon-blue); font-weight: bold; }
+        .log-entry { margin-bottom: 3px; color: #4b5563; }
+        .log-info { color: var(--neon-blue); }
         .log-proc { color: var(--neon-red); }
-        .log-store { color: var(--neon-orange); font-weight: bold; }
-        .log-out { color: var(--neon-green); }
+        .log-store { color: var(--neon-orange); }
 
-        /* ANIMATIONS */
         @keyframes flowRight { 0% { left: 0; opacity: 1; } 100% { left: 100%; opacity: 1; } }
         @keyframes flowDown { 0% { top: 0; opacity: 1; } 100% { top: 100%; opacity: 1; } }
         @keyframes flowUp { 0% { top: 100%; opacity: 1; } 100% { top: 0; opacity: 1; } }
-        
         @keyframes flowFB {
-            0% { top: 50px; left: 445px; opacity: 0; transform: translate(-4px, -4px) translateZ(0); }
+            0% { top: 45px; left: 390px; opacity: 0; }
             5% { opacity: 1; }
-            35% { top: 280px; left: 445px; transform: translate(-4px, -4px) translateZ(40px); }
-            65% { top: 280px; left: 65px; transform: translate(-4px, -4px) translateZ(40px); }
-            95% { opacity: 1; }
-            100% { top: 50px; left: 65px; opacity: 0; transform: translate(-4px, -4px) translateZ(0); }
+            35% { top: 245px; left: 390px; }
+            65% { top: 245px; left: 60px; }
+            100% { top: 45px; left: 60px; opacity: 0; }
         }
 
+        /* --- MOBILE FIX --- */
         @media (max-width: 600px) {
-            .scene { transform: scale(0.75); }
+            h1 { font-size: 0.9rem; }
+            .controls { gap: 5px; transform: scale(0.9); margin-bottom: 10px; }
+            input { width: 100px; }
+            .scene { transform: scale(0.65); margin-top: -30px; } /* Diperkecil supaya muat di layar potret HP */
+            .log-container { width: 90%; margin-top: 10px; }
         }
     </style>
 </head>
@@ -203,21 +126,13 @@
 
     <div class="controls">
         <input type="text" id="userInput" placeholder="INJECT DATA..." autocomplete="off">
-        <button id="btnRun" onclick="runSystem()">Initialize</button>
+        <button id="btnRun" onclick="runSystem()">Run</button>
         <button onclick="location.reload()" style="background:#334155;">Reset</button>
     </div>
 
     <div class="scene">
         <div class="diagram-container">
-            <div class="box box-input" id="bInput">
-                <div class="input-waves">
-                    <div class="wave"></div>
-                    <div class="wave"></div>
-                    <div class="wave"></div>
-                </div>
-                <div class="input-data-stream" id="iStream"></div>
-                <i>⌨️</i><h3>INPUT</h3>
-            </div>
+            <div class="box box-input" id="bInput"><i>⌨️</i><h3>INPUT</h3></div>
             <div class="pipe-h" id="p1"></div>
             <div class="box box-cpu" id="bCpu"><i>⚙️</i><h3>CPU</h3></div>
             <div class="pipe-h" id="p2"></div>
@@ -226,17 +141,11 @@
                 <h3>OUTPUT</h3>
             </div>
 
-            <div></div><div></div>
-            <div class="pipe-v" id="p3"></div>
-            <div></div><div></div>
+            <div></div><div></div><div class="pipe-v" id="p3"></div><div></div><div></div>
 
             <div></div><div></div>
             <div class="box box-storage" id="bStore">
-                <div class="quantum-core">
-                    <div class="core-center"></div>
-                    <div class="core-ring ring-1"></div>
-                    <div class="core-ring ring-2"></div>
-                </div>
+                <div class="quantum-core"><div class="core-center"></div><div class="core-ring ring-1"></div></div>
                 <i>💾</i><h3>STORAGE</h3>
             </div>
             <div></div><div></div>
@@ -247,7 +156,7 @@
     </div>
 
     <div class="log-container" id="log">
-        <div class="log-entry">// Sistem Standby. Menunggu Sinyal...</div>
+        <div class="log-entry">// Sistem Standby...</div>
     </div>
 
     <script>
@@ -256,15 +165,6 @@
         const input = document.getElementById('userInput');
         const screen = document.getElementById('screenText');
         const pLayer = document.getElementById('pLayer');
-        const iStream = document.getElementById('iStream');
-
-        // Initialize Input Stream
-        for(let i=0; i<40; i++) {
-            const bit = document.createElement('span');
-            bit.textContent = Math.round(Math.random());
-            bit.style.margin = '2px';
-            iStream.appendChild(bit);
-        }
 
         const boxes = {
             in: document.getElementById('bInput'),
@@ -273,11 +173,7 @@
             store: document.getElementById('bStore')
         };
 
-        const pipes = {
-            p1: document.getElementById('p1'),
-            p2: document.getElementById('p2'),
-            p3: document.getElementById('p3')
-        };
+        const pipes = { p1: document.getElementById('p1'), p2: document.getElementById('p2'), p3: document.getElementById('p3') };
 
         function addLog(msg, type) {
             const div = document.createElement('div');
@@ -288,17 +184,17 @@
         }
 
         function spawnParticles(pipe, direction, color) {
-            for (let i = 0; i < 8; i++) {
+            for (let i = 0; i < 6; i++) {
                 setTimeout(() => {
                     const p = document.createElement('div');
                     p.className = 'particle';
-                    p.style.boxShadow = `0 0 12px #fff, 0 0 20px ${color}`;
-                    if (direction === 'right') p.style.animation = 'flowRight 0.8s ease-in forwards';
-                    else if (direction === 'down') p.style.animation = 'flowDown 0.8s ease-in forwards';
-                    else if (direction === 'up') p.style.animation = 'flowUp 0.8s ease-in forwards';
+                    p.style.boxShadow = `0 0 10px #fff, 0 0 15px ${color}`;
+                    if (direction === 'right') p.style.animation = 'flowRight 0.7s linear forwards';
+                    else if (direction === 'down') p.style.animation = 'flowDown 0.7s linear forwards';
+                    else if (direction === 'up') p.style.animation = 'flowUp 0.7s linear forwards';
                     pipe.appendChild(p);
-                    setTimeout(() => p.remove(), 900);
-                }, i * 140);
+                    setTimeout(() => p.remove(), 800);
+                }, i * 130);
             }
         }
 
@@ -306,66 +202,57 @@
             const val = input.value;
             if (!val) return;
             btn.disabled = true;
-            log.innerHTML = '';
-            screen.innerText = '';
+            log.innerHTML = ''; screen.innerText = '';
             
-            // 1. INPUT
-            addLog(`KONEKSI NEURAL AKTIF. MENYUNTIKKAN DATA: "${val}"`, 'info');
+            addLog(`KONEKSI NEURAL AKTIF: "${val}"`, 'info');
             boxes.in.classList.add('active');
-            await new Promise(r => setTimeout(r, 1000)); // Time for waves
-            spawnParticles(pipes.p1, 'right', 'var(--neon-blue)');
             await new Promise(r => setTimeout(r, 800));
+            spawnParticles(pipes.p1, 'right', 'var(--neon-blue)');
+            await new Promise(r => setTimeout(r, 700));
             boxes.in.classList.remove('active');
 
-            // 2. CPU
-            addLog(`INTI PROSESOR: ANALISIS DATA MULTI-THREAD...`, 'proc');
+            addLog(`INTI PROSESOR: ANALISIS DATA...`, 'proc');
             boxes.cpu.classList.add('active');
-            await new Promise(r => setTimeout(r, 1200));
+            await new Promise(r => setTimeout(r, 1000));
 
-            // 3. STORAGE
-            addLog(`INTI KUANTUM: MENSTABILKAN MATRIKS DATA...`, 'store');
+            addLog(`INTI KUANTUM: MENYIMPAN DATA...`, 'store');
             spawnParticles(pipes.p3, 'down', 'var(--neon-orange)');
-            await new Promise(r => setTimeout(r, 700));
+            await new Promise(r => setTimeout(r, 600));
             boxes.store.classList.add('active');
-            await new Promise(r => setTimeout(r, 1500));
+            await new Promise(r => setTimeout(r, 1200));
             
-            addLog(`INTI KUANTUM: MENGAMBIL SINYAL ARSIP...`, 'store');
-            await new Promise(r => setTimeout(r, 500));
+            addLog(`INTI KUANTUM: MEMBACA DATA...`, 'store');
             spawnParticles(pipes.p3, 'up', 'var(--neon-blue)');
-            await new Promise(r => setTimeout(r, 700));
+            await new Promise(r => setTimeout(r, 600));
             boxes.store.classList.remove('active');
             
-            // 4. OUTPUT
-            addLog(`DISPLAY VIRTUAL: MERENDER DATA VISUAL...`, 'out');
+            addLog(`DISPLAY: MERENDER VISUAL...`, 'out');
             spawnParticles(pipes.p2, 'right', 'var(--neon-green)');
-            await new Promise(r => setTimeout(r, 800));
+            await new Promise(r => setTimeout(r, 700));
             boxes.cpu.classList.remove('active');
             boxes.out.classList.add('active');
 
             for (let char of val) {
                 screen.innerText += char;
-                await new Promise(r => setTimeout(r, 100));
+                await new Promise(r => setTimeout(r, 80));
             }
-            addLog(`MENAMPILKAN: "${val}" PADA ANTARMUKA...`, 'out');
-            await new Promise(r => setTimeout(r, 1500));
+            await new Promise(r => setTimeout(r, 1200));
 
-            // 5. FEEDBACK LOOP
-            addLog(`SINKRONISASI FEEDBACK: KEMBALI KE SUMBER...`, 'info');
-            for (let i = 0; i < 8; i++) {
+            addLog(`SINKRONISASI FEEDBACK...`, 'info');
+            for (let i = 0; i < 6; i++) {
                 setTimeout(() => {
                     const p = document.createElement('div');
                     p.className = 'particle';
-                    p.style.animation = 'flowFB 2s linear forwards';
+                    p.style.animation = 'flowFB 1.6s linear forwards';
                     pLayer.appendChild(p);
-                    setTimeout(() => p.remove(), 2200);
-                }, i * 250);
+                    setTimeout(() => p.remove(), 1800);
+                }, i * 200);
             }
-            await new Promise(r => setTimeout(r, 2200));
+            await new Promise(r => setTimeout(r, 1800));
             
             boxes.in.classList.add('active');
-            addLog(`SIKLUS SELESAI. KONEKSI STABIL.`, 'info');
-            await new Promise(r => setTimeout(r, 1000));
-            
+            addLog(`SIKLUS SELESAI.`, 'info');
+            await new Promise(r => setTimeout(r, 800));
             boxes.in.classList.remove('active');
             boxes.out.classList.remove('active');
             btn.disabled = false;
