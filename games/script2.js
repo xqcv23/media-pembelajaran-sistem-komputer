@@ -392,7 +392,22 @@ function selectHero(el) {
     playSound(sfxMap[state.heroClass] || 'jump');
 }
 function selectDungeon(el) { document.querySelectorAll('.dungeon-option').forEach(d => d.classList.remove('selected')); el.classList.add('selected'); state.dungeon = el.dataset.dungeon; playSound('typing'); }
-function switchScreen(from, to) { document.getElementById(from).classList.remove('active'); document.getElementById(to).classList.add('active'); }
+function switchScreen(from, to) { 
+    document.getElementById(from).classList.remove('active'); 
+    document.getElementById(to).classList.add('active'); 
+    
+    // Auto-manage back & exit button visibility
+    var btnBack = document.getElementById('btnBackGame');
+    var btnExit = document.getElementById('btnExitGame');
+    
+    if (to === 'mainMenu') {
+        if (btnBack) btnBack.style.display = 'none';
+        if (btnExit) btnExit.style.display = 'block';
+    } else {
+        if (btnBack) btnBack.style.display = 'block';
+        if (btnExit) btnExit.style.display = 'none';
+    }
+}
 
 // ============ LEADERBOARD & ACHIEVEMENTS ============
 const cheatsDB = {
@@ -419,8 +434,6 @@ function showBriefing() {
     document.getElementById('missionTitle').textContent = titles[state.dungeon] || "MISI: SYSTEM BOOT";
     
     switchScreen('mainMenu', 'briefingScreen');
-    var btnBack = document.getElementById('btnBackGame');
-    if (btnBack) btnBack.style.display = 'block';
 }
 
 function showToast(msg) {
@@ -442,28 +455,42 @@ function handleBackAction() {
     if (document.getElementById('battleScreen').classList.contains('active')) {
         switchScreen('battleScreen', 'mainMenu');
         playLoopingTrack('menu');
-        if (btnBack) btnBack.style.display = 'none';
     } else if (document.getElementById('briefingScreen').classList.contains('active')) {
         switchScreen('briefingScreen', 'mainMenu');
-        if (btnBack) btnBack.style.display = 'none';
     } else if (document.getElementById('resultScreen').classList.contains('active')) {
         switchScreen('resultScreen', 'mainMenu');
         playLoopingTrack('menu');
+    } else {
+        // Fallback: jika tombol ditekan saat sudah di menu (karena tidak sengaja muncul)
         if (btnBack) btnBack.style.display = 'none';
     }
 }
 
 // Fungsi keluar dari menu RPG ke halaman pilihan games (index.html)
 function exitToGamesList() {
+    // Feedback visual klik
+    const btn = document.getElementById('btnExitGame');
+    if (btn) {
+        btn.style.background = '#ff4444';
+        btn.style.transform = 'scale(0.8)';
+        setTimeout(() => { btn.style.background = ''; btn.style.transform = ''; }, 150);
+    }
+
     try {
+        // Kirim sinyal ke parent (prep-quest.html)
+        if (window.parent) {
+            window.parent.postMessage('TECH_QUEST_EXIT', '*');
+        }
+        
+        // Panggil langsung jika memungkinkan
         if (window.parent !== window && typeof window.parent.showExitConfirm === 'function') {
             window.parent.showExitConfirm();
             return;
         }
-    } catch(e) { }
+    } catch(e) { console.warn("Parent comm failed:", e); }
     
-    // Fallback
-    if (confirm('Apakah kamu yakin ingin meninggalkan permainan?')) {
+    // Backup: jika masih gagal, gunakan confirm native
+    if (confirm('Keluar dari permainan?')) {
         window.top.location.href = 'index.html';
     }
 }
@@ -1260,8 +1287,14 @@ function endQuest() {
     `;
     switchScreen('battleScreen', 'resultScreen');
 }
-function retryQuest() { switchScreen('resultScreen','mainMenu'); setTimeout(startQuest, 100); }
-function backToMenu() { switchScreen('resultScreen','mainMenu'); if (isBgmOn) playLoopingTrack('menu'); }
+function retryQuest() { 
+    switchScreen('resultScreen','mainMenu'); 
+    setTimeout(startQuest, 100); 
+}
+function backToMenu() { 
+    switchScreen('resultScreen','mainMenu'); 
+    if (isBgmOn) playLoopingTrack('menu'); 
+}
 function shuffle(a) { const b=[...a]; for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];} return b; }
 
 function spawnConfetti() {

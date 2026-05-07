@@ -261,7 +261,7 @@ body, html { width:100%; height:100%; background: #04091a; font-family: 'Outfit'
             <strong style="color:#ec4899;">(Landscape)</strong>.
         </p>
         <button class="btn-enter" id="btnEnter" onclick="startFullscreen()">⛶ Masuk Layar Penuh</button>
-        <button class="btn-cancel" onclick="window.close()">✕ Keluar</button>
+        <button class="btn-cancel" onclick="safeClose()">✕ Keluar</button>
     </div>
 </div>
 
@@ -290,7 +290,7 @@ body, html { width:100%; height:100%; background: #04091a; font-family: 'Outfit'
         <h2>⚠️ GAME DIJEDA</h2>
         <p>Layar Penuh Tertutup!<br><span class="warning-blink">⚠️ WAKTU GAME TETAP BERJALAN!</span></p>
         <button class="btn-resume" onclick="resumeFullscreen()">⛶ Lanjutkan Bermain</button>
-        <button class="btn-close-game" onclick="window.close()">✕ Keluar Game</button>
+        <button class="btn-close-game" onclick="safeClose()">✕ Keluar Game</button>
     </div>
 </div>
 
@@ -424,9 +424,25 @@ async function resumeFullscreen() {
     document.getElementById('resumeOverlay').classList.remove('active');
 }
 
+// Listen pesan dari iframe (backup jika fungsi showExitConfirm tidak terjangkau)
+window.addEventListener('message', function(event) {
+    if (event.data === 'TECH_QUEST_EXIT') {
+        showExitConfirm();
+    }
+});
+
 // Fungsi yang dipanggil dari iframe (games.html) saat tombol Keluar diklik
 function showExitConfirm() {
     document.getElementById('exitConfirm').classList.add('active');
+}
+
+function safeClose() {
+    // Coba tutup tab
+    window.close();
+    // Fallback jika window.close diblokir
+    setTimeout(() => {
+        window.location.href = 'index.html';
+    }, 100);
 }
 
 function confirmExit() {
