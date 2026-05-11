@@ -46,6 +46,7 @@
                     melalui antarmuka.</p>
             </div>
             <iframe id="iframe_instruksi" src="./animasi/instruksi_manusia_dan_komputer.html"
+                tabindex="-1"
                 style="border:none; margin-top:15px; margin-bottom:15px;">tidak support</iframe>
         </div>
 
@@ -181,5 +182,15 @@
     </div>
     </div>
 </body>
+
+<script>
+    // Pastikan halaman selalu mulai dari atas saat dimuat
+    if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'manual';
+    }
+    window.addEventListener('load', function() {
+        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    });
+</script>
 
 </html>
