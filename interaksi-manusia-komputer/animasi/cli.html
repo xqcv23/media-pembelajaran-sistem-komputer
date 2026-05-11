@@ -217,9 +217,9 @@
                     <span id="typedText" class="command-text"></span><span class="cursor"></span>
                 </div>
 
-                <!-- Input dibungkus FORM di dalam terminal agar scroll tetap sinkron -->
+                <!-- Input tersembunyi - tabindex="-1" mencegah browser auto-scroll ke sini -->
                 <form id="cmdForm" action="#" onsubmit="return false;">
-                    <input type="text" id="hiddenInput" autocomplete="off" spellcheck="false">
+                    <input type="text" id="hiddenInput" tabindex="-1" autocomplete="off" spellcheck="false">
                 </form>
             </div>
 
