@@ -295,8 +295,10 @@
             'ver': `<div class='line'>Microsoft Windows [Version 10.0.19045.3693]</div>`
         };
 
-        function focusInput() { hiddenInput.focus(); }
-        window.onload = focusInput;
+        function focusInput() { 
+            hiddenInput.focus({ preventScroll: true }); 
+        }
+        // TIDAK auto-fokus saat load — mencegah halaman parent scroll ke iframe
 
         // Listener untuk efek ngetik visual
         hiddenInput.addEventListener('input', function() {
@@ -336,14 +338,14 @@
             
             scrollToBottom();
             
-            // Jaga fokus agar keyboard tidak tertutup (opsional, tergantung browser HP)
-            setTimeout(() => hiddenInput.focus(), 10);
+            // Jaga fokus agar keyboard tidak tertutup
+            setTimeout(() => hiddenInput.focus({ preventScroll: true }), 10);
         });
 
         function autoType(txt) {
             hiddenInput.value = txt; 
             typedText.textContent = txt; 
-            hiddenInput.focus();
+            hiddenInput.focus({ preventScroll: true });
             scrollToBottom();
         }
 
