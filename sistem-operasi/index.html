@@ -55,6 +55,7 @@
         <p>Bagaimana OS menjalankan operasi dasar <strong>(poin a)</strong> dan menyajikan tampilan <strong>(poin d)</strong>? Animasi ini mensimulasikan proses <strong>booting</strong>. OS adalah perangkat lunak pertama yang dimuat ke RAM. Setelah OS berhasil dimuat, barulah muncul antarmuka Desktop (GUI) sehingga kamu bisa menjalankan aplikasi lain. Klik tombol untuk memulai!</p>
       </div>
       <iframe id="iframe_booting" src="./animasi/animasi_booting.html" width="100%" height="480px"
+        tabindex="-1"
         style="border:none; margin-top:15px; margin-bottom:15px;">tidak support</iframe>
       <div class="tab-nav-footer">
         <button class="nav-next" onclick="goToTab(1)">Selanjutnya: Driver ➔</button>
@@ -89,6 +90,7 @@
             Hardware.</p>
         </div>
         <iframe id="iframe_peran" src="./animasi/peran_sistem_komputer.html"
+          tabindex="-1"
           style="border:none; margin-top:15px; margin-bottom:15px;">tidak support</iframe>
       </div>
       <div class="tab-nav-footer">
@@ -137,7 +139,7 @@
         </ul>
         <p style="margin-top:10px;"><strong>Instruksi:</strong> Tekan kedua tombol di panel bawah animasi untuk melihat langsung perbedaan proses kerjanya!</p>
       </div>
-      <iframe id="iframe_instalasi" src="./animasi/animasi_instalasi.html?v=2" width="100%" height="560px" style="border:none; margin-top:10px; margin-bottom:15px; border-radius: 12px; overflow: hidden;"></iframe>
+      <iframe id="iframe_instalasi" src="./animasi/animasi_instalasi.html?v=2" width="100%" height="560px" tabindex="-1" style="border:none; margin-top:10px; margin-bottom:15px; border-radius: 12px; overflow: hidden;"></iframe>
 
       <div class="tab-nav-footer">
         <button class="nav-prev" onclick="goToTab(1)">⬅ Kembali ke Driver</button>
@@ -146,5 +148,14 @@
   </div>
   </div>
 </body>
+
+<script>
+  if ('scrollRestoration' in history) {
+    history.scrollRestoration = 'manual';
+  }
+  window.addEventListener('load', function() {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  });
+</script>
 
 </html>
