@@ -11,7 +11,7 @@
         body {
             margin: 0; padding: 0;
             background: #e2e8f0;
-            height: 100vh; height: 100vh;
+            height: 100vh;
             display: flex; align-items: center; justify-content: center;
             font-family: 'Segoe UI', sans-serif;
             overflow: hidden;
@@ -62,6 +62,7 @@
             white-space: nowrap; 
             display: block; 
             -webkit-overflow-scrolling: touch;
+            position: relative;
         }
 
         /* Scrollbar Styling */
@@ -112,7 +113,14 @@
 
         /* FORM HIDDEN (PENTING BUAT HP) */
         #cmdForm {
-            position: fixed; top: 0; left: 0; width: 1px; height: 1px; opacity: 0; z-index: -1;
+            position: absolute; 
+            bottom: 0; 
+            left: 0; 
+            width: 1px; 
+            height: 1px; 
+            opacity: 0; 
+            z-index: -1;
+            pointer-events: none;
         }
         
         /* TABLE DEFAULT DESKTOP */
@@ -208,6 +216,11 @@
                     <span class="prompt">C:\Users\Siswa></span>
                     <span id="typedText" class="command-text"></span><span class="cursor"></span>
                 </div>
+
+                <!-- Input dibungkus FORM di dalam terminal agar scroll tetap sinkron -->
+                <form id="cmdForm" action="#" onsubmit="return false;">
+                    <input type="text" id="hiddenInput" autocomplete="off" spellcheck="false">
+                </form>
             </div>
 
             <div class="sidebar">
@@ -233,13 +246,7 @@
         </div>
     </div>
 
-    <!-- 
-       PERBAIKAN UTAMA:
-       Input dibungkus FORM agar tombol 'Enter/Go' di HP memicu event submit.
-    -->
-    <form id="cmdForm" action="#" onsubmit="return false;">
-        <input type="text" id="hiddenInput" autocomplete="off" spellcheck="false">
-    </form>
+
 
     <script>
         const outputDiv = document.getElementById('output');
