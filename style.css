@@ -25,7 +25,7 @@ body {
     background-color: var(--bg-color);
     color: var(--text-dark);
     min-height: 100vh;
-    padding: 20px 20px 100px 20px; /* Ditambah padding bawah agar tidak terpotong di Google Sites */
+    padding: 20px;
     display: flex;
     justify-content: center;
     align-items: flex-start;
@@ -56,7 +56,7 @@ body::before {
     display: flex;
     flex-direction: column;
     gap: 30px;
-    margin-bottom: 80px; /* Ditambah margin bawah ekstra */
+    margin-bottom: 20px;
     z-index: 1;
 }
 
