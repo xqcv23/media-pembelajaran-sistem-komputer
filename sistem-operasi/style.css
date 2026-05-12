@@ -18,7 +18,7 @@ h1 {
 
 #iframe_peran {
     width: 100%;
-    height: 800px;
+    height: 550px;
 }
 
 @media (max-width: 768px) {
@@ -41,7 +41,7 @@ h1 {
     }
 
     #iframe_peran {
-        height: 500px;
+        height: 600px;
     }
 
 }
