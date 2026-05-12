@@ -26,8 +26,14 @@ function goToTab(index) {
 
 // ========= SECTION-BASED PROGRESS TRACKING =========
 (function() {
-    // Hardcode materiKey untuk modul ini agar tidak bentrok
-    var materiKey = 'sistem-operasi';
+    // Deteksi nama materi dari path URL
+    var path = window.location.pathname;
+    var materiKey = '';
+    if (path.indexOf('sistem-komputer') !== -1) materiKey = 'sistem-komputer';
+    else if (path.indexOf('interaksi-manusia-komputer') !== -1) materiKey = 'interaksi-manusia-komputer';
+    else if (path.indexOf('sistem-operasi') !== -1) materiKey = 'sistem-operasi';
+
+    if (!materiKey) return;
 
     var storageKey = 'progress_data_' + materiKey;
 
