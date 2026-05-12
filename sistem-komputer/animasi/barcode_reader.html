@@ -690,7 +690,7 @@
       }
 
       .product {
-        left: 0px !important;
+        left: 20px !important;
         bottom: 50px !important;
         width: 80px !important;
         height: 120px !important;
@@ -708,7 +708,7 @@
       }
 
       .shadow-product {
-        left: 0px !important;
+        left: 20px !important;
         bottom: 40px !important;
         width: 80px !important;
         height: 10px !important;
@@ -716,16 +716,16 @@
 
       .scanner-gun,
       .laser-container {
-        left: 180px !important;
+        left: 120px !important;
         top: auto !important;
-        bottom: 40px !important;
-        transform: scale(0.55);
+        bottom: 70px !important;
+        transform: scale(0.4);
         transform-origin: bottom center !important;
       }
 
       .shadow-scanner {
-        left: 200px !important;
-        bottom: 30px !important;
+        left: 140px !important;
+        bottom: 60px !important;
         width: 100px !important;
         height: 15px !important;
       }
@@ -1033,7 +1033,7 @@
       currentX = Math.max(-200, Math.min(100, currentX));
       currentY = Math.max(-100, Math.min(150, currentY));
 
-      const baseS = window.innerWidth <= 650 ? 0.55 : 1;
+      const baseS = window.innerWidth <= 650 ? 0.4 : 1;
       const transformStyle = `translate(${currentX}px, ${currentY}px) scale(${baseS * 1.02}) rotate(-5deg)`;
       scanner.style.transform = transformStyle;
       laserCont.style.transform = transformStyle;
@@ -1049,7 +1049,7 @@
       document.removeEventListener('mouseup', endDrag);
       document.removeEventListener('touchend', endDrag);
 
-      const baseS = window.innerWidth <= 650 ? 0.55 : 1;
+      const baseS = window.innerWidth <= 650 ? 0.4 : 1;
       const transformStyle = `translate(${currentX}px, ${currentY}px) scale(${baseS}) rotate(0deg)`;
       scanner.style.transform = transformStyle;
       laserCont.style.transform = transformStyle;
@@ -1071,7 +1071,7 @@
         currentX = 0; currentY = 0;
         scanner.style.transition = 'transform 0.5s ease-out';
         laserCont.style.transition = 'transform 0.5s ease-out';
-        const baseS = window.innerWidth <= 650 ? 0.55 : 1;
+        const baseS = window.innerWidth <= 650 ? 0.4 : 1;
         scanner.style.transform = `translate(0px, 0px) scale(${baseS})`;
         laserCont.style.transform = `translate(0px, 0px) scale(${baseS})`;
         shadowScanner.style.transform = `translate(0px, 0px)`;
@@ -1095,7 +1095,7 @@
           laserCont.style.transition = 'transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1)';
           shadowScanner.style.transition = 'transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1)';
           currentX = -50;
-          const baseS = window.innerWidth <= 650 ? 0.55 : 1;
+          const baseS = window.innerWidth <= 650 ? 0.4 : 1;
           const animState1 = `translate(${currentX}px, 20px) scale(${baseS * 1.05}) rotate(-16deg)`;
           scanner.style.transform = animState1;
           laserCont.style.transform = animState1;
@@ -1107,7 +1107,7 @@
             laserCont.style.transition = 'transform 1s ease-in-out';
             shadowScanner.style.transition = 'transform 1s ease-in-out';
             currentX = 0;
-            const animState2 = `translate(${currentX}px, 0px) scale(${window.innerWidth <= 650 ? 0.55 : 1}) rotate(0deg)`;
+            const animState2 = `translate(${currentX}px, 0px) scale(${window.innerWidth <= 650 ? 0.4 : 1}) rotate(0deg)`;
             scanner.style.transform = animState2;
             laserCont.style.transform = animState2;
             shadowScanner.style.transform = `translate(${currentX}px, 0px)`;
