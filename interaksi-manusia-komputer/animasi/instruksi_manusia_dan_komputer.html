@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
@@ -14,6 +14,11 @@
             --c-input: #3b82f6; --c-cpu: #ef4444; --c-output: #10b981; --c-storage: #f59e0b; --c-feedback: #d946ef;
         }
 
+        html, body {
+            overflow-x: hidden;
+            max-width: 100%;
+        }
+
         body {
             background-color: var(--bg);
             color: #f3f4f6;
@@ -21,7 +26,8 @@
             display: flex; flex-direction: column; align-items: center;
             min-height: 100vh;
             margin: 0; padding: 10px;
-            overflow: hidden;
+            overflow-y: auto;
+            overflow-x: hidden;
         }
 
         h1 { 
@@ -175,18 +181,36 @@
         @keyframes shoot-u { 0% { top: 100%; opacity: 1; } 100% { top: 0; opacity: 1; } }
 
         @media (max-width: 600px) {
-            .diagram-container { 
-                transform: scale(0.5);
-                 margin-top: 0px; 
-                 margin-bottom: -50px;
-                  margin-left: -5px; }
-            .controls { 
-                width: 90%;
-                margin-bottom: 10px;
-                transform: scale(0.8);
+            .diagram-container {
+                width: 100%;
+                overflow: hidden;
+                display: flex;
+                justify-content: center;
+                padding-bottom: 10px;
+                margin-bottom: 0;
+                transform: none;
             }
-            h1 { font-size: 1rem; margin-bottom: 15px; }
-            body { overflow: hidden; padding-bottom: 50px;}
+
+            .diagram-grid {
+                grid-template-columns: 82px 22px 82px 22px 82px;
+                grid-template-rows: 70px 30px 70px 40px auto;
+                transform: scale(0.82);
+                transform-origin: top center;
+            }
+
+            .controls {
+                width: 95%;
+                margin-bottom: 8px;
+                padding: 8px;
+                transform: none;
+            }
+
+            .controls input { width: 120px; font-size: 0.85rem; }
+            .controls button { padding: 7px 12px; font-size: 0.85rem; }
+
+            h1 { font-size: 0.95rem; margin-bottom: 10px; }
+
+            body { overflow-y: auto; overflow-x: hidden; padding-bottom: 20px; }
         }
     </style>
 </head>
