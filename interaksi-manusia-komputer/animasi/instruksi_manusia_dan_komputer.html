@@ -49,8 +49,9 @@
         }
 
         input { background: #0f172a; border: 1px solid #475569; color: white; padding: 8px; border-radius: 4px; width: 150px; }
-        button { background: var(--c-input); color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-weight: bold;}
-        button:hover { opacity: 0.9; }
+        button { background: var(--c-input); color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-weight: bold; transition: transform 0.15s, box-shadow 0.15s; }
+        button:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(59,130,246,0.4); }
+        button:active { transform: scale(0.95); }
         button:disabled { background: #475569; cursor: not-allowed; }
 
         /* --- DIAGRAM CONTAINER --- */
@@ -89,6 +90,37 @@
         .box-cpu { border-bottom: 4px solid var(--c-cpu); }
         .box-storage { border-bottom: 4px solid var(--c-storage); }
         .box.active { transform: scale(1.05); border-color: white !important; box-shadow: 0 0 15px rgba(255,255,255,0.2); }
+
+        /* --- ENHANCED ANIMATIONS --- */
+        .box-input.active { animation: inputPulse 0.6s ease; border-color: var(--c-input) !important; box-shadow: 0 0 25px rgba(59,130,246,0.5), inset 0 0 15px rgba(59,130,246,0.15) !important; }
+        .box-input.active i { animation: inputIconBounce 0.4s ease; }
+        @keyframes inputPulse {
+            0% { transform: scale(1); } 30% { transform: scale(1.12); } 60% { transform: scale(0.97); } 100% { transform: scale(1.05); }
+        }
+        @keyframes inputIconBounce {
+            0% { transform: translateY(0); } 40% { transform: translateY(-8px); } 100% { transform: translateY(0); }
+        }
+
+        .box-cpu.active { border-color: var(--c-cpu) !important; box-shadow: 0 0 25px rgba(239,68,68,0.5), inset 0 0 15px rgba(239,68,68,0.15) !important; }
+        .box-cpu.active i { animation: cpuSpin 0.8s linear infinite; }
+        @keyframes cpuSpin {
+            0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); }
+        }
+
+        .box-storage.active { border-color: var(--c-storage) !important; box-shadow: 0 0 25px rgba(245,158,11,0.5), inset 0 0 15px rgba(245,158,11,0.15) !important; }
+        .box-storage.active i { animation: storagePulse 0.5s ease infinite alternate; }
+        @keyframes storagePulse {
+            0% { transform: scale(1); opacity: 0.7; } 100% { transform: scale(1.2); opacity: 1; }
+        }
+
+        .monitor-wrapper.active .monitor-screen::after {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(transparent 50%, rgba(16,185,129,0.03) 50%);
+            background-size: 100% 4px; pointer-events: none;
+            animation: scanLines 0.1s linear infinite;
+        }
+        @keyframes scanLines { 0% { transform: translateY(0); } 100% { transform: translateY(4px); } }
+        .monitor-screen { position: relative; }
 
         /* --- MONITOR --- */
         .monitor-wrapper {
