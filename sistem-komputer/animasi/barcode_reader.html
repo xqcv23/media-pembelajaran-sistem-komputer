@@ -321,7 +321,7 @@
     /* --- PRODUK (Tengah) --- */
     .product {
       position: absolute;
-      left: 360px;
+      left: 350px;
       bottom: 120px;
       width: 120px;
       height: 180px;
@@ -425,7 +425,7 @@
     /* --- BAYANGAN MEJA (Dinasmis) --- */
     .shadow-product {
       position: absolute;
-      left: 360px;
+      left: 350px;
       bottom: 105px;
       width: 120px;
       height: 15px;
@@ -495,9 +495,9 @@
 
     .laser-ray {
       position: absolute;
-      left: -210px;
+      left: -160px;
       top: 76px;
-      width: 220px;
+      width: 170px;
       height: 3px;
       background: #fff;
       box-shadow: 0 0 15px 5px rgba(239, 68, 68, 1), 0 0 30px 10px rgba(239, 68, 68, 0.8);
@@ -522,6 +522,15 @@
       pointer-events: none;
       mix-blend-mode: screen;
       z-index: 1;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .laser-container.laser-on .laser-ray {
+      opacity: 0.8;
+    }
+
+    .laser-container.laser-on .laser-cone {
       animation: pulseCone 1.5s infinite alternate;
     }
 
@@ -707,7 +716,7 @@
 
       .scanner-gun,
       .laser-container {
-        left: 140px !important;
+        left: 180px !important;
         top: auto !important;
         bottom: 40px !important;
         transform: scale(0.55);
@@ -715,7 +724,7 @@
       }
 
       .shadow-scanner {
-        left: 160px !important;
+        left: 200px !important;
         bottom: 30px !important;
         width: 100px !important;
         height: 15px !important;
@@ -993,6 +1002,7 @@
       if (isAuto) return;
       isDragging = true;
       scanner.classList.add('dragging');
+      laserCont.classList.add('laser-on');
       const clientX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
       const clientY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
 
@@ -1033,6 +1043,7 @@
     function endDrag() {
       isDragging = false;
       scanner.classList.remove('dragging');
+      laserCont.classList.remove('laser-on');
       document.removeEventListener('mousemove', drag);
       document.removeEventListener('touchmove', drag);
       document.removeEventListener('mouseup', endDrag);
@@ -1053,6 +1064,7 @@
         isAuto = false;
         btn.innerText = '▶ Auto Play';
         btn.classList.remove('active');
+        laserCont.classList.remove('laser-on');
         clearInterval(autoInterval);
         clearTimeout(autoTimer);
         clearInterval(collisionLoop);
@@ -1073,6 +1085,7 @@
         btn.innerText = '⏹ Stop Auto';
         btn.classList.add('active');
         dragHint.style.display = 'none';
+        laserCont.classList.add('laser-on');
 
         collisionLoop = setInterval(checkCollision, 50);
 

@@ -8,6 +8,10 @@
   <link rel="stylesheet" href="../style.css">
   <link rel="stylesheet" href="./style.css">
   <script src="./script.js" defer></script>
+  <script>
+    // Jalankan paling awal agar scroll restoration dimatikan sebelum render
+    if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  </script>
 </head>
 
 <body style="display: block;">
@@ -301,12 +305,21 @@
 </body>
 
 <script>
-  if ('scrollRestoration' in history) {
-    history.scrollRestoration = 'manual';
+  // Paksa halaman mulai dari atas — BERHENTI jika user sudah mulai scroll
+  var _userScrolled = false;
+  window.addEventListener('scroll', function () {
+    _userScrolled = true;
+  }, { once: true, passive: true });
+
+  function _scrollTop() {
+    if (!_userScrolled) {
+      window.scrollTo(0, 0);
+      document.documentElement.scrollTop = 0;
+      if (document.body) document.body.scrollTop = 0;
+    }
   }
-  window.addEventListener('load', function() {
-    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-  });
+  document.addEventListener('DOMContentLoaded', _scrollTop);
+  window.addEventListener('load', _scrollTop);
 </script>
 
 </html>
