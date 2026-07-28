@@ -222,7 +222,8 @@
     .game-controls-group { width: 100%; display: flex; gap: 10px; justify-content: center; }
     .btn-full, .btn-claim { flex: 1; justify-content: center; font-size: 0.8rem; padding: 10px 5px; }
 
-    .mat-card { padding: 20px; min-height: auto; } .btn-access { padding: 12px; font-size: 0.9rem; }
+    .mat-card { padding: 20px 16px; min-height: auto; } 
+    .btn-access { padding: 11px 18px; font-size: 0.88rem; border-radius: 10px; }
     #drag-balloon { top: 10px; right: 10px; } .cyber-fab { width: 36px; height: 36px; } .cyber-fab svg { width: 16px; height: 16px; }
     .drone-label { font-size: 0.5rem; padding: 3px 6px; margin-top: 4px; }
     

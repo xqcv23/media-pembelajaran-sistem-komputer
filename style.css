@@ -450,6 +450,15 @@ h2 {
     .typing-subtitle {
         font-size: 0.92rem;
     }
+    .mat-card {
+        padding: 20px 16px;
+        border-radius: 18px;
+    }
+    .btn-access {
+        padding: 11px 18px;
+        font-size: 0.88rem;
+        border-radius: 10px;
+    }
 }
 
 h2 span {
