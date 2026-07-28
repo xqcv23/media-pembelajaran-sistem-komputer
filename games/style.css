@@ -59,16 +59,65 @@
 
   .header-section-inner {
     text-align: center;
-    background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.9);
+    background: rgba(255, 255, 255, 0.88);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.95);
     border-radius: 24px;
-    padding: 30px 20px;
-    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.06);
+    padding: 35px 25px;
+    box-shadow: 0 12px 35px rgba(59, 130, 246, 0.08);
     position: relative;
     overflow: hidden;
   }
+
+  /* Glowing Ambient Orbs */
+  .header-glow-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(40px);
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.6;
+  }
+
+  .orb-1 {
+    top: -30px; left: -20px; width: 140px; height: 140px;
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.4) 0%, rgba(6, 182, 212, 0.1) 70%, transparent 100%);
+    animation: orbPulse 4s ease-in-out infinite alternate;
+  }
+
+  .orb-2 {
+    bottom: -40px; right: -20px; width: 160px; height: 160px;
+    background: radial-gradient(circle, rgba(139, 92, 246, 0.35) 0%, rgba(236, 72, 153, 0.1) 70%, transparent 100%);
+    animation: orbPulse 5s ease-in-out infinite alternate-reverse;
+  }
+
+  @keyframes orbPulse {
+    0% { transform: scale(0.9) translate(0, 0); opacity: 0.5; }
+    100% { transform: scale(1.15) translate(10px, -10px); opacity: 0.8; }
+  }
+
+  /* Floating Tech Icons */
+  .header-float-icon {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    font-size: 2rem; z-index: 1; opacity: 0.75;
+    filter: drop-shadow(0 4px 12px rgba(59, 130, 246, 0.25)); pointer-events: none;
+  }
+
+  .icon-left { left: 30px; animation: floatIconLeft 4s ease-in-out infinite; }
+  .icon-right { right: 30px; animation: floatIconRight 4.5s ease-in-out infinite; }
+
+  @keyframes floatIconLeft {
+    0%, 100% { transform: translateY(-50%) rotate(-5deg); }
+    50% { transform: translateY(-62%) rotate(5deg); }
+  }
+
+  @keyframes floatIconRight {
+    0%, 100% { transform: translateY(-50%) rotate(5deg); }
+    50% { transform: translateY(-38%) rotate(-5deg); }
+  }
+
+  .header-section-inner > * { position: relative; z-index: 2; }
 
   .header-section { text-align: center; margin-top: 30px; margin-bottom: 20px; }
   
@@ -214,6 +263,11 @@
      ========================================= */
   @media (max-width: 600px), (max-height: 700px) {
     body { padding: 10px; } h2 { font-size: 2rem; }
+    .hero-card-wrapper { padding: 14px; border-radius: 20px; }
+    .header-section-inner { padding: 22px 12px; border-radius: 18px; }
+    .header-float-icon { font-size: 1.25rem; opacity: 0.55; }
+    .icon-left { left: 10px; }
+    .icon-right { right: 10px; }
     .material-grid { grid-template-columns: 1fr; gap: 20px; }
     
     /* Tombol tersusun rapih di atas area game */
