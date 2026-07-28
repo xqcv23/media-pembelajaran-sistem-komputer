@@ -85,6 +85,24 @@
   }
 
   h2 { font-size: 2.5rem; font-weight: 800; margin-bottom: 10px; letter-spacing: -1px; line-height: 1.1; }
+  
+  @media (max-width: 600px) {
+    .hero-card-wrapper {
+      padding: 16px;
+      border-radius: 20px;
+    }
+    .header-section-inner {
+      padding: 20px 14px;
+      border-radius: 18px;
+    }
+    h2 {
+      font-size: 1.5rem;
+      letter-spacing: -0.5px;
+    }
+    .sub-desc {
+      font-size: 0.92rem;
+    }
+  }
   h2 span { background: linear-gradient(120deg, var(--primary), var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
   
   .sub-desc { color: var(--text-grey); font-size: 1.1rem; min-height: 25px; }
