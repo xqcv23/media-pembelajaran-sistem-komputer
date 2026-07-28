@@ -66,6 +66,338 @@ body::before {
     margin-bottom: 20px;
 }
 
+/* CONTAINER CARD WRAPPER MATCHING SCREENSHOT COLOR */
+.hero-card-wrapper {
+    background: #eef6ff;
+    background-image: 
+        linear-gradient(to right, rgba(59, 130, 246, 0.12) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(59, 130, 246, 0.12) 1px, transparent 1px);
+    background-size: 24px 24px;
+    border: 2px solid #bfdbfe;
+    border-radius: 28px;
+    padding: 24px;
+    box-shadow: 0 10px 30px rgba(59, 130, 246, 0.08);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-bottom: 25px;
+}
+
+.header-section-inner {
+    text-align: center;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.9);
+    border-radius: 24px;
+    padding: 30px 20px;
+    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.06);
+    position: relative;
+    overflow: hidden;
+}
+
+.header-section-inner::before {
+    content: '';
+    position: absolute;
+    top: -40px;
+    right: -40px;
+    width: 150px;
+    height: 150px;
+    background: radial-gradient(circle, rgba(6, 182, 212, 0.2) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+/* HERO BANNER CYBER STYLE (GOOGLE SITES DESIGN) */
+.hero-banner {
+    width: 100%;
+    background: linear-gradient(135deg, #050b14 0%, #0a192f 50%, #030a16 100%);
+    border-radius: 20px;
+    padding: 40px 30px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4), inset 0 0 15px rgba(56, 189, 248, 0.15);
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    margin-bottom: 0;
+}
+
+/* Background Cyber Grid Lines & Particles */
+.hero-bg-grid {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+        linear-gradient(to right, rgba(56, 189, 248, 0.07) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(56, 189, 248, 0.07) 1px, transparent 1px);
+    background-size: 30px 30px;
+    pointer-events: none;
+}
+
+.hero-banner::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -20%;
+    width: 350px;
+    height: 350px;
+    background: radial-gradient(circle, rgba(56, 189, 248, 0.15) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+}
+
+@media (max-width: 768px) {
+    .hero-content {
+        flex-direction: column;
+        text-align: center;
+    }
+}
+
+/* Left side: PC Vector Illustration */
+.hero-left {
+    flex: 0 0 280px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pc-illustration {
+    position: relative;
+    width: 240px;
+    height: 170px;
+}
+
+/* Monitor */
+.pc-illustration .monitor {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 160px;
+    height: 110px;
+    border: 2px solid #38bdf8;
+    border-radius: 8px;
+    background: rgba(10, 25, 47, 0.8);
+    box-shadow: 0 0 15px rgba(56, 189, 248, 0.4), inset 0 0 10px rgba(56, 189, 248, 0.2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pc-illustration .screen {
+    width: 140px;
+    height: 90px;
+    border: 1px dashed rgba(56, 189, 248, 0.5);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle, rgba(56, 189, 248, 0.1) 0%, transparent 80%);
+}
+
+.cpu-icon-glow {
+    width: 44px;
+    height: 44px;
+    color: #38bdf8;
+    filter: drop-shadow(0 0 8px #38bdf8);
+    animation: pulseCpu 2.5s infinite alternate ease-in-out;
+}
+
+.cpu-icon-glow svg {
+    width: 100%;
+    height: 100%;
+}
+
+@keyframes pulseCpu {
+    0% { transform: scale(0.95); opacity: 0.8; filter: drop-shadow(0 0 4px #38bdf8); }
+    100% { transform: scale(1.05); opacity: 1; filter: drop-shadow(0 0 12px #38bdf8); }
+}
+
+.pc-illustration .stand {
+    position: absolute;
+    bottom: -15px;
+    left: 72px;
+    width: 16px;
+    height: 15px;
+    border-left: 2px solid #38bdf8;
+    border-right: 2px solid #38bdf8;
+    background: #0a192f;
+}
+
+.pc-illustration .base {
+    position: absolute;
+    bottom: -22px;
+    left: 45px;
+    width: 70px;
+    height: 7px;
+    border: 2px solid #38bdf8;
+    border-radius: 4px;
+    background: #0a192f;
+    box-shadow: 0 0 8px rgba(56, 189, 248, 0.3);
+}
+
+/* PC CPU Casing */
+.pc-illustration .casing {
+    position: absolute;
+    top: 5px;
+    right: 0;
+    width: 65px;
+    height: 125px;
+    border: 2px solid #38bdf8;
+    border-radius: 6px;
+    background: rgba(10, 25, 47, 0.9);
+    box-shadow: 0 0 12px rgba(56, 189, 248, 0.3);
+    padding: 10px 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.casing .drive-slot {
+    width: 100%;
+    height: 6px;
+    border: 1px solid #38bdf8;
+    border-radius: 2px;
+}
+
+.casing .power-btn {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #38bdf8;
+    box-shadow: 0 0 8px #38bdf8;
+    margin-top: auto;
+    margin-left: auto;
+}
+
+/* Keyboard & Mouse */
+.pc-illustration .keyboard {
+    position: absolute;
+    bottom: -25px;
+    left: 10px;
+    width: 110px;
+    height: 8px;
+    border: 1.5px solid #38bdf8;
+    border-radius: 3px;
+    background: rgba(56, 189, 248, 0.15);
+}
+
+.pc-illustration .mouse {
+    position: absolute;
+    bottom: -25px;
+    right: 15px;
+    width: 14px;
+    height: 20px;
+    border: 1.5px solid #38bdf8;
+    border-radius: 8px 8px 6px 6px;
+    background: rgba(56, 189, 248, 0.15);
+}
+
+/* Right side: Typography & Pills */
+.hero-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+@media (max-width: 768px) {
+    .hero-right {
+        align-items: center;
+    }
+}
+
+.hero-tagline {
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 3px;
+    color: #94a3b8;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+}
+
+.hero-title {
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: #ffffff;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+    text-shadow: 0 0 20px rgba(56, 189, 248, 0.3);
+    text-align: left;
+    background: none;
+    -webkit-text-fill-color: initial;
+}
+
+@media (max-width: 768px) {
+    .hero-title {
+        text-align: center;
+        font-size: 2rem;
+    }
+}
+
+.hero-title span {
+    color: #38bdf8;
+    background: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: none;
+}
+
+/* Interactive Pill Outline Box */
+.hero-pills {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 20px;
+    border: 1.5px solid rgba(56, 189, 248, 0.5);
+    border-radius: 50px;
+    background: rgba(56, 189, 248, 0.05);
+    backdrop-filter: blur(5px);
+    margin-bottom: 20px;
+    box-shadow: 0 0 15px rgba(56, 189, 248, 0.1);
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.hero-pill {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #e2e8f0;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+
+.pill-icon {
+    font-size: 0.9rem;
+}
+
+.pill-divider {
+    color: rgba(56, 189, 248, 0.4);
+    font-weight: 300;
+}
+
+.hero-footer-text {
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: #38bdf8;
+    text-transform: uppercase;
+    opacity: 0.9;
+    text-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
+}
+
 /* ANIMASI BADGE */
 .badge-float {
     display: inline-block;

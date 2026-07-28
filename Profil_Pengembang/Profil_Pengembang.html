@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil Peneliti - M. Saefudin</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700;800&family=JetBrains+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* =========================================
+     1. TEMA & BACKGROUND
+     ========================================= */
+        :root {
+            --bg-color: #ffffff;
+            --primary: #3b82f6;
+            --cyan: #06b6d4;
+            --dark: #0f172a;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--dark);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 20px;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background-image:
+                linear-gradient(rgba(59, 130, 246, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(59, 130, 246, 0.05) 1px, transparent 1px),
+                radial-gradient(circle at 0% 0%, rgba(59, 130, 246, 0.1), transparent 40%),
+                radial-gradient(circle at 100% 100%, rgba(6, 182, 212, 0.1), transparent 40%);
+            background-size: 40px 40px, 40px 40px, 100% 100%, 100% 100%;
+        }
+
+        /* =========================================
+     2. STYLE KARTU PROFIL
+     ========================================= */
+        .card-wrapper {
+            width: 100%;
+            max-width: 380px;
+            position: relative;
+            margin: 100px auto 50px auto;
+            animation: royalFloat 6s ease-in-out infinite;
+            z-index: 10;
+        }
+
+        @keyframes royalFloat {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-5px);
+            }
+        }
+
+        .card-box {
+            position: relative;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(15px);
+            border-radius: 24px;
+            padding: 0 30px 30px 30px;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 25px 60px rgba(15, 23, 42, 0.15);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .particles-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            border-radius: 24px;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            background: var(--primary);
+            border-radius: 50%;
+            opacity: 0;
+            animation: floatInside 8s infinite linear;
+        }
+
+        @keyframes floatInside {
+            0% {
+                transform: translateY(100%);
+                opacity: 0;
+            }
+
+            20% {
+                opacity: 0.6;
+            }
+
+            80% {
+                opacity: 0.6;
+            }
+
+            100% {
+                transform: translateY(-20%);
+                opacity: 0;
+            }
+        }
+
+        /* FOTO PROFIL */
+        .photo-box {
+            width: 140px;
+            height: 140px;
+            margin-top: -70px;
+            margin-bottom: 20px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            z-index: 20;
+        }
+
+        .photo-box::before {
+            content: "";
+            position: absolute;
+            inset: -5px;
+            border-radius: 50%;
+            background: conic-gradient(from 0deg, transparent 0deg, rgba(59, 130, 246, 0.1) 180deg, var(--primary) 360deg);
+            animation: spinOrbit 4s linear infinite;
+            z-index: -1;
+        }
+
+        .photo-box::after {
+            content: "";
+            position: absolute;
+            inset: 4px;
+            background: #fff;
+            border-radius: 50%;
+            z-index: -1;
+        }
+
+        @keyframes spinOrbit {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .photo-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center 70%;
+            border-radius: 50%;
+            border: 4px solid #fff;
+            position: relative;
+            z-index: 2;
+            background-color: #ddd;
+        }
+
+        .verified-badge {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            width: 30px;
+            height: 30px;
+            background: var(--primary);
+            color: #fff;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 21;
+            font-size: 0.8rem;
+        }
+
+        /* TEXT CONTENT */
+        .text-content {
+            width: 100%;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .name {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--dark);
+            margin-bottom: 8px;
+        }
+
+        .typing-container {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--primary);
+            background: #eff6ff;
+            padding: 8px 16px;
+            border-radius: 50px;
+            display: inline-flex;
+            border: 1px solid #dbeafe;
+            font-weight: 600;
+            min-height: 40px;
+            align-items: center;
+        }
+
+        /* INFO ROWS */
+        .info-container {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 16px;
+            padding: 15px;
+            border: 1px solid #fff;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px dashed #cbd5e1;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .info-row:hover {
+            background: rgba(59, 130, 246, 0.03);
+        }
+
+        .info-row:last-child {
+            margin: 0;
+            padding: 0;
+            border: none;
+        }
+
+        .label {
+            font-size: 0.7rem;
+            color: #64748b;
+            font-weight: 700;
+            text-transform: uppercase;
+            flex-shrink: 0;
+            margin-right: 10px;
+        }
+
+        .value {
+            font-weight: 700;
+            color: var(--dark);
+            text-align: right;
+            line-height: 1.3;
+        }
+
+        /* SOCIAL & BUTTON */
+        .social-stack {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            justify-content: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        .soc-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
+            background: #fff;
+            color: #64748b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            text-decoration: none;
+            border: 1px solid #e2e8f0;
+            transition: 0.3s;
+        }
+
+        .soc-btn:hover {
+            transform: translateY(-3px);
+        }
+
+        .soc-ig:hover {
+            background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+            color: #fff;
+            border-color: transparent;
+            box-shadow: 0 5px 15px rgba(214, 36, 159, 0.4);
+        }
+
+        .soc-mail:hover {
+            background: #EA4335;
+            color: #fff;
+            border-color: transparent;
+            box-shadow: 0 5px 15px rgba(234, 67, 53, 0.4);
+        }
+
+        .btn-main {
+            width: 100%;
+            padding: 14px;
+            background: var(--dark);
+            color: #fff;
+            border: none;
+            border-radius: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        .btn-main:hover {
+            background: var(--primary);
+        }
+
+        /* TOAST */
+        #toast {
+            visibility: hidden;
+            min-width: 200px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 50px;
+            padding: 10px;
+            position: fixed;
+            z-index: 100;
+            left: 50%;
+            bottom: 20px;
+            transform: translateX(-50%);
+            font-size: 0.8rem;
+        }
+
+        #toast.show {
+            visibility: visible;
+            animation: fadein 0.5s, fadeout 0.5s 2.5s;
+        }
+
+        @keyframes fadein {
+            from {
+                bottom: 0;
+                opacity: 0;
+            }
+
+            to {
+                bottom: 20px;
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeout {
+            from {
+                bottom: 20px;
+                opacity: 1;
+            }
+
+            to {
+                bottom: 0;
+                opacity: 0;
+            }
+        }
+
+        @keyframes blink {
+            50% {
+                opacity: 0;
+            }
+        }
+
+        /* RESPONSIVE UNTUK HP / GOOGLE SITES IFRAME */
+        @media (max-width: 400px) {
+            .card-wrapper {
+                margin: 70px auto 30px auto;
+                max-width: 95%;
+            }
+
+            .card-box {
+                padding: 0 15px 20px 15px;
+            }
+
+            .info-container {
+                padding: 10px;
+            }
+
+            .info-row {
+                font-size: 0.8rem;
+            }
+
+            .name {
+                font-size: 1.4rem;
+            }
+
+            .photo-box {
+                width: 120px;
+                height: 120px;
+                margin-top: -60px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="card-wrapper">
+        <div class="card-box">
+            <div class="particles-container" id="particles"></div>
+
+            <!-- FOTO PROFIL -->
+            <div class="photo-box">
+                <img src="https://lh3.googleusercontent.com/d/1Nwn2Iafuo_8VhZUG-DWqC31NANqpkPNm" alt="Saefudin"
+                    class="photo-img">
+                <div class="verified-badge"><i class="fas fa-check"></i></div>
+            </div>
+
+            <!-- NAMA & ANIMASI -->
+            <div class="text-content">
+                <h1 class="name">M. Saefudin</h1>
+                <div class="typing-container">
+                    <span id="typingText">Memuat...</span><span style="animation:blink 0.7s infinite">|</span>
+                </div>
+            </div>
+
+            <!-- INFO DETAIL -->
+            <div class="info-container">
+                <!-- Bidang Keahlian -->
+                <div class="info-row" onclick="copyText('Pendidikan Komputer')">
+                    <span class="label">Prodi</span><span class="value">Pend. Komputer</span>
+                </div>
+
+                <!-- Institusi -->
+                <div class="info-row" onclick="copyText('FKIP')">
+                    <span class="label">Fakultas</span><span class="value" style="color:var(--primary)">FKIP</span>
+                </div>
+                <div class="info-row" onclick="copyText('Universitas Mulawarman')">
+                    <span class="label">Universitas</span><span class="value">Unmul</span>
+                </div>
+
+                <!-- Data Diri -->
+                <div class="info-row" onclick="copyText('Muara Muntai, 23 November 2001')">
+                    <span class="label">TTL</span><span class="value">Muara Muntai, 2001</span>
+                </div>
+
+                <!-- Alamat (Tampilan Samarinda Lengkap) -->
+                <div class="info-row" onclick="copyText('Jl. Suwandi, Samarinda, Kalimantan Timur')">
+                    <span class="label">Alamat</span><span class="value">Jl. Suwandi, Samarinda</span>
+                </div>
+            </div>
+
+            <!-- SOSIAL MEDIA -->
+            <div class="social-stack">
+                <a href="https://www.instagram.com/seffdin_?igsh=MWZhcHNqaTMwdzR3NQ==" class="soc-btn soc-ig"
+                    target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="mailto:msaefudin112@gmail.com" class="soc-btn soc-mail" title="Email"><i
+                        class="fas fa-envelope"></i></a>
+            </div>
+
+
+        </div>
+    </div>
+
+    <div id="toast">Informasi berhasil disalin!</div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            // === LOGIKA TYPING ===
+            const textElement = document.getElementById('typingText');
+            const phrases = [
+                "Muhammad Saefudin",
+                "Pendidikan Komputer",
+                "Fakultas FKIP",
+                "Universitas Mulawarman",
+                "Muara Muntai, 23 Nov 2001",
+                "Jl. Suwandi, Samarinda"
+            ];
+
+            if (textElement) {
+                let phraseIndex = 0;
+                let charIndex = 0;
+                let isDeleting = false;
+
+                function typeWriter() {
+                    const currentPhrase = phrases[phraseIndex];
+                    textElement.textContent = currentPhrase.substring(0, charIndex);
+
+                    if (!isDeleting && charIndex < currentPhrase.length) {
+                        charIndex++;
+                        setTimeout(typeWriter, 100);
+                    } else if (isDeleting && charIndex > 0) {
+                        charIndex--;
+                        setTimeout(typeWriter, 50);
+                    } else {
+                        if (!isDeleting) {
+                            isDeleting = true;
+                            setTimeout(typeWriter, 2000);
+                        } else {
+                            isDeleting = false;
+                            phraseIndex = (phraseIndex + 1) % phrases.length;
+                            setTimeout(typeWriter, 500);
+                        }
+                    }
+                }
+                typeWriter();
+            }
+
+            // === BACKGROUND PARTICLES ===
+            const pContainer = document.getElementById('particles');
+            if (pContainer) {
+                for (let i = 0; i < 12; i++) {
+                    let p = document.createElement('div');
+                    p.className = 'particle';
+                    let s = Math.random() * 6 + 2;
+                    p.style.width = s + 'px'; p.style.height = s + 'px';
+                    p.style.left = Math.random() * 100 + '%';
+                    p.style.top = Math.random() * 100 + '%';
+                    p.style.animationDuration = (Math.random() * 5 + 5) + 's';
+                    p.style.animationDelay = '-' + (Math.random() * 5) + 's';
+                    pContainer.appendChild(p);
+                }
+            }
+        });
+
+        // === FUNGSI SALIN TEKS ===
+        function copyText(t) {
+            navigator.clipboard.writeText(t);
+            let x = document.getElementById("toast");
+            if (x) {
+                x.className = "show";
+                setTimeout(() => x.className = x.className.replace("show", ""), 3000);
+            }
+        }
+    </script>
+</body>
+
+</html>

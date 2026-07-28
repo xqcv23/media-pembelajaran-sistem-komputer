@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Tujuan & Petunjuk Pembelajaran - SMAN 8 Samarinda</title>
+    <!-- Google Fonts & FontAwesome -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!--=========================================BAGIAN CSS (STYLE)=========================================-->
+    <style>
+        /* --- 1. DESIGN TOKENS & LATAR BELAKANG ASLI --- */
+        :root {
+            --bg-color: #ffffff;
+            --primary: #3b82f6;
+            --primary-dark: #1d4ed8;
+            --cyan: #06b6d4;
+            --purple: #8b5cf6;
+            --pink: #ec4899;
+            --amber: #f59e0b;
+            --emerald: #10b981;
+            --text-dark: #0f172a;
+            --text-grey: #475569;
+            --card-shadow: 0 12px 30px rgba(59, 130, 246, 0.08);
+            --card-shadow-hover: 0 20px 45px rgba(59, 130, 246, 0.22);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', 'Outfit', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* LATAR BELAKANG KONSISTEN SESUAI PERMINTAAN */
+        body {
+            background-color: var(--bg-color);
+            background-image:
+                linear-gradient(rgba(59, 130, 246, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(59, 130, 246, 0.05) 1px, transparent 1px),
+                radial-gradient(circle at 0% 0%, rgba(59, 130, 246, 0.12), transparent 45%),
+                radial-gradient(circle at 100% 100%, rgba(6, 182, 212, 0.12), transparent 45%);
+            background-size: 40px 40px, 40px 40px, 100% 100%, 100% 100%;
+            background-attachment: fixed;
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 20px 16px;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1100px;
+            display: flex;
+            flex-direction: column;
+            gap: 26px;
+            margin-bottom: 50px;
+        }
+
+        /* --- 2. HERO DASHBOARD BANNER --- */
+        .hero-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f0f7ff 100%);
+            border: 2px solid rgba(59, 130, 246, 0.2);
+            border-radius: 24px;
+            padding: 28px 22px;
+            box-shadow: 0 16px 40px rgba(59, 130, 246, 0.1);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            right: -50px;
+            width: 160px;
+            height: 160px;
+            background: radial-gradient(circle, rgba(6, 182, 212, 0.2), transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .badge-glow {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.08), rgba(6, 182, 212, 0.08));
+            border: 1px solid rgba(59, 130, 246, 0.25);
+            padding: 5px 15px;
+            border-radius: 50px;
+            font-size: 0.76rem;
+            font-weight: 800;
+            color: #2563eb;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .badge-glow i {
+            color: var(--amber);
+        }
+
+        h1 {
+            font-size: clamp(1.5rem, 4.2vw, 2.2rem);
+            font-weight: 800;
+            line-height: 1.2;
+            letter-spacing: -0.8px;
+            color: #1e3a8a;
+            margin-bottom: 8px;
+        }
+
+        h1 span {
+            background: linear-gradient(120deg, #2563eb, #06b6d4, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 3px 10px rgba(6, 182, 212, 0.25));
+        }
+
+        .sub-text {
+            font-size: clamp(0.85rem, 2vw, 0.95rem);
+            color: var(--text-grey);
+            font-weight: 600;
+            max-width: 600px;
+            margin-bottom: 18px;
+        }
+
+        /* Dashboard Stat Widgets */
+        .dashboard-stats {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            width: 100%;
+        }
+
+        .stat-widget {
+            background: #ffffff;
+            border: 1px solid rgba(59, 130, 246, 0.16);
+            padding: 10px 16px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.03);
+            transition: all 0.3s ease;
+        }
+
+        .stat-widget:hover {
+            transform: translateY(-2px);
+            border-color: var(--primary);
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.12);
+        }
+
+        .stat-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.95rem;
+            color: #fff;
+        }
+
+        .stat-info {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+        }
+
+        .stat-value {
+            font-size: 0.9rem;
+            font-weight: 800;
+            color: var(--text-dark);
+        }
+
+        .stat-label {
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: var(--text-grey);
+        }
+
+        /* --- 3. TAB CONTROLS (OPTIMIZED FOR ALL SCREENS) --- */
+        .controls-wrapper {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .tab-controls {
+            display: inline-flex;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(59, 130, 246, 0.18);
+            padding: 5px;
+            border-radius: 50px;
+            gap: 5px;
+            box-shadow: 0 8px 24px rgba(59, 130, 246, 0.08);
+            max-width: 100%;
+        }
+
+        .tab-btn {
+            padding: 10px 18px;
+            border-radius: 50px;
+            border: none;
+            background: transparent;
+            color: var(--text-grey);
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            min-height: 40px;
+            white-space: nowrap;
+        }
+
+        .tab-btn:hover {
+            color: var(--primary);
+            background: rgba(59, 130, 246, 0.08);
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #2563eb, #06b6d4);
+            color: #ffffff;
+            box-shadow: 0 6px 18px rgba(37, 99, 235, 0.3);
+        }
+
+        /* --- 4. VISUAL CARDS GRID (TUJUAN PEMBELAJARAN) --- */
+        .section-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            transition: all 0.4s ease;
+        }
+
+        .section-container.hidden {
+            display: none;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 2px solid rgba(59, 130, 246, 0.15);
+            padding-bottom: 10px;
+        }
+
+        .section-header-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: #1e3a8a;
+        }
+
+        .section-header-left i {
+            width: 36px;
+            height: 36px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #2563eb, #06b6d4);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            box-shadow: 0 5px 14px rgba(37, 99, 235, 0.25);
+        }
+
+        .visual-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+            gap: 20px;
+        }
+
+        /* Dynamic Visual Module Card */
+        .module-card {
+            background: #ffffff;
+            border-radius: 22px;
+            padding: 22px;
+            box-shadow: var(--card-shadow);
+            border: 2px solid rgba(59, 130, 246, 0.12);
+            transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .module-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--card-color-1, #2563eb), var(--card-color-2, #06b6d4));
+        }
+
+        .module-card:hover {
+            transform: translateY(-6px) scale(1.005);
+            box-shadow: var(--card-shadow-hover);
+            border-color: rgba(59, 130, 246, 0.35);
+        }
+
+        .card-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .icon-box-3d {
+            width: 48px;
+            height: 48px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.35rem;
+            color: #ffffff;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+            position: relative;
+        }
+
+        .level-pill {
+            font-size: 0.72rem;
+            font-weight: 800;
+            padding: 5px 12px;
+            border-radius: 50px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .pill-blue {
+            background: rgba(37, 99, 235, 0.12);
+            color: #2563eb;
+        }
+
+        .pill-cyan {
+            background: rgba(6, 182, 212, 0.12);
+            color: #0891b2;
+        }
+
+        .pill-purple {
+            background: rgba(139, 92, 246, 0.12);
+            color: #7c3aed;
+        }
+
+        .pill-emerald {
+            background: rgba(16, 185, 129, 0.12);
+            color: #059669;
+        }
+
+        .card-topic-title {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+            line-height: 1.3;
+        }
+
+        /* Progress Bar Indicator */
+        .progress-box {
+            margin-bottom: 16px;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--text-grey);
+            margin-bottom: 5px;
+        }
+
+        .progress-bar-bg {
+            width: 100%;
+            height: 7px;
+            background: #e2e8f0;
+            border-radius: 50px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            border-radius: 50px;
+            background: linear-gradient(90deg, var(--card-color-1, #2563eb), var(--card-color-2, #06b6d4));
+        }
+
+        .card-topic-desc {
+            font-size: 0.88rem;
+            color: var(--text-grey);
+            line-height: 1.55;
+            margin-bottom: 16px;
+        }
+
+        /* Target Checklist Boxes */
+        .targets-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: auto;
+        }
+
+        .target-item {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 9px 12px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            transition: all 0.2s ease;
+        }
+
+        .target-item i {
+            color: var(--emerald);
+            font-size: 0.9rem;
+        }
+
+        .module-card:hover .target-item {
+            background: #ffffff;
+            border-color: rgba(59, 130, 246, 0.25);
+        }
+
+        /* --- 5. GAMIFIED STEPPER PATH (PETUNJUK PENGGUNAAN) --- */
+        .stepper-path {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 18px;
+            position: relative;
+        }
+
+        .step-box {
+            background: #ffffff;
+            border-radius: 22px;
+            padding: 22px 18px;
+            box-shadow: var(--card-shadow);
+            border: 2px solid rgba(59, 130, 246, 0.12);
+            position: relative;
+            transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .step-box:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--card-shadow-hover);
+            border-color: var(--cyan);
+        }
+
+        .step-badge-3d {
+            width: 42px;
+            height: 42px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #2563eb, #06b6d4);
+            color: #ffffff;
+            font-size: 1.1rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 14px;
+            box-shadow: 0 6px 16px rgba(37, 99, 235, 0.25);
+        }
+
+        .step-tag {
+            position: absolute;
+            top: 18px;
+            right: 18px;
+            font-size: 0.72rem;
+            font-weight: 800;
+            color: #94a3b8;
+            letter-spacing: 0.8px;
+        }
+
+        .step-title-text {
+            font-size: 1.12rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+
+        .step-desc-text {
+            font-size: 0.85rem;
+            color: var(--text-grey);
+            line-height: 1.55;
+        }
+
+        /* --- ANIMATIONS & MOBILE RESPONSIVE OPTIMIZATION --- */
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-5px);
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 14px 10px;
+            }
+
+            .hero-card {
+                padding: 22px 16px;
+                border-radius: 20px;
+            }
+
+            .dashboard-stats {
+                gap: 8px;
+            }
+
+            .stat-widget {
+                padding: 8px 12px;
+            }
+
+            .visual-grid,
+            .stepper-path {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .module-card,
+            .step-box {
+                padding: 18px;
+                border-radius: 18px;
+            }
+        }
+
+        /* PERBAIKAN RESPONSIVITAS TOMBOL TAB DI HP */
+        @media (max-width: 640px) {
+            .controls-wrapper {
+                width: 100%;
+            }
+
+            .tab-controls {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                width: 100%;
+                border-radius: 16px;
+                padding: 4px;
+                gap: 4px;
+            }
+
+            .tab-btn {
+                padding: 7px 3px;
+                font-size: 0.73rem;
+                font-weight: 700;
+                justify-content: center;
+                text-align: center;
+                border-radius: 12px;
+                min-height: 38px;
+                gap: 3px;
+                width: 100%;
+                white-space: normal;
+                line-height: 1.2;
+            }
+
+            .tab-btn i {
+                font-size: 0.8rem;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .tab-btn {
+                font-size: 0.68rem;
+                padding: 5px 2px;
+            }
+
+            .tab-btn i {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- Hero Interactive Banner -->
+        <div class="hero-card">
+            <div class="badge-glow">
+                <i class="fas fa-gamepad"></i> Media Pembelajaran Interaktif
+            </div>
+            <h1>Tujuan Pembelajaran <span>& Petunjuk Penggunaan</span></h1>
+            <p class="sub-text">
+                Kuasai materi Informatika SMAN 8 Samarinda melalui modul visual, simulasi interaktif, dan kuis evaluasi.
+            </p>
+
+            <div class="dashboard-stats">
+                <div class="stat-widget">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, #2563eb, #1d4ed8);">
+                        <i class="fas fa-cubes"></i>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-value">4 Modul</span>
+                        <span class="stat-label">Komputer & OS</span>
+                    </div>
+                </div>
+
+                <div class="stat-widget">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, #06b6d4, #0891b2);">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-value">Fase E</span>
+                        <span class="stat-label">Kelas X SMA</span>
+                    </div>
+                </div>
+
+                <div class="stat-widget">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, #8b5cf6, #6d28d9);">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-value">Latihan</span>
+                        <span class="stat-label">Simulasi & Kuis</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter Tab Controls (Mobile Optimized Grid) -->
+        <div class="controls-wrapper">
+            <div class="tab-controls">
+                <button class="tab-btn active" data-filter="all">
+                    <i class="fas fa-border-all"></i>
+                    <span>Semua</span>
+                </button>
+                <button class="tab-btn" data-filter="tujuan">
+                    <i class="fas fa-target"></i>
+                    <span>Tujuan Pembelajaran</span>
+                </button>
+                <button class="tab-btn" data-filter="petunjuk">
+                    <i class="fas fa-map-marked-alt"></i>
+                    <span>Petunjuk Penggunaan</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Section 1: Tujuan Pembelajaran (Visual Module Cards) -->
+        <div class="section-container" id="sec-tujuan">
+            <div class="section-header">
+                <div class="section-header-left">
+                    <i class="fas fa-flag-checkered"></i>
+                    <span>Target & Capaian Pembelajaran</span>
+                </div>
+            </div>
+
+            <div class="visual-grid">
+                <!-- Card 1: CP -->
+                <div class="module-card" style="--card-color-1: #2563eb; --card-color-2: #3b82f6;">
+                    <div class="card-head">
+                        <div class="icon-box-3d" style="background: linear-gradient(135deg, #2563eb, #1d4ed8);">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <span class="level-pill pill-blue">Capaian Utama</span>
+                    </div>
+                    <h2 class="card-topic-title">Capaian Pembelajaran (CP)</h2>
+                    <div class="progress-box">
+                        <div class="progress-label">
+                            <span>Tingkat Pemahaman</span>
+                            <span>Target 100%</span>
+                        </div>
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill" style="width: 100%;"></div>
+                        </div>
+                    </div>
+                    <p class="card-topic-desc">
+                        Peserta didik mampu memahami peran sistem komputer, fungsi sistem operasi, serta prinsip
+                        interaksi manusia dan komputer.
+                    </p>
+                    <ul class="targets-list">
+                        <li class="target-item"><i class="fas fa-check-circle"></i> Pemrosesan data internal komputer
+                        </li>
+                        <li class="target-item"><i class="fas fa-check-circle"></i> Identifikasi hardware & software
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Card 2: Sistem Komputer -->
+                <div class="module-card" style="--card-color-1: #06b6d4; --card-color-2: #0891b2;">
+                    <div class="card-head">
+                        <div class="icon-box-3d" style="background: linear-gradient(135deg, #06b6d4, #0891b2);">
+                            <i class="fas fa-microchip"></i>
+                        </div>
+                        <span class="level-pill pill-cyan">Modul 01</span>
+                    </div>
+                    <h2 class="card-topic-title">Sistem Komputer & Hardware</h2>
+                    <div class="progress-box">
+                        <div class="progress-label">
+                            <span>Fokus Materi</span>
+                            <span>Input & Output</span>
+                        </div>
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill" style="width: 85%;"></div>
+                        </div>
+                    </div>
+                    <p class="card-topic-desc">
+                        Menguraikan mekanisme kerja komponen utama komputer beserta alur kerja dari input, proses,
+                        hingga output data.
+                    </p>
+                    <ul class="targets-list">
+                        <li class="target-item"><i class="fas fa-check-circle"></i> Peran CPU, RAM, ROM & Storage</li>
+                        <li class="target-item"><i class="fas fa-check-circle"></i> Pemahaman I/O Perangkat Komputer
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Card 3: Sistem Operasi -->
+                <div class="module-card" style="--card-color-1: #8b5cf6; --card-color-2: #6d28d9;">
+                    <div class="card-head">
+                        <div class="icon-box-3d" style="background: linear-gradient(135deg, #8b5cf6, #6d28d9);">
+                            <i class="fas fa-cogs"></i>
+                        </div>
+                        <span class="level-pill pill-purple">Modul 02</span>
+                    </div>
+                    <h2 class="card-topic-title">Sistem Operasi & Driver</h2>
+                    <div class="progress-box">
+                        <div class="progress-label">
+                            <span>Fokus Materi</span>
+                            <span>Manajemen OS</span>
+                        </div>
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill" style="width: 90%;"></div>
+                        </div>
+                    </div>
+                    <p class="card-topic-desc">
+                        Menganalisis peran sistem operasi sebagai pengelola sumber daya perangkat keras dan penghubung
+                        aplikasi.
+                    </p>
+                    <ul class="targets-list">
+                        <li class="target-item"><i class="fas fa-check-circle"></i> Mekanisme Booting & File System</li>
+                        <li class="target-item"><i class="fas fa-check-circle"></i> Fungsi Driver pada Hardware</li>
+                    </ul>
+                </div>
+
+                <!-- Card 4: IMK -->
+                <div class="module-card" style="--card-color-1: #10b981; --card-color-2: #059669;">
+                    <div class="card-head">
+                        <div class="icon-box-3d" style="background: linear-gradient(135deg, #10b981, #059669);">
+                            <i class="fas fa-desktop"></i>
+                        </div>
+                        <span class="level-pill pill-emerald">Modul 03</span>
+                    </div>
+                    <h2 class="card-topic-title">Interaksi Manusia & Komputer</h2>
+                    <div class="progress-box">
+                        <div class="progress-label">
+                            <span>Fokus Materi</span>
+                            <span>GUI vs CLI</span>
+                        </div>
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill" style="width: 80%;"></div>
+                        </div>
+                    </div>
+                    <p class="card-topic-desc">
+                        Memahami berbagai cara manusia berinteraksi dengan mesin melalui ragam antarmuka dan konsep
+                        aksesibilitas.
+                    </p>
+                    <ul class="targets-list">
+                        <li class="target-item"><i class="fas fa-check-circle"></i> Perbandingan GUI dan CLI</li>
+                        <li class="target-item"><i class="fas fa-check-circle"></i> Respon Sistem terhadap User Input
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 2: Petunjuk Penggunaan (Gamified Stepper Path) -->
+        <div class="section-container" id="sec-petunjuk">
+            <div class="section-header">
+                <div class="section-header-left">
+                    <i class="fas fa-directions"></i>
+                    <span>Langkah Mudah Belajar</span>
+                </div>
+            </div>
+
+            <div class="stepper-path">
+                <!-- Step 1 -->
+                <div class="step-box">
+                    <div class="step-badge-3d">1</div>
+                    <span class="step-tag">LANGKAH 01</span>
+                    <h3 class="step-title-text">Eksplorasi Modul</h3>
+                    <p class="step-desc-text">
+                        Buka menu utama dan pilih topik materi yang ingin dipelajari (Sistem Komputer, OS, atau IMK).
+                    </p>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="step-box">
+                    <div class="step-badge-3d" style="background: linear-gradient(135deg, #06b6d4, #0891b2);">2</div>
+                    <span class="step-tag">LANGKAH 02</span>
+                    <h3 class="step-title-text">Pahami Materi</h3>
+                    <p class="step-desc-text">
+                        Pelajari rangkuman materi interaktif, grafik visual, serta poin penting di setiap pembahasan.
+                    </p>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="step-box">
+                    <div class="step-badge-3d" style="background: linear-gradient(135deg, #8b5cf6, #6d28d9);">3</div>
+                    <span class="step-tag">LANGKAH 03</span>
+                    <h3 class="step-title-text">Coba Simulasi</h3>
+                    <p class="step-desc-text">
+                        Praktikkan konsep yang telah dibaca melalui simulasi dan elemen interaktif di dalam modul.
+                    </p>
+                </div>
+
+                <!-- Step 4 -->
+                <div class="step-box">
+                    <div class="step-badge-3d" style="background: linear-gradient(135deg, #10b981, #059669);">4</div>
+                    <span class="step-tag">LANGKAH 04</span>
+                    <h3 class="step-title-text">Kuis & Evaluasi</h3>
+                    <p class="step-desc-text">
+                        Uji kemampuan awal dan akhir Anda dengan menjawab kuis evaluasi yang telah disediakan.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Script Filter Tab -->
+    <script>
+        const filterBtns = document.querySelectorAll('.tab-btn');
+        const secTujuan = document.getElementById('sec-tujuan');
+        const secPetunjuk = document.getElementById('sec-petunjuk');
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                const mode = btn.dataset.filter;
+                if (mode === 'all') {
+                    secTujuan.classList.remove('hidden');
+                    secPetunjuk.classList.remove('hidden');
+                } else if (mode === 'tujuan') {
+                    secTujuan.classList.remove('hidden');
+                    secPetunjuk.classList.add('hidden');
+                } else if (mode === 'petunjuk') {
+                    secPetunjuk.classList.remove('hidden');
+                    secTujuan.classList.add('hidden');
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
