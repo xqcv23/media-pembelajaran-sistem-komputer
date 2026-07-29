@@ -216,13 +216,23 @@ body::before {
     50% { transform: scale(1.6); opacity: 0.4; }
 }
 
+.hero-text-side {
+    flex: 1;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 8px;
+}
+
 .hero-text-side h2 {
-    font-size: 2rem;
+    font-size: 1.9rem;
     font-weight: 900;
     color: #1e1b4b;
     letter-spacing: -0.8px;
-    line-height: 1.2;
-    margin-bottom: 4px;
+    line-height: 1.25;
+    margin: 0;
 }
 
 .hero-text-side h2 span {
@@ -233,29 +243,12 @@ body::before {
     display: inline-block;
 }
 
-.hero-desc {
-    font-size: 0.88rem;
-    color: #64748b;
-    font-weight: 500;
-    line-height: 1.5;
-    margin-bottom: 6px;
-    max-width: 340px;
-}
-
-.hero-text-side .typing-subtitle {
-    font-size: 0.9rem;
-    color: #6366f1;
-    font-weight: 600;
-    margin-bottom: 4px;
-}
-
 .hero-subtitle {
-    font-size: 0.88rem;
+    font-size: 0.85rem;
     color: #64748b;
     font-weight: 500;
-    margin-top: 6px;
-    margin-bottom: 12px;
-    line-height: 1.5;
+    margin: 0;
+    line-height: 1.4;
 }
 
 .hero-subtitle strong {
@@ -268,7 +261,7 @@ body::before {
     display: flex;
     gap: 8px;
     flex-wrap: wrap;
-    margin-bottom: 14px;
+    margin: 2px 0;
 }
 
 .chip-pill {
@@ -371,11 +364,14 @@ body::before {
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: 10px;
+    background: radial-gradient(circle at center, rgba(99, 102, 241, 0.1) 0%, rgba(255, 255, 255, 0.5) 60%, transparent 100%);
+    border-radius: 50%;
 }
 
 .holo-graphic-circle {
-    width: 108px;
-    height: 108px;
+    width: 116px;
+    height: 116px;
     position: relative;
     display: flex;
     align-items: center;
@@ -389,8 +385,8 @@ body::before {
 }
 
 .ring-1 {
-    width: 104px;
-    height: 104px;
+    width: 112px;
+    height: 112px;
     border: 2px solid transparent;
     border-top: 2.5px solid #6366f1;
     border-right: 2.5px solid #3b82f6;
@@ -400,8 +396,8 @@ body::before {
 }
 
 .ring-2 {
-    width: 80px;
-    height: 80px;
+    width: 86px;
+    height: 86px;
     border: 2px solid transparent;
     border-left: 2.5px solid #8b5cf6;
     border-bottom: 2.5px solid #3b82f6;
@@ -410,8 +406,8 @@ body::before {
 }
 
 .ring-3 {
-    width: 56px;
-    height: 56px;
+    width: 60px;
+    height: 60px;
     border: 1.5px solid transparent;
     border-top: 2px dashed rgba(99, 102, 241, 0.4);
     border-left: 2px solid rgba(59, 130, 246, 0.35);
@@ -889,60 +885,56 @@ h2:not(.hero-text-side h2) {
     }
     
     .header-section-inner {
-        padding: 16px 16px;
-        border-radius: 15px;
-        flex-direction: row;
+        padding: 20px 16px;
+        border-radius: 16px;
+        flex-direction: column;
         align-items: center;
-        justify-content: space-between;
-        gap: 10px;
+        text-align: center;
+        gap: 14px;
+    }
+
+    .hero-text-side {
+        align-items: center;
+        text-align: center;
     }
 
     .hero-text-side h2 {
-        font-size: 1.3rem;
+        font-size: 1.35rem;
         letter-spacing: -0.3px;
     }
 
-    .hero-desc {
+    .hero-subtitle {
         font-size: 0.78rem;
-        display: none; /* hide on very small screens */
     }
 
-    .hero-stats-row {
-        padding: 6px 10px;
-        gap: 8px;
+    .hero-tech-pills {
+        justify-content: center;
     }
 
-    .hero-stat-number {
-        font-size: 0.85rem;
-    }
-
-    .hero-stat-label {
-        font-size: 0.58rem;
+    .hero-stat-strip {
+        font-size: 0.7rem;
+        padding: 5px 12px;
     }
 
     .badge-float {
         font-size: 0.65rem;
         padding: 3px 8px;
-        margin-bottom: 3px;
+    }
+
+    .hero-visual-side {
+        margin-top: 4px;
     }
 
     .holo-graphic-circle {
-        width: 84px;
-        height: 84px;
+        width: 90px;
+        height: 90px;
     }
 
-    .ring-1 { width: 80px; height: 80px; }
-    .ring-2 { width: 62px; height: 62px; }
-    .ring-3 { width: 44px; height: 44px; }
+    .ring-1 { width: 86px; height: 86px; }
+    .ring-2 { width: 66px; height: 66px; }
+    .ring-3 { width: 46px; height: 46px; }
 
     .hero-dot { display: none; }
-
-    .tech-graphic-card {
-        width: 90px;
-        height: 70px;
-        padding: 2px;
-        border-radius: 12px;
-    }
 
     /* Grid di HP bersusun vertikal dari atas ke bawah (1 kolom) */
     .material-grid {
