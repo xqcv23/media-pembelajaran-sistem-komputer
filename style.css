@@ -1056,18 +1056,12 @@ h1 {
 
 .mat-card:hover {
     transform: translateY(-8px) scale(1.015);
-    box-shadow: 0 16px 40px rgba(59, 130, 246, 0.15);
-    border-color: var(--primary);
 }
 
 .card-icon {
-    font-size: 2.6rem;
-    margin-bottom: 12px;
+    font-size: 1.9rem;
+    line-height: 1;
     transition: 0.3s;
-}
-
-.mat-card:hover .card-icon {
-    transform: scale(1.08) rotate(4deg);
 }
 
 .card-info h3 {
@@ -1847,13 +1841,15 @@ h4 {
 .reading-badge {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    padding: 5px 14px;
+    gap: 4px;
+    padding: 4px 10px;
     border-radius: 50px;
-    font-size: 0.75rem;
+    font-size: 0.68rem;
     font-weight: 700;
-    margin-bottom: 15px;
+    margin-bottom: 0;
     transition: all 0.3s ease;
+    white-space: nowrap;
+    align-self: flex-start;
 }
 
 .reading-badge.unread {
