@@ -166,16 +166,15 @@ body::before {
     -webkit-backdrop-filter: blur(24px);
     border: 1px solid rgba(255, 255, 255, 0.98);
     border-radius: 22px;
-    padding: 24px 28px;
+    padding: 30px 36px;
     position: relative;
     overflow: hidden;
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    gap: 20px;
+    gap: 28px;
 }
-
 
 .header-grid-lines {
     position: absolute;
@@ -190,15 +189,15 @@ body::before {
     pointer-events: none;
 }
 
-/* Sisi Kiri Teks Hero */
 .hero-text-side {
     flex: 1;
+    z-index: 2;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     justify-content: center;
-    gap: 6px;
-    z-index: 2;
+    gap: 8px;
+    max-width: 600px;
 }
 
 .badge-pulse {
@@ -216,22 +215,12 @@ body::before {
     50% { transform: scale(1.6); opacity: 0.4; }
 }
 
-.hero-text-side {
-    flex: 1;
-    z-index: 2;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
-    gap: 8px;
-}
-
 .hero-text-side h2 {
-    font-size: 1.9rem;
+    font-size: 2.1rem;
     font-weight: 900;
     color: #1e1b4b;
     letter-spacing: -0.8px;
-    line-height: 1.25;
+    line-height: 1.2;
     margin: 0;
 }
 
@@ -244,7 +233,7 @@ body::before {
 }
 
 .hero-subtitle {
-    font-size: 0.85rem;
+    font-size: 0.88rem;
     color: #64748b;
     font-weight: 500;
     margin: 0;
@@ -364,14 +353,14 @@ body::before {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 10px;
-    background: radial-gradient(circle at center, rgba(99, 102, 241, 0.1) 0%, rgba(255, 255, 255, 0.5) 60%, transparent 100%);
+    padding: 14px;
+    background: radial-gradient(circle at center, rgba(99, 102, 241, 0.12) 0%, rgba(59, 130, 246, 0.04) 65%, transparent 100%);
     border-radius: 50%;
 }
 
 .holo-graphic-circle {
-    width: 116px;
-    height: 116px;
+    width: 140px;
+    height: 140px;
     position: relative;
     display: flex;
     align-items: center;
@@ -385,32 +374,32 @@ body::before {
 }
 
 .ring-1 {
-    width: 112px;
-    height: 112px;
-    border: 2px solid transparent;
-    border-top: 2.5px solid #6366f1;
-    border-right: 2.5px solid #3b82f6;
-    border-bottom: 2px dashed rgba(99, 102, 241, 0.25);
-    box-shadow: 0 0 16px rgba(99, 102, 241, 0.22);
+    width: 136px;
+    height: 136px;
+    border: 2.5px solid transparent;
+    border-top: 3px solid #6366f1;
+    border-right: 3px solid #3b82f6;
+    border-bottom: 2px dashed rgba(99, 102, 241, 0.3);
+    box-shadow: 0 0 20px rgba(99, 102, 241, 0.25);
     animation: spinRing 6s linear infinite;
 }
 
 .ring-2 {
-    width: 86px;
-    height: 86px;
-    border: 2px solid transparent;
-    border-left: 2.5px solid #8b5cf6;
-    border-bottom: 2.5px solid #3b82f6;
-    box-shadow: 0 0 10px rgba(139, 92, 246, 0.18);
+    width: 104px;
+    height: 104px;
+    border: 2.5px solid transparent;
+    border-left: 3px solid #8b5cf6;
+    border-bottom: 3px solid #3b82f6;
+    box-shadow: 0 0 12px rgba(139, 92, 246, 0.2);
     animation: spinRingReverse 4s linear infinite;
 }
 
 .ring-3 {
-    width: 60px;
-    height: 60px;
+    width: 72px;
+    height: 72px;
     border: 1.5px solid transparent;
-    border-top: 2px dashed rgba(99, 102, 241, 0.4);
-    border-left: 2px solid rgba(59, 130, 246, 0.35);
+    border-top: 2px dashed rgba(99, 102, 241, 0.45);
+    border-left: 2px solid rgba(59, 130, 246, 0.4);
     animation: spinRing 3s linear infinite;
 }
 
