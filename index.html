@@ -11,36 +11,49 @@
 <body>
 
 <div class="container">
-  <!-- Hero Wrapper Wrapping Original Text Content & Banner Style -->
+  <!-- Hero Tech Banner (2-Column Layout) -->
   <div class="hero-card-wrapper">
     <div class="header-section-inner">
       <div class="header-glow-orb orb-1"></div>
       <div class="header-glow-orb orb-2"></div>
       
-      <!-- Side Left Animation/Icon: Modern Laptop/Monitor SVG -->
-      <div class="header-side-anim side-left" title="Perangkat Keras">
-        <svg class="tech-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="2" y="3" width="20" height="14" rx="2" ry="2" class="svg-part-screen"></rect>
-          <line x1="8" y1="21" x2="16" y2="21"></line>
-          <line x1="12" y1="17" x2="12" y2="21"></line>
-          <path d="M7 8h10M7 11h7" stroke-opacity="0.5" stroke-width="1.5"></path>
-        </svg>
-      </div>
-
-      <!-- Center Text Section -->
-      <div class="header-center-content">
-        <div class="badge-float">📚 Ruang Belajar</div>
+      <!-- Sisi Kiri: Typography & Badges -->
+      <div class="hero-text-side">
+        <div class="badge-float">📚 Ruang Belajar Digital</div>
         <h2>Materi <span>Sistem Komputer</span></h2>
         <div class="typing-subtitle" id="typewriterText"></div>
       </div>
 
-      <!-- Side Right Animation/Icon: Modern CPU Chip SVG -->
-      <div class="header-side-anim side-right" title="Prosesor & Sistem">
-        <svg class="tech-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="4" y="4" width="16" height="16" rx="2" class="svg-part-chip"></rect>
-          <rect x="8" y="8" width="8" height="8" rx="1" fill="currentColor" fill-opacity="0.15"></rect>
-          <path d="M9 1h2M13 1h2M9 23h2M13 23h2M1 9v2M1 13v2M23 9v2M23 13v2"></path>
-        </svg>
+      <!-- Sisi Kanan: Ilustrasi Tech Computer & Processors -->
+      <div class="hero-visual-side">
+        <div class="tech-graphic-card">
+          <svg class="hero-tech-svg" viewBox="0 0 120 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Glow background circle -->
+            <circle cx="60" cy="45" r="35" fill="url(#blue-glow)" opacity="0.4"/>
+            <!-- Monitor -->
+            <rect x="25" y="15" width="50" height="34" rx="4" fill="#1e293b" stroke="#38bdf8" stroke-width="2"/>
+            <rect x="29" y="19" width="42" height="26" rx="2" fill="#0f172a"/>
+            <!-- Monitor Screen Code Lines -->
+            <path d="M34 26h18M34 31h24M34 36h12" stroke="#38bdf8" stroke-width="1.8" stroke-linecap="round"/>
+            <circle cx="65" cy="36" r="2" fill="#818cf8"/>
+            <!-- Monitor Stand -->
+            <path d="M44 49h12v7H44z" fill="#334155"/>
+            <path d="M38 56h24v3H38z" fill="#475569" rx="1.5"/>
+            <!-- CPU Microchip Floating -->
+            <g class="floating-chip-anim">
+              <rect x="80" y="28" width="24" height="24" rx="3" fill="#1e1b4b" stroke="#6366f1" stroke-width="1.5"/>
+              <rect x="86" y="34" width="12" height="12" rx="1.5" fill="#818cf8" opacity="0.8"/>
+              <path d="M92 24v4M92 52v4M76 40h4M104 40h4" stroke="#818cf8" stroke-width="1.5" stroke-linecap="round"/>
+            </g>
+            <!-- SVG Gradients -->
+            <defs>
+              <radialGradient id="blue-glow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(60 45) rotate(90) scale(35)">
+                <stop stop-color="#38bdf8"/>
+                <stop offset="1" stop-color="#38bdf8" stop-opacity="0"/>
+              </radialGradient>
+            </defs>
+          </svg>
+        </div>
       </div>
     </div>
   </div>

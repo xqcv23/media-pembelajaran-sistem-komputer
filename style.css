@@ -66,101 +66,118 @@ body::before {
     margin-bottom: 10px;
 }
 
-/* CONTAINER CARD WRAPPER MATCHING SCREENSHOT COLOR */
-/* CONTAINER CARD WRAPPER - CLEAN TECH STYLE */
+/* HERO CARD WRAPPER - MODERN TECH 2-COLUMN DESIGN */
 .hero-card-wrapper {
-    background: linear-gradient(135deg, #f0f7ff 0%, #e0f2fe 50%, #eef2ff 100%);
+    background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
     background-image: 
-        radial-gradient(at 0% 0%, rgba(14, 165, 233, 0.15) 0px, transparent 50%),
-        radial-gradient(at 100% 100%, rgba(99, 102, 241, 0.12) 0px, transparent 50%),
-        linear-gradient(to right, rgba(56, 189, 248, 0.15) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(56, 189, 248, 0.15) 1px, transparent 1px);
-    background-size: 100% 100%, 100% 100%, 18px 18px, 18px 18px;
-    border: 1.5px solid rgba(186, 230, 253, 0.8);
-    border-radius: 18px;
-    padding: 8px;
-    box-shadow: 0 10px 25px -5px rgba(14, 165, 233, 0.1), 0 8px 10px -6px rgba(99, 102, 241, 0.05);
+        radial-gradient(at 0% 0%, rgba(56, 189, 248, 0.25) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(99, 102, 241, 0.25) 0px, transparent 50%),
+        linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 100% 100%, 100% 100%, 20px 20px, 20px 20px;
+    border: 1.5px solid rgba(56, 189, 248, 0.35);
+    border-radius: 20px;
+    padding: 10px;
+    box-shadow: 0 15px 35px -5px rgba(15, 23, 42, 0.3), 0 0 25px rgba(56, 189, 248, 0.15);
     display: flex;
     flex-direction: column;
-    margin-bottom: 14px;
+    margin-bottom: 20px;
     position: relative;
+    overflow: hidden;
 }
 
 .header-section-inner {
-    text-align: center;
-    background: rgba(255, 255, 255, 0.85);
+    text-align: left;
+    background: rgba(15, 23, 42, 0.7);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.95);
-    border-radius: 14px;
-    padding: 12px 18px;
-    box-shadow: 0 4px 20px rgba(14, 165, 233, 0.08), inset 0 1px 0 rgba(255, 255, 255, 1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 24px 28px;
     position: relative;
     overflow: hidden;
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    gap: 15px;
+    gap: 25px;
 }
 
-.header-center-content {
+/* Sisi Kiri Teks Hero */
+.hero-text-side {
     flex: 1;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
-    gap: 4px;
+    gap: 8px;
     z-index: 2;
 }
 
-/* Side Animations Left & Right Cards - Clean Tech Glass */
-.header-side-anim {
+.hero-text-side h2 {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    line-height: 1.2;
+    margin-bottom: 2px;
+}
+
+.hero-text-side h2 span {
+    background: linear-gradient(135deg, #38bdf8 0%, #818cf8 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.hero-text-side .typing-subtitle {
+    font-size: 0.92rem;
+    color: #94a3b8;
+    font-weight: 500;
+}
+
+/* Sisi Kanan Graphic Illustration Card */
+.hero-visual-side {
+    flex-shrink: 0;
+    z-index: 2;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 48px;
-    height: 48px;
-    background: #ffffff;
-    border: 1.5px solid #e0f2fe;
-    border-radius: 14px;
-    box-shadow: 0 6px 16px rgba(14, 165, 233, 0.12), inset 0 2px 4px rgba(255, 255, 255, 0.9);
-    z-index: 2;
-    flex-shrink: 0;
-    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-.side-left {
-    color: #0284c7;
-    animation: floatSideLeft 3.5s ease-in-out infinite;
+.tech-graphic-card {
+    width: 130px;
+    height: 95px;
+    background: rgba(30, 41, 59, 0.6);
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    border-radius: 16px;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3), inset 0 0 15px rgba(56, 189, 248, 0.1);
+    backdrop-filter: blur(10px);
+    transition: transform 0.4s ease;
 }
 
-.side-right {
-    color: #4f46e5;
-    animation: floatSideRight 4s ease-in-out infinite;
-}
-
-.tech-svg-icon {
-    width: 26px;
-    height: 26px;
-    filter: drop-shadow(0 2px 6px rgba(14, 165, 233, 0.25));
-    transition: transform 0.3s ease;
-}
-
-.header-side-anim:hover {
-    transform: translateY(-3px) scale(1.05);
+.tech-graphic-card:hover {
+    transform: translateY(-4px) scale(1.03);
     border-color: #38bdf8;
-    box-shadow: 0 10px 22px rgba(14, 165, 233, 0.2);
 }
 
-@keyframes floatSideLeft {
-    0%, 100% { transform: translateY(0) rotate(-4deg); box-shadow: 0 4px 14px rgba(2, 132, 199, 0.12); }
-    50% { transform: translateY(-6px) rotate(3deg); box-shadow: 0 10px 20px rgba(2, 132, 199, 0.22); }
+.hero-tech-svg {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 4px 10px rgba(56, 189, 248, 0.3));
 }
 
-@keyframes floatSideRight {
-    0%, 100% { transform: translateY(0) rotate(4deg); box-shadow: 0 4px 14px rgba(79, 70, 229, 0.12); }
-    50% { transform: translateY(-6px) rotate(-3deg); box-shadow: 0 10px 20px rgba(79, 70, 229, 0.22); }
+.floating-chip-anim {
+    animation: floatChip 3.5s ease-in-out infinite alternate;
+}
+
+@keyframes floatChip {
+    0% { transform: translateY(0) rotate(0deg); }
+    100% { transform: translateY(-5px) rotate(3deg); }
 }
 
 /* Make sure text elements sit above glowing background */
@@ -503,40 +520,40 @@ h2 {
     }
 
     .hero-card-wrapper {
-        padding: 8px;
+        padding: 6px;
         border-radius: 16px;
-        margin-bottom: 10px;
+        margin-bottom: 12px;
     }
     
     .header-section-inner {
-        padding: 12px 10px;
+        padding: 16px 14px;
         border-radius: 12px;
-        gap: 8px;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
     }
 
-    .header-side-anim {
-        width: 36px;
-        height: 36px;
-        border-radius: 10px;
-    }
-
-    .tech-svg-icon {
-        width: 20px;
-        height: 20px;
-    }
-
-    h2 {
-        font-size: 1.1rem;
+    .hero-text-side h2 {
+        font-size: 1.2rem;
         letter-spacing: -0.3px;
     }
 
-    .typing-subtitle {
-        font-size: 0.8rem;
+    .hero-text-side .typing-subtitle {
+        font-size: 0.78rem;
     }
 
     .badge-float {
-        font-size: 0.7rem;
-        padding: 3px 10px;
+        font-size: 0.68rem;
+        padding: 3px 8px;
+        margin-bottom: 4px;
+    }
+
+    .tech-graphic-card {
+        width: 90px;
+        height: 70px;
+        padding: 2px;
+        border-radius: 12px;
     }
 
     /* Grid di HP bersusun vertikal dari atas ke bawah (1 kolom) */
