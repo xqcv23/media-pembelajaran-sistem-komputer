@@ -69,14 +69,14 @@ body::before {
 /* HERO CARD WRAPPER - PREMIUM CLEAN TECH */
 .hero-card-wrapper {
     background: linear-gradient(135deg, #f0f4ff 0%, #ede9fe 40%, #eff6ff 100%);
-    border-radius: 20px;
-    padding: 2px;
+    border-radius: 24px;
+    padding: 3px;
     /* Animated gradient border */
     background-clip: padding-box;
     position: relative;
-    margin-bottom: 12px;
+    margin-bottom: 20px;
     overflow: hidden;
-    box-shadow: 0 8px 24px rgba(99, 102, 241, 0.1), 0 2px 6px rgba(99, 102, 241, 0.05);
+    box-shadow: 0 12px 40px rgba(99, 102, 241, 0.12), 0 2px 8px rgba(99, 102, 241, 0.06);
 }
 
 /* Animated glowing border via ::before */
@@ -84,7 +84,7 @@ body::before {
     content: '';
     position: absolute;
     inset: 0;
-    border-radius: 20px;
+    border-radius: 24px;
     padding: 2px;
     background: linear-gradient(135deg, #6366f1, #3b82f6, #8b5cf6, #6366f1);
     background-size: 300% 300%;
@@ -107,7 +107,7 @@ body::before {
     background: linear-gradient(90deg, #6366f1, #3b82f6, #8b5cf6, #06b6d4, #6366f1);
     background-size: 200% 100%;
     animation: stripeScroll 3s linear infinite;
-    border-radius: 20px 20px 0 0;
+    border-radius: 24px 24px 0 0;
     margin: 0 2px;
 }
 
@@ -159,22 +159,23 @@ body::before {
     100% { transform: translateY(-8px) scale(1.3); }
 }
 
-.header-section-inner.hero-slim-layout {
-    text-align: center;
-    background: rgba(255, 255, 255, 0.95);
+.header-section-inner {
+    text-align: left;
+    background: rgba(255, 255, 255, 0.92);
     backdrop-filter: blur(24px);
     -webkit-backdrop-filter: blur(24px);
     border: 1px solid rgba(255, 255, 255, 0.98);
-    border-radius: 18px;
-    padding: 14px 18px;
+    border-radius: 22px;
+    padding: 24px 28px;
     position: relative;
     overflow: hidden;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
-    justify-content: center;
-    gap: 6px;
+    justify-content: space-between;
+    gap: 20px;
 }
+
 
 .header-grid-lines {
     position: absolute;
@@ -187,6 +188,17 @@ body::before {
         linear-gradient(to bottom, rgba(99, 102, 241, 0.06) 1px, transparent 1px);
     background-size: 22px 22px;
     pointer-events: none;
+}
+
+/* Sisi Kiri Teks Hero */
+.hero-text-side {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 6px;
+    z-index: 2;
 }
 
 .badge-pulse {
@@ -204,21 +216,26 @@ body::before {
     50% { transform: scale(1.6); opacity: 0.4; }
 }
 
-.hero-title-wrap h2 {
-    font-size: 1.6rem;
-    font-weight: 900;
-    color: #1e1b4b;
-    letter-spacing: -0.5px;
-    line-height: 1.15;
-    margin: 0;
-    text-align: center;
+.hero-text-side {
+    flex: 1;
+    z-index: 2;
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    align-items: flex-start;
     justify-content: center;
-    gap: 6px;
+    gap: 8px;
 }
 
-.hero-title-wrap h2 span {
+.hero-text-side h2 {
+    font-size: 1.9rem;
+    font-weight: 900;
+    color: #1e1b4b;
+    letter-spacing: -0.8px;
+    line-height: 1.25;
+    margin: 0;
+}
+
+.hero-text-side h2 span {
     background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 50%, #8b5cf6 100%);
     -webkit-background-clip: text;
     background-clip: text;
@@ -226,26 +243,34 @@ body::before {
     display: inline-block;
 }
 
-.title-icon {
-    font-size: 1.4rem;
+.hero-subtitle {
+    font-size: 0.85rem;
+    color: #64748b;
+    font-weight: 500;
+    margin: 0;
+    line-height: 1.4;
+}
+
+.hero-subtitle strong {
+    color: #4f46e5;
+    font-weight: 700;
 }
 
 /* CHIP PILLS - Colorful gradient chips */
 .hero-tech-pills {
     display: flex;
-    gap: 7px;
+    gap: 8px;
     flex-wrap: wrap;
-    justify-content: center;
-    margin: 1px 0;
+    margin: 2px 0;
 }
 
 .chip-pill {
     display: inline-flex;
     align-items: center;
-    gap: 5px;
-    padding: 4px 11px;
+    gap: 6px;
+    padding: 6px 14px;
     border-radius: 50px;
-    font-size: 0.72rem;
+    font-size: 0.78rem;
     font-weight: 700;
     letter-spacing: 0.2px;
     cursor: default;
@@ -254,7 +279,7 @@ body::before {
 }
 
 .chip-icon {
-    font-size: 0.85rem;
+    font-size: 0.95rem;
     line-height: 1;
 }
 
@@ -311,14 +336,14 @@ body::before {
 .hero-stat-strip {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    padding: 4px 14px;
+    gap: 10px;
+    padding: 6px 16px;
     background: rgba(255, 255, 255, 0.85);
     border: 1px solid rgba(99, 102, 241, 0.2);
     border-radius: 50px;
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     color: #475569;
-    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.06);
+    box-shadow: 0 2px 10px rgba(99, 102, 241, 0.08);
 }
 
 .strip-item b {
@@ -332,19 +357,21 @@ body::before {
 }
 
 
-/* Centered Holographic Cyber Circle */
-.hero-visual-center {
+/* Sisi Kanan Holographic Cyber Circle */
+.hero-visual-side {
+    flex-shrink: 0;
     z-index: 2;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 2px;
-    margin: 1px 0;
+    padding: 10px;
+    background: radial-gradient(circle at center, rgba(99, 102, 241, 0.1) 0%, rgba(255, 255, 255, 0.5) 60%, transparent 100%);
+    border-radius: 50%;
 }
 
 .holo-graphic-circle {
-    width: 86px;
-    height: 86px;
+    width: 116px;
+    height: 116px;
     position: relative;
     display: flex;
     align-items: center;
@@ -358,29 +385,29 @@ body::before {
 }
 
 .ring-1 {
-    width: 82px;
-    height: 82px;
+    width: 112px;
+    height: 112px;
     border: 2px solid transparent;
     border-top: 2.5px solid #6366f1;
     border-right: 2.5px solid #3b82f6;
     border-bottom: 2px dashed rgba(99, 102, 241, 0.25);
-    box-shadow: 0 0 12px rgba(99, 102, 241, 0.2);
+    box-shadow: 0 0 16px rgba(99, 102, 241, 0.22);
     animation: spinRing 6s linear infinite;
 }
 
 .ring-2 {
-    width: 64px;
-    height: 64px;
+    width: 86px;
+    height: 86px;
     border: 2px solid transparent;
     border-left: 2.5px solid #8b5cf6;
     border-bottom: 2.5px solid #3b82f6;
-    box-shadow: 0 0 8px rgba(139, 92, 246, 0.15);
+    box-shadow: 0 0 10px rgba(139, 92, 246, 0.18);
     animation: spinRingReverse 4s linear infinite;
 }
 
 .ring-3 {
-    width: 46px;
-    height: 46px;
+    width: 60px;
+    height: 60px;
     border: 1.5px solid transparent;
     border-top: 2px dashed rgba(99, 102, 241, 0.4);
     border-left: 2px solid rgba(59, 130, 246, 0.35);
@@ -1014,14 +1041,17 @@ h1 {
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border-radius: 20px;
-    padding: 22px 18px;
+    padding: 22px 20px 20px;
+    padding-top: 26px;
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
     border: 1px solid var(--glass-border);
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: flex-start;
     height: 100%;
+    position: relative;
+    overflow: hidden;
 }
 
 .mat-card:hover {
@@ -1054,30 +1084,85 @@ h1 {
     line-height: 1.5;
 }
 
-/* TOMBOL BACA MATERI - CLEAN TECH DESIGN */
+/* CARD TOP ACCENT STRIPE */
+.card-top-stripe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    border-radius: 20px 20px 0 0;
+}
+.stripe-blue   { background: linear-gradient(90deg, #3b82f6, #06b6d4); }
+.stripe-violet { background: linear-gradient(90deg, #6366f1, #8b5cf6); }
+.stripe-cyan   { background: linear-gradient(90deg, #06b6d4, #0284c7); }
+
+/* CARD THEMED HOVER GLOW */
+.card-blue:hover   { box-shadow: 0 16px 40px rgba(59, 130, 246, 0.2);  border-color: rgba(59, 130, 246, 0.45); }
+.card-violet:hover { box-shadow: 0 16px 40px rgba(99, 102, 241, 0.2);  border-color: rgba(99, 102, 241, 0.45); }
+.card-cyan:hover   { box-shadow: 0 16px 40px rgba(6, 182, 212, 0.2);   border-color: rgba(6, 182, 212, 0.45); }
+
+/* CARD HEADER ROW: Icon + Badge */
+.card-header-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 14px;
+}
+
+/* ICON BOX */
+.card-icon-box {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    flex-shrink: 0;
+    transition: transform 0.3s ease;
+}
+.mat-card:hover .card-icon-box {
+    transform: scale(1.1) rotate(4deg);
+}
+.icon-bg-blue   { background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(6, 182, 212, 0.1));  border: 1.5px solid rgba(59, 130, 246, 0.25); }
+.icon-bg-violet { background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(139, 92, 246, 0.1)); border: 1.5px solid rgba(99, 102, 241, 0.25); }
+.icon-bg-cyan   { background: linear-gradient(135deg, rgba(6, 182, 212, 0.15), rgba(2, 132, 199, 0.1));   border: 1.5px solid rgba(6, 182, 212, 0.25); }
+
+/* PROGRESS BAR THEMED COLORS */
+.fill-blue   { background: linear-gradient(90deg, #3b82f6, #06b6d4) !important; }
+.fill-violet { background: linear-gradient(90deg, #6366f1, #8b5cf6) !important; }
+.fill-cyan   { background: linear-gradient(90deg, #06b6d4, #0284c7) !important; }
+
+/* BUTTON LINK WRAPPER */
+.btn-link {
+    display: block;
+    text-decoration: none;
+    margin-top: auto;
+}
+
+/* TOMBOL BACA MATERI - PREMIUM THEMED */
 .btn-access {
     width: 100%;
-    padding: 10px 14px;
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    border-radius: 12px;
+    padding: 12px 16px;
+    border: none;
+    border-radius: 14px;
     color: #ffffff;
     font-weight: 700;
-    font-size: 0.82rem;
-    letter-spacing: 0.3px;
+    font-size: 0.88rem;
+    letter-spacing: 0.4px;
     cursor: pointer;
     position: relative;
     overflow: hidden;
     z-index: 1;
-    background: linear-gradient(135deg, #2563eb 0%, #0284c7 100%);
-    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.25);
-    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     gap: 8px;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* Shimmer Light Effect */
+/* Shimmer sweep effect */
 .btn-access::before {
     content: '';
     position: absolute;
@@ -1085,40 +1170,67 @@ h1 {
     left: -100%;
     width: 60%;
     height: 100%;
-    background: linear-gradient(
-        90deg,
-        transparent,
-        rgba(255, 255, 255, 0.35),
-        transparent
-    );
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
     transform: skewX(-20deg);
     transition: 0.6s ease;
     z-index: 2;
+    pointer-events: none;
 }
+.btn-access:hover::before { left: 150%; }
 
-.btn-access:hover::before {
-    left: 150%;
+/* Blue Theme */
+.btn-blue {
+    background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+    box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
 }
-
-.btn-access:hover {
+.btn-blue:hover {
+    background: linear-gradient(135deg, #2563eb 0%, #0284c7 100%);
+    box-shadow: 0 8px 24px rgba(59, 130, 246, 0.45);
     transform: translateY(-2px);
-    box-shadow: 0 8px 22px rgba(2, 132, 199, 0.35);
-    background: linear-gradient(135deg, #1d4ed8 0%, #0369a1 100%);
 }
 
-.btn-access:active {
-    transform: translateY(0) scale(0.98);
+/* Violet Theme */
+.btn-violet {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    box-shadow: 0 4px 16px rgba(99, 102, 241, 0.3);
+}
+.btn-violet:hover {
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    box-shadow: 0 8px 24px rgba(99, 102, 241, 0.45);
+    transform: translateY(-2px);
 }
 
-.btn-arrow {
-    transition: transform 0.3s ease;
-    display: inline-block;
-    font-size: 0.9rem;
+/* Cyan Theme */
+.btn-cyan {
+    background: linear-gradient(135deg, #06b6d4 0%, #0284c7 100%);
+    box-shadow: 0 4px 16px rgba(6, 182, 212, 0.3);
+}
+.btn-cyan:hover {
+    background: linear-gradient(135deg, #0891b2 0%, #0369a1 100%);
+    box-shadow: 0 8px 24px rgba(6, 182, 212, 0.45);
+    transform: translateY(-2px);
 }
 
-.btn-access:hover .btn-arrow {
-    transform: translateX(4px);
+.btn-access:active { transform: translateY(0) scale(0.98); }
+
+/* Arrow Circle Badge */
+.btn-arrow-circle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.25);
+    font-size: 0.85rem;
+    flex-shrink: 0;
+    transition: transform 0.3s ease, background 0.3s ease;
 }
+.btn-access:hover .btn-arrow-circle {
+    transform: translateX(3px);
+    background: rgba(255, 255, 255, 0.35);
+}
+
 
 /* MODAL POPUP */
 .modal-overlay {
