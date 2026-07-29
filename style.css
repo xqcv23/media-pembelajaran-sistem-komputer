@@ -1123,6 +1123,53 @@ h1 {
 .icon-bg-violet { background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(139, 92, 246, 0.1)); border: 1.5px solid rgba(99, 102, 241, 0.25); }
 .icon-bg-cyan   { background: linear-gradient(135deg, rgba(6, 182, 212, 0.15), rgba(2, 132, 199, 0.1));   border: 1.5px solid rgba(6, 182, 212, 0.25); }
 
+/* Animated SVG icons */
+.card-svg-icon {
+    display: block;
+    animation: iconFloat 3s ease-in-out infinite alternate;
+    filter: drop-shadow(0 2px 6px rgba(99, 102, 241, 0.15));
+    transition: filter 0.3s ease;
+}
+.mat-card:hover .card-svg-icon {
+    animation-play-state: paused;
+    filter: drop-shadow(0 4px 14px rgba(99, 102, 241, 0.35));
+}
+.mat-card:hover .card-icon-box {
+    transform: scale(1.1);
+}
+
+.svg-blue   { filter: drop-shadow(0 2px 6px rgba(59, 130, 246, 0.2)); }
+.svg-violet { filter: drop-shadow(0 2px 6px rgba(99, 102, 241, 0.2)); }
+.svg-cyan   { filter: drop-shadow(0 2px 6px rgba(6, 182, 212, 0.2)); }
+
+.mat-card:hover .svg-blue   { filter: drop-shadow(0 4px 14px rgba(59, 130, 246, 0.45)); }
+.mat-card:hover .svg-violet { filter: drop-shadow(0 4px 14px rgba(99, 102, 241, 0.45)); }
+.mat-card:hover .svg-cyan   { filter: drop-shadow(0 4px 14px rgba(6, 182, 212, 0.45)); }
+
+@keyframes iconFloat {
+    0%   { transform: translateY(0px);   }
+    100% { transform: translateY(-4px);  }
+}
+
+/* Icon box glow pulse */
+.icon-bg-blue   { animation: glowPulseBlue   3s ease-in-out infinite alternate; }
+.icon-bg-violet { animation: glowPulseViolet 3s ease-in-out infinite alternate; }
+.icon-bg-cyan   { animation: glowPulseCyan   3s ease-in-out infinite alternate; }
+
+@keyframes glowPulseBlue {
+    0%   { box-shadow: 0 0 0px rgba(59, 130, 246, 0); }
+    100% { box-shadow: 0 0 16px rgba(59, 130, 246, 0.25); }
+}
+@keyframes glowPulseViolet {
+    0%   { box-shadow: 0 0 0px rgba(99, 102, 241, 0); }
+    100% { box-shadow: 0 0 16px rgba(99, 102, 241, 0.25); }
+}
+@keyframes glowPulseCyan {
+    0%   { box-shadow: 0 0 0px rgba(6, 182, 212, 0); }
+    100% { box-shadow: 0 0 16px rgba(6, 182, 212, 0.25); }
+}
+
+
 /* PROGRESS BAR THEMED COLORS */
 .fill-blue   { background: linear-gradient(90deg, #3b82f6, #06b6d4) !important; }
 .fill-violet { background: linear-gradient(90deg, #6366f1, #8b5cf6) !important; }
