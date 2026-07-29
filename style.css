@@ -1134,6 +1134,34 @@ h1 {
     animation-play-state: paused;
 }
 
+/* Header Particles (Visible on white background, bottom to top) */
+.header-particles {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    overflow: hidden;
+    pointer-events: none;
+}
+.hp {
+    position: absolute;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.5), rgba(139, 92, 246, 0.5));
+    border-radius: 50%;
+    animation: hpFloat 4s infinite linear;
+    bottom: -20px;
+}
+.hp1 { width: 14px; height: 14px; left: 15%; animation-duration: 4.5s; }
+.hp2 { width: 8px; height: 8px; left: 40%; animation-duration: 3.2s; animation-delay: 1s; }
+.hp3 { width: 18px; height: 18px; left: 75%; animation-duration: 5.5s; animation-delay: 2s; }
+.hp4 { width: 10px; height: 10px; left: 85%; animation-duration: 3.8s; animation-delay: 0.5s; }
+.hp5 { width: 6px; height: 6px; left: 25%; animation-duration: 4.2s; animation-delay: 2.5s; }
+
+@keyframes hpFloat {
+    0% { transform: translateY(0) scale(1); opacity: 0; }
+    20% { opacity: 1; }
+    80% { opacity: 1; }
+    100% { transform: translateY(-160px) scale(0.3); opacity: 0; }
+}
+
 /* Preview Particles */
 .preview-particles {
     position: absolute;
