@@ -4,6 +4,7 @@
   let i = 0;
 
   function typeWriter() {
+    if (!typeEl) return;
     if (i < txt.length) {
       typeEl.innerHTML += txt.charAt(i);
       i++;
