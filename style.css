@@ -249,72 +249,44 @@ body::before {
     margin-bottom: 4px;
 }
 
-/* HERO TERMINAL - Code snippet decorative */
-.hero-terminal {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    background: #1e1b4b;
-    border: 1px solid rgba(99, 102, 241, 0.35);
-    border-radius: 8px;
-    padding: 5px 12px;
-    font-family: 'Consolas', monospace;
-    font-size: 0.72rem;
-    margin-bottom: 2px;
-    box-shadow: 0 4px 14px rgba(30, 27, 75, 0.18);
+.hero-subtitle {
+    font-size: 0.88rem;
+    color: #64748b;
+    font-weight: 500;
+    margin-top: 6px;
+    margin-bottom: 12px;
+    line-height: 1.5;
 }
 
-.terminal-dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    flex-shrink: 0;
-}
-.td-red    { background: #f87171; }
-.td-yellow { background: #fbbf24; }
-.td-green  { background: #34d399; }
-
-.terminal-code {
-    color: #94a3b8;
-    font-size: 0.7rem;
-    letter-spacing: 0.3px;
-}
-
-.tc-prompt {
-    color: #34d399;
-    font-weight: 700;
-    margin-right: 4px;
-}
-
-.tc-highlight {
-    color: #818cf8;
+.hero-subtitle strong {
+    color: #4f46e5;
     font-weight: 700;
 }
 
 /* CHIP PILLS - Colorful gradient chips */
 .hero-tech-pills {
     display: flex;
-    gap: 7px;
+    gap: 8px;
     flex-wrap: wrap;
-    margin-top: 6px;
+    margin-bottom: 14px;
 }
 
 .chip-pill {
     display: inline-flex;
     align-items: center;
-    gap: 5px;
-    padding: 5px 13px 5px 9px;
-    border-radius: 10px;
-    font-size: 0.75rem;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 50px;
+    font-size: 0.78rem;
     font-weight: 700;
-    letter-spacing: 0.3px;
+    letter-spacing: 0.2px;
     cursor: default;
     transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
     border: 1.5px solid transparent;
 }
 
 .chip-icon {
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     line-height: 1;
 }
 
@@ -324,114 +296,71 @@ body::before {
 
 /* Hardware - Blue */
 .chip-blue {
-    background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(37, 99, 235, 0.1));
-    border-color: rgba(59, 130, 246, 0.35);
+    background: rgba(59, 130, 246, 0.08);
+    border-color: rgba(59, 130, 246, 0.25);
     color: #2563eb;
-    box-shadow: 0 2px 10px rgba(59, 130, 246, 0.15);
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.1);
 }
 .chip-blue:hover {
     background: linear-gradient(135deg, #3b82f6, #2563eb);
     color: #ffffff;
     border-color: transparent;
-    transform: translateY(-3px) scale(1.04);
-    box-shadow: 0 6px 18px rgba(59, 130, 246, 0.35);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(59, 130, 246, 0.3);
 }
 
 /* Software - Violet */
 .chip-violet {
-    background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(79, 70, 229, 0.1));
-    border-color: rgba(99, 102, 241, 0.35);
+    background: rgba(99, 102, 241, 0.08);
+    border-color: rgba(99, 102, 241, 0.25);
     color: #4f46e5;
-    box-shadow: 0 2px 10px rgba(99, 102, 241, 0.15);
+    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.1);
 }
 .chip-violet:hover {
     background: linear-gradient(135deg, #6366f1, #4f46e5);
     color: #ffffff;
     border-color: transparent;
-    transform: translateY(-3px) scale(1.04);
-    box-shadow: 0 6px 18px rgba(99, 102, 241, 0.35);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(99, 102, 241, 0.3);
 }
 
 /* Brainware - Purple */
 .chip-purple {
-    background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(109, 40, 217, 0.1));
-    border-color: rgba(139, 92, 246, 0.35);
+    background: rgba(139, 92, 246, 0.08);
+    border-color: rgba(139, 92, 246, 0.25);
     color: #7c3aed;
-    box-shadow: 0 2px 10px rgba(139, 92, 246, 0.15);
+    box-shadow: 0 2px 8px rgba(139, 92, 246, 0.1);
 }
 .chip-purple:hover {
     background: linear-gradient(135deg, #8b5cf6, #7c3aed);
     color: #ffffff;
     border-color: transparent;
-    transform: translateY(-3px) scale(1.04);
-    box-shadow: 0 6px 18px rgba(139, 92, 246, 0.35);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(139, 92, 246, 0.3);
 }
 
-/* STAT MINI CARDS */
-.hero-stats-row {
-    display: flex;
-    align-items: stretch;
-    gap: 7px;
-    margin-top: 10px;
-    flex-wrap: wrap;
-}
-
-.hero-stat-card {
-    display: flex;
-    flex-direction: column;
+/* COMPACT STAT STRIP */
+.hero-stat-strip {
+    display: inline-flex;
     align-items: center;
-    justify-content: center;
-    gap: 1px;
-    padding: 7px 12px;
-    border-radius: 10px;
-    border: 1.5px solid transparent;
-    min-width: 60px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    gap: 10px;
+    padding: 6px 16px;
+    background: rgba(255, 255, 255, 0.85);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    border-radius: 50px;
+    font-size: 0.75rem;
+    color: #475569;
+    box-shadow: 0 2px 10px rgba(99, 102, 241, 0.08);
 }
 
-.hero-stat-card:hover {
-    transform: translateY(-3px);
-}
-
-.stat-icon {
-    font-size: 0.9rem;
-    line-height: 1;
-    margin-bottom: 1px;
-}
-
-.stat-val {
-    font-size: 1.1rem;
-    font-weight: 900;
-    line-height: 1.1;
-}
-
-.stat-lbl {
-    font-size: 0.6rem;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-    opacity: 0.75;
-}
-
-.stat-indigo {
-    background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(79, 70, 229, 0.06));
-    border-color: rgba(99, 102, 241, 0.25);
+.strip-item b {
     color: #4f46e5;
-    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.12);
+    font-weight: 800;
 }
 
-.stat-blue {
-    background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(37, 99, 235, 0.06));
-    border-color: rgba(59, 130, 246, 0.25);
-    color: #2563eb;
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.12);
-}
-
-.stat-violet {
-    background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(109, 40, 217, 0.06));
-    border-color: rgba(139, 92, 246, 0.25);
-    color: #7c3aed;
-    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.12);
+.strip-sep {
+    color: #cbd5e1;
+    font-weight: 700;
 }
 
 
