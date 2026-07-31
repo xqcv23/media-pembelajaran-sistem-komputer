@@ -1,17 +1,28 @@
- // ========= EFEK MENGETIK =========
+// ========= EFEK MENGETIK =========
   const typeEl = document.getElementById('typewriterText');
-  const txt = "Pilih materi pembelajaran di bawah ini...";
+  const txt = "Modul pembelajaran terstruktur mencakup 3 topik utama...";
   let i = 0;
 
   function typeWriter() {
     if (!typeEl) return;
-    if (i < txt.length) {
-      typeEl.innerHTML += txt.charAt(i);
-      i++;
-      setTimeout(typeWriter, 50); 
+    typeEl.textContent = "";
+    i = 0;
+
+    function typeChar() {
+      if (i < txt.length) {
+        typeEl.textContent += txt.charAt(i);
+        i++;
+        setTimeout(typeChar, 40);
+      }
     }
+    typeChar();
   }
-  window.addEventListener('load', typeWriter);
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', typeWriter);
+  } else {
+    typeWriter();
+  }
 
   // ========= PROGRESS TRACKING =========
   const materiList = ['sistem-komputer', 'interaksi-manusia-komputer', 'sistem-operasi'];

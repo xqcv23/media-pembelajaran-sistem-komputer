@@ -604,15 +604,18 @@
             right: 0;
             width: 100%;
             height: 100vh;
-            background: rgba(0, 0, 0, 0.95);
+            background: rgba(15, 23, 42, 0.88);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             z-index: 999999;
             display: flex;
             align-items: center;
             justify-content: center;
             opacity: 0;
             visibility: hidden;
-            transition: 0.3s ease;
+            transition: all 0.3s ease;
             padding: 20px;
+            overflow-y: auto;
         }
 
         .video-modal.active {
@@ -620,41 +623,138 @@
             visibility: visible;
         }
 
-        .video-wrapper {
-            position: relative;
+        .video-modal-container {
             width: 100%;
-            max-width: 900px;
-            aspect-ratio: 16/9;
-            background: #000;
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 0 40px rgba(59, 130, 246, 0.4);
+            max-width: 920px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
             transform: scale(0.9);
-            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            margin: auto;
         }
 
-        .video-modal.active .video-wrapper {
+        .video-modal.active .video-modal-container {
             transform: scale(1);
         }
 
-        .close-video {
-            position: absolute;
-            top: -45px;
-            right: 0;
+        /* Header Modal dengan Tombol Keluar */
+        .video-modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(30, 41, 59, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 12px 20px;
+            border-radius: 16px;
             color: #fff;
-            font-size: 2rem;
-            cursor: pointer;
-            transition: 0.3s;
-            width: 40px;
-            height: 40px;
-            text-align: center;
-            line-height: 40px;
-            z-index: 1000000;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
         }
 
-        .close-video:hover {
-            color: var(--pink);
-            transform: rotate(90deg);
+        .video-title-tag {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1rem;
+            font-weight: 700;
+            color: #f8fafc;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .video-title-tag i {
+            color: #ec4899;
+            font-size: 1.2rem;
+            animation: pulsePlay 2s infinite;
+        }
+
+        @keyframes pulsePlay {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.1); }
+        }
+
+        /* Tombol Keluar (Exit Video) */
+        .close-video-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
+            flex-shrink: 0;
+        }
+
+        .close-video-btn:hover {
+            background: linear-gradient(135deg, #dc2626, #b91c1c);
+            transform: translateY(-2px) scale(1.03);
+            box-shadow: 0 6px 20px rgba(239, 68, 68, 0.6);
+        }
+
+        .close-video-btn i {
+            font-size: 1.1rem;
+        }
+
+        .video-wrapper {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: #000;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 30px rgba(59, 130, 246, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .video-modal-footer {
+            display: flex;
+            justify-content: center;
+            margin-top: 4px;
+        }
+
+        .close-video-btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.15);
+            color: #e2e8f0;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .close-video-btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.25);
+            color: #ffffff;
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 600px) {
+            .video-modal {
+                padding: 12px;
+            }
+            .video-modal-header {
+                padding: 10px 14px;
+            }
+            .video-title-tag {
+                font-size: 0.85rem;
+            }
+            .close-video-btn {
+                padding: 8px 14px;
+                font-size: 0.82rem;
+            }
         }
 
         /* --- ANIMATIONS --- */
@@ -799,11 +899,31 @@
 
     <!-- Video Modal Overlay -->
     <div class="video-modal" id="videoModal">
-        <div class="video-wrapper">
-            <div class="close-video" id="closeBtn">&times;</div>
-            <iframe id="youtubeFrame" width="100%" height="100%" src="" title="YouTube video player" frameborder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowfullscreen></iframe>
+        <div class="video-modal-container" id="videoModalContainer">
+            <!-- Header Modal dengan Tombol Keluar Utama -->
+            <div class="video-modal-header">
+                <div class="video-title-tag">
+                    <i class="fas fa-play-circle"></i>
+                    <span id="modalVideoTitle">Menonton Video</span>
+                </div>
+                <button class="close-video-btn" id="closeBtn" title="Keluar dari Video">
+                    <i class="fas fa-times-circle"></i> Keluar Video
+                </button>
+            </div>
+
+            <!-- Frame Video Player -->
+            <div class="video-wrapper">
+                <iframe id="youtubeFrame" width="100%" height="100%" src="" title="YouTube video player" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowfullscreen></iframe>
+            </div>
+
+            <!-- Footer Modal dengan Tombol Keluar Sekunder -->
+            <div class="video-modal-footer">
+                <button class="close-video-btn-secondary" id="closeBtnSecondary">
+                    <i class="fas fa-arrow-left"></i> Tutup &amp; Kembali ke Daftar Video
+                </button>
+            </div>
         </div>
     </div>
 
@@ -858,7 +978,9 @@
         const modal = document.getElementById('videoModal');
         const iframe = document.getElementById('youtubeFrame');
         const closeBtn = document.getElementById('closeBtn');
-        const videoWrapper = document.querySelector('.video-wrapper');
+        const closeBtnSecondary = document.getElementById('closeBtnSecondary');
+        const modalVideoTitle = document.getElementById('modalVideoTitle');
+        const videoModalContainer = document.getElementById('videoModalContainer');
 
         /* --- 3. EFEK MENGETIK (Typewriter) --- */
         const text = "Tonton video interaktif untuk pemahaman lebih dalam...";
@@ -882,7 +1004,7 @@
 
             // Generate HTML String
             container.innerHTML = list.map(item => `
-                <div class="video-card" onclick="openVideo('${item.youtubeId}')">
+                <div class="video-card" onclick="openVideo('${item.youtubeId}', '${item.title.replace(/'/g, "\\'")}')">
                     <div class="thumb-wrapper">
                         <span class="badge-category">${item.category}</span>
                         <img src="https://img.youtube.com/vi/${item.youtubeId}/hqdefault.jpg" alt="${item.title}">
@@ -928,39 +1050,52 @@
         /* --- 6. LOGIKA MODAL VIDEO --- */
 
         // Fungsi Buka Video (Dipanggil via onclick di renderVideos)
-        window.openVideo = function (id) {
+        window.openVideo = function (id, title) {
             iframe.src = `https://www.youtube.com/embed/${id}?autoplay=1`;
-            modal.classList.add('active');
-
-            // Fix posisi modal jika dibuka di HP
-            if (window.innerWidth <= 600) {
-                videoWrapper.style.transform = "scale(1) translateY(-20px)";
+            if (title && modalVideoTitle) {
+                modalVideoTitle.textContent = title;
             }
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+
+            // Posisi otomatis ke tengah viewport agar tidak perlu scroll manual
+            setTimeout(() => {
+                modal.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 50);
         };
 
         // Fungsi Tutup Video
         function closeVideo() {
             modal.classList.remove('active');
+            document.body.style.overflow = '';
             // Hapus src agar suara video berhenti
             setTimeout(() => { iframe.src = ""; }, 300);
-            // Reset transform wrapper
-            videoWrapper.style.transform = "";
         }
 
-        // Event Listener: Klik tombol close
-        closeBtn.addEventListener('click', closeVideo);
+        // Event Listener: Klik tombol close utama dan sekunder
+        if (closeBtn) closeBtn.addEventListener('click', closeVideo);
+        if (closeBtnSecondary) closeBtnSecondary.addEventListener('click', closeVideo);
 
-        // Event Listener: Klik area gelap (background) untuk menutup
+        // Event Listener: Tombol ESC untuk keluar video
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal.classList.contains('active')) {
+                closeVideo();
+            }
+        });
+
+        // Event Listener: Klik area luar modal (background) untuk menutup
         modal.addEventListener('click', (e) => {
             if (e.target === modal) {
                 closeVideo();
             }
         });
 
-        // Mencegah penutupan jika yang diklik adalah wrapper video
-        videoWrapper.addEventListener('click', (e) => {
-            e.stopPropagation();
-        });
+        // Mencegah penutupan jika area video container diklik
+        if (videoModalContainer) {
+            videoModalContainer.addEventListener('click', (e) => {
+                e.stopPropagation();
+            });
+        }
 
     </script>
 

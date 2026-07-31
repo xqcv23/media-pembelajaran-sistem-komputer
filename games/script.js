@@ -1,14 +1,28 @@
 /* ================= EFEK ANIMASI PENGETIKAN ================= */
-const textToType = "Pilih misi dan kumpulkan semua gelar kehormatan!";
+const textToType = "Pilih misimu dan buktikan kehebatanmu melalui 4 tantangan seru!";
 let typeIndex = 0;
+
 function typeWriterEffect() {
-    if (typeIndex < textToType.length) {
-        document.getElementById("typing-text").innerHTML += textToType.charAt(typeIndex);
-        typeIndex++;
-        setTimeout(typeWriterEffect, 60);
+    const typingEl = document.getElementById("typing-text");
+    if (!typingEl) return;
+    typingEl.textContent = "";
+    typeIndex = 0;
+
+    function typeChar() {
+        if (typeIndex < textToType.length) {
+            typingEl.textContent += textToType.charAt(typeIndex);
+            typeIndex++;
+            setTimeout(typeChar, 40);
+        }
     }
+    typeChar();
 }
-setTimeout(typeWriterEffect, 600);
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', typeWriterEffect);
+} else {
+    typeWriterEffect();
+}
 
 /* ================= LOGIKA UI DRAGGABLE ================= */
 const balloon = document.getElementById('drag-balloon');
